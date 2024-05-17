@@ -26,18 +26,6 @@ class ListCheckins extends Page
     public $selectedCoupons = [];
     public $alreadyCheckedCoupons;
 
-    private function queueMail(Collection $informations): void
-    {
-        dd($informations);
-        foreach ($informations as $info) {
-            Mail::to($info['user'])->queue(new EventFinalized(
-                user:   $info['user'], 
-                coupon: $info['coupon'],
-                event:  $this->record
-            ));
-        }
-    }
-
     protected function getHeaderActions(): array
     {
         return [
@@ -47,7 +35,7 @@ class ListCheckins extends Page
                     Select::make('location_id')
                         ->label('Helyszín')
                         ->options($this->record->region->locations->pluck('name', 'id'))
-                        ->required(),       
+                        ->required(),
                 ])
                 ->action(function (array $data): void {
 
@@ -67,7 +55,7 @@ class ListCheckins extends Page
 
                     foreach ($informations as $info) {
                         Mail::to($info['user'])->queue(new EventFinalized(
-                            user:   $info['user'], 
+                            user:   $info['user'],
                             coupon: $info['coupon'],
                             event:  $this->record
                         ));
@@ -75,18 +63,18 @@ class ListCheckins extends Page
 
                     foreach ($kickedInformations as $info) {
                         Mail::to($info['user'])->queue(new KickedFromEvent(
-                            user:   $info['user'], 
+                            user:   $info['user'],
                             coupon: $info['coupon'],
                             event:  $this->record
                         ));
                     }
-                    
+
                     $this->record->coupons()->updateExistingPivot($this->selectedCoupons, ['status' => 1]);
                     $this->record->coupons()->updateExistingPivot($unselectedCoupons, ['status' => 0]);
 
                     Coupon::whereIn('id', $this->selectedCoupons)->update(['status' => CouponStatus::Applicant]);
                     Coupon::whereIn('id', $unselectedCoupons)->update(['status' => CouponStatus::CanBeUsed]);
-                    
+
                     $data['status'] = AircraftLocationPilotStatus::Finalized;
 
                     $this->record->update($data);
