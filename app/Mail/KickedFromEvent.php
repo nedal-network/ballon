@@ -31,7 +31,7 @@ class KickedFromEvent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kicked From Event',
+            subject: 'Véglegesített repülés módosítása',
         );
     }
 

@@ -40,14 +40,14 @@
     <!--
         ide jön a vissza az adminra rész
     -->
-    <div class="grid">
+    <div class="grid z-10">
         <div class="grid md:grid-cols-2 w-full justify-items-center gap-5 relative min-h-10 md:order-6">
             <button onclick="location.href='/admin'" type="button" class="btn primary hover:bg-custom-secondary transition duration-300 absolute left-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%]"><span class="text-shadow text-lg">Vissza a kuponjaimhoz!</span></button>
         </div>
     </div>
 
     @else
-    
+
     <div class="section">
         <div class="flex flex-wrap">
             <h2 class="card accent font-bold"><span class="text-shadow">Van kuponod?</span></h2>
@@ -62,6 +62,6 @@
         </div>
         @livewire('registration')
     </div>
-    
+
     @endauth
 </div>

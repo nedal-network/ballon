@@ -31,7 +31,7 @@ class EventDeleted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Event Deleted',
+            subject: 'Törölt repülés',
         );
     }
 

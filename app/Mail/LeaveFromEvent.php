@@ -31,7 +31,7 @@ class LeaveFromEvent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Lejelentkeztél az eseményről',
+            subject: 'Lejelentkezés repülésről',
         );
     }
 

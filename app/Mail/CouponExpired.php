@@ -29,7 +29,7 @@ class CouponExpired extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Coupon Expired',
+            subject: 'Lejárt kupon',
         );
     }
 

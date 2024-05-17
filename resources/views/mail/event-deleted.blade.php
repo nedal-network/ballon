@@ -3,6 +3,13 @@
         Kedves {{ $user->name }}!
     </h3>
     <div class="content">
-        <p>A(z) {{ $event->dateTime }} dátumú repülést töröltük. A kuponja ismét felhasználható.</p>
+        <p>Töröltük az időpontot, amire jelentkeztél.</p>
+        <br>
+        <p>
+            Repülés részletei:
+            <br>
+            <strong>Helyszín:</strong> {{ $event->region->name . ', ' . $event->location->name }}<br>
+            <strong>Időpont:</strong> {{ $event->dateTime }}
+        </p>
     </div>
 </x-mail::message>

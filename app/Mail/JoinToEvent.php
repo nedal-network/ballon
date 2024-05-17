@@ -31,7 +31,7 @@ class JoinToEvent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Csatlakoztál az eseményre',
+            subject: 'Jelentkezés repülésre',
         );
     }
 

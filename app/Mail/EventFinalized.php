@@ -31,7 +31,7 @@ class EventFinalized extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Event Finalized',
+            subject: 'Véglegesített repülés',
         );
     }
 

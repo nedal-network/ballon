@@ -29,7 +29,7 @@ class CouponApproved extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Coupon Approved',
+            subject: 'Kupon jóváhagyva',
         );
     }
 

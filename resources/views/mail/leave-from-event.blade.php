@@ -3,6 +3,12 @@
         Kedves {{ $user->name }}!
     </h3>
     <div class="content">
-        <p>Lejelentkeztél az {{ $event->dateTime }} dátumú repülésről.</p>
+        <p>Sikeresen lejelentkeztél az alábbi kiírt időpontunkról.</p>
+        <p>
+            Repülés részletei:
+            <br>
+            <strong>Helyszín:</strong> {{ $event->region->name }}<br>
+            <strong>Időpont:</strong> {{ $event->dateTime }}
+        </p>
     </div>
 </x-mail::message>

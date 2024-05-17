@@ -32,7 +32,7 @@ class EventExecuted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Event Executed',
+            subject: 'Lezárt repülés',
         );
     }
 
