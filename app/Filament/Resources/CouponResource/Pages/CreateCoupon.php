@@ -41,7 +41,7 @@ class CreateCoupon extends CreateRecord
         if ($checking_the_existence_of_a_coupon == 0 && $data['source'] == 'Ballonozz')
         {
             $response_coupon = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/orders/'.$data['coupon_code']);
-            //Felőtt(3db->3f): 1567 
+            //Felőtt(3db->3f): 1567
             //Családi(1db->2f+2gy): 1508 érvénes
             //1526 nem érvényes
             if ($response_coupon->successful())
@@ -62,9 +62,9 @@ class CreateCoupon extends CreateRecord
                 {
                     foreach($coupons_data['line_items'] as $coupon)
                     {
-                        $response_item_nums = $coupon['quantity']; 
+                        $response_item_nums = $coupon['quantity'];
                         $response_product_id = $coupon['product_id'];
-                                                                            
+
                         $response_product_attributes = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/products/'.$response_product_id);
                         if ($response_product_attributes->successful())
                         {
@@ -75,6 +75,14 @@ class CreateCoupon extends CreateRecord
                             $data['status'] = CouponStatus::CanBeUsed;
                             $data['expiration_at'] = $coupon_expiration_date;
                             $data['total_price'] = $payment_total_price ;
+                        } else {
+                            Notification::make()
+                                ->title('Hiba történt, kérjük próbálja meg újra később!')
+                                ->color('danger')
+                                ->icon('tabler-alert-triangle')
+                                ->danger()
+                                ->send();
+                            $this->halt();
                         }
                     }
                 }
@@ -90,17 +98,26 @@ class CreateCoupon extends CreateRecord
                     $this->halt();
                 }
             }
+            else {
+                Notification::make()
+                    ->title('Hibás kuponkódott adott meg!')
+                    ->color('danger')
+                    ->icon('tabler-alert-triangle')
+                    ->danger()
+                    ->send();
+                $this->halt();
+            }
         }
-       
+
         if ($checking_the_existence_of_a_coupon == 0 && $data['source'] == 'Egyéb')
         {
             $data['tickettype_id'] = NULL;
-            $data['status'] = CouponStatus::UnderProcess; 
+            $data['status'] = CouponStatus::UnderProcess;
         }
 
         return $data;
     }
-    
+
     /*
     protected function getRedirectUrl(): string
     {
@@ -108,7 +125,7 @@ class CreateCoupon extends CreateRecord
     }
     */
     protected static bool $canCreateAnother = false;
-    
+
     protected function getCreateFormAction(): \Filament\Actions\Action
     {
         return parent::getCreateFormAction()
