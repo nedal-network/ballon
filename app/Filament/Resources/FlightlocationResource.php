@@ -62,7 +62,7 @@ class FlightlocationResource extends Resource
                 ->label('Helyszín')
                 ->description(function (Flightlocation $location) {
                     $areatype_name = AreaType::find($location->area_type_id);
-                    return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name->name . ' ' . $location->address_number .'.';
+                    return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name?->name . ' ' . $location->address_number .'.';
                 })
                 ->searchable(['name', 'zip_code','settlement']),
                 TextColumn::make('coordinates')
@@ -113,7 +113,7 @@ class FlightlocationResource extends Resource
                 }),
             ])
             ->bulkActions([
-                
+
             ]);
     }
 
