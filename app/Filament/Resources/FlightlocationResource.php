@@ -50,71 +50,71 @@ class FlightlocationResource extends Resource
             //->defaultSort('region.name', 'asc')
             ->defaultGroup(
                 Group::make('region.name')
-                ->getTitleFromRecordUsing(function($record)
-                {
-                    return 'Régió: '.Region::find ($record->region_id)->name;
-                })
-                ->titlePrefixedWithLabel(false)
-                ->collapsible(),
+                    ->getTitleFromRecordUsing(function ($record) {
+                        return 'Régió: ' . Region::find($record->region_id)->name;
+                    })
+                    ->titlePrefixedWithLabel(false)
+                    ->collapsible(),
             )
             ->columns([
                 TextColumn::make('name')
-                ->label('Helyszín')
-                ->description(function (Flightlocation $location) {
-                    $areatype_name = AreaType::find($location->area_type_id);
-                    return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name?->name . ' ' . $location->address_number .'.';
-                })
-                ->searchable(['name', 'zip_code','settlement']),
+                    ->label('Helyszín')
+                    ->description(function (Flightlocation $location) {
+                        $areatype_name = AreaType::find($location->area_type_id);
+                        return ($location->zip_code ? $location->zip_code . ' ' : '') .
+                        ($location->settlement ? $location->settlement . ', ' : '') .
+                        ($location->address ? $location->address . ' ' : '') .
+                        ($areatype_name?->name ? $areatype_name?->name . ' ' : '') .
+                        ($location->address_number ? $location->address_number . '.' : '');
+                    })
+                    ->searchable(['name', 'zip_code', 'settlement']),
                 TextColumn::make('coordinates')
-                ->label('Navigáció')
-                ->formatStateUsing(function ($state){
-                    list($latitude, $longitude) = explode(",", $state);
-                    return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$latitude.'</span></p>
-                        <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$longitude.'</span></p>';
-                })
-                ->html()
-                ->icon('tabler-compass'),
+                    ->label('Navigáció')
+                    ->formatStateUsing(function ($state) {
+                        list($latitude, $longitude) = explode(",", $state);
+                        return '<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">' . $latitude . '</span></p>
+                        <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">' . $longitude . '</span></p>';
+                    })
+                    ->html()
+                    ->icon('tabler-compass'),
                 TextColumn::make('online_map_link')
-                ->icon('tabler-map-route')
-                ->formatStateUsing(function($state)
-                {
-                    $wrapText='...';
-                    $count = 40;
-                    if(strlen($state)>$count){
-                        preg_match('/^.{0,' . $count . '}(?:.*?)\b/siu', $state, $matches);
-                        $text = $matches[0];
-                    }else{
-                        $wrapText = '';
-                    }
-                    return $text . $wrapText;
-                })
-                ->visibleFrom('md'),
+                    ->icon('tabler-map-route')
+                    ->formatStateUsing(function ($state) {
+                        $wrapText = '...';
+                        $count = 40;
+                        if (strlen($state) > $count) {
+                            preg_match('/^.{0,' . $count . '}(?:.*?)\b/siu', $state, $matches);
+                            $text = $matches[0];
+                        } else {
+                            $wrapText = '';
+                        }
+                        return $text . $wrapText;
+                    })
+                    ->visibleFrom('md'),
                 ImageColumn::make('image_path')
-                ->label('Kép')
-                ->square()
-                ->visibleFrom('md'),
+                    ->label('Kép')
+                    ->square()
+                    ->visibleFrom('md'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Action::make('redirect')
-                ->icon('tabler-arrow-loop-right')
-                ->hiddenLabel()
-                ->tooltip('Ide kattintva megtekintheti egy új ablakban a helyszínt a térképen.')
-                ->url(function($record){return $record->online_map_link;})
-                ->openUrlInNewTab()
-                ->visible(function($record)
-                {
-                    if (!empty($record->online_map_link))
-                    {
-                        return true;
-                    }
-                }),
+                    ->icon('tabler-arrow-loop-right')
+                    ->hiddenLabel()
+                    ->tooltip('Ide kattintva megtekintheti egy új ablakban a helyszínt a térképen.')
+                    ->url(function ($record) {
+                        return $record->online_map_link;
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(function ($record) {
+                        if (!empty($record->online_map_link)) {
+                            return true;
+                        }
+                    }),
             ])
-            ->bulkActions([
-
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
