@@ -111,7 +111,7 @@ class CouponResource extends Resource
                                         <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
                                     </svg></div><div style="float:left; position:relative;">'.$record->source.'</div>');
                                     }
-                                    
+
                                 }),
                                 Placeholder::make('adult')
                                 ->hiddenLabel()
@@ -168,7 +168,7 @@ class CouponResource extends Resource
                     ->schema([
                         Grid::make(12)
                         ->schema([
-                            
+
                             Fieldset::make()
                             ->label('Kuponok öszvonása')
                             ->schema([
@@ -180,7 +180,7 @@ class CouponResource extends Resource
                                     foreach ($coupons as $coupon) {
                                             $filteredcoupons[$coupon->id] = 'Kuponkód: '.$coupon->coupon_code.' -> (felnőtt: '.$coupon->adult.' fő, gyermek: '.$coupon->children.' fő)';
                                     }
-                                    return $filteredcoupons;
+                                    return $filteredcoupons ?? [];
                                 })
                                 ->preload(),
 
@@ -200,7 +200,7 @@ class CouponResource extends Resource
                                         }
                                     }),
                                 ]),
-                                
+
                             ])
                             ->columns([
                                 'sm' => 1,
@@ -232,7 +232,7 @@ class CouponResource extends Resource
                                 'xl' => 1,
                                 '2xl' => 1,
                             ]),
-                                                                
+
                         ]),
                     ])
                     ->columnSpan([
@@ -314,7 +314,7 @@ class CouponResource extends Resource
                                                                 if (empty($finding_match))
                                                                 {
                                                                     $response_coupon = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/orders/'.$checkable_coupon_code);
-                                                                    //Felőtt(3db->3f): 1567 
+                                                                    //Felőtt(3db->3f): 1567
                                                                     //Családi(1db->2f+2gy): 1508
                                                                     if ($response_coupon->successful())
                                                                     {
@@ -322,9 +322,9 @@ class CouponResource extends Resource
                                                                         dd($payment_status = ($coupons_data['status']));
                                                                         foreach($coupons_data['line_items'] as $coupon)
                                                                         {
-                                                                            $response_item_nums = $coupon['quantity']; 
+                                                                            $response_item_nums = $coupon['quantity'];
                                                                             $response_product_id = $coupon['product_id'];
-                                                                            
+
                                                                             $response_product_attributes = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/products/'.$response_product_id);
                                                                             if ($response_product_attributes->successful())
                                                                             {
@@ -332,7 +332,7 @@ class CouponResource extends Resource
                                                                                 $tickettype = ($product_attributes['attributes'][0]['options'][0])*1;
                                                                                 $adult = ($product_attributes['attributes'][1]['options'][0])*$response_item_nums;
                                                                                 $children = ($product_attributes['attributes'][2]['options'][0])*$response_item_nums;
-        
+
                                                                                 $new_coupon = Coupon::create([
                                                                                     'user_id' => Auth::id(),
                                                                                     'coupon_code' => $checkable_coupon_code,
@@ -342,9 +342,9 @@ class CouponResource extends Resource
                                                                                     'tickettype_id' => $tickettype,
                                                                                     'status' => CouponStatus::CanBeUsed,
                                                                                 ]);
-        
+
                                                                                 return redirect()->route('filament.admin.resources.coupons.edit', ['record' => $new_coupon]);
-        
+
                                                                             }
                                                                         }
                                                                     }
@@ -379,7 +379,7 @@ class CouponResource extends Resource
                                                                 'status' => CouponStatus::UnderProcess,
                                                                 ]);
                                                                 return redirect()->route('filament.admin.resources.coupons.edit', ['record' => $new_coupon]);
-                                                            }                                   
+                                                            }
                                                         })
                                                     ])
                                                     ->hidden(fn (GET $get, $operation): bool => ($get('source')!='Egyéb' || $operation=='edit')),
@@ -419,7 +419,7 @@ class CouponResource extends Resource
                                             ->minValue(1)
                                             ->minLength(1)
                                             ->maxLength(10)
-                                            ->suffix(' fő'),  
+                                            ->suffix(' fő'),
                                         TextInput::make('children')
                                             ->helperText('Adja meg a kuponhoz tartozó gyermek utasok számát.')
                                             ->label('Gyermek')
@@ -578,7 +578,7 @@ class CouponResource extends Resource
                                 'xl' => 3,
                                 '2xl' => 3,
                             ]),
-                            
+
                         ])->columns(5),
                     ])
                     ->columnSpan([
@@ -729,6 +729,6 @@ class CouponResource extends Resource
         /** @var class-string<Model> $modelClass */
         $modelClass = static::$model;
 
-        return (string) $modelClass::where('status', '1')->orwhere('status', '2')->count(); 
+        return (string) $modelClass::where('status', '1')->orwhere('status', '2')->count();
     }
 }
