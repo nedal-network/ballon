@@ -82,6 +82,8 @@ class Checkin extends Page
 
             // TODO Jelenleg csak a mainapra szűrünk,
             // azaz tudunk jelentkezni olyan eseményre ami ma van, de már pl. 1 órája végét ért.
+            // azaz tudunk jelentkezni olyan eseményre ami ma van, de már pl. 1 órája végét ért. --- nem lényeges maradhat
+            // jelenítsük meg vissza menőleg 2 hónapra a teljesített repüléseket.
             ->where('date', '>=', now()->format('Y-m-d'))  
         
             ->whereIn('status', [AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized])
