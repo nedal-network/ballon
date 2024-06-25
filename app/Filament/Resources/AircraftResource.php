@@ -51,7 +51,7 @@ class AircraftResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                            ->helperText('Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')
+                            ->helperText('Adj egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')
                             ->label('Megnevezés')
                             ->prefixIcon('tabler-writing-sign')
                             ->required()
@@ -59,14 +59,14 @@ class AircraftResource extends Resource
                             ->maxLength(255),
                         Textarea::make('description')
                             ->label('Leírás')
-                            ->helperText('Adjon egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
+                            ->helperText('Adj egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
                             ->rows(4)
                             ->cols(20),
                         Fieldset::make('Besorolás')
                             ->schema([
                                 ToggleButtons::make('type')
                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Válassza ki a légijármű típusát.')*/
-                                    ->helperText('Válassza ki a légijármű típusát.')
+                                    ->helperText('Válaszd ki a légijármű típusát.')
                                     ->label('Típus')
                                     ->inline()
                                     /*->grouped()*/
@@ -88,7 +88,7 @@ class AircraftResource extends Resource
                                     ->default(0),
                                 TextInput::make('registration_number')
                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                    ->helperText('Ide a légijármű lajstromjelét adja meg.')
+                                    ->helperText('Ide a légijármű lajstromjelét add meg.')
                                     ->label('Lajstrom-jel')
                                     ->prefixIcon('tabler-license')
                                     ->placeholder('HA-1234 vagy HA-ABCD')
@@ -115,7 +115,7 @@ class AircraftResource extends Resource
                         Fieldset::make('Terhelhetőség')
                         ->schema([
                             TextInput::make('number_of_person')
-                            ->helperText('Adja meg a MAXIMÁLISAN szállítható személyek számát.')
+                            ->helperText('Add meg a MAXIMÁLISAN szállítható személyek számát.')
                             ->label('Szállítható személyek száma')
                             ->prefixIcon('fluentui-people-team-24-o')
                             ->required()
@@ -126,7 +126,7 @@ class AircraftResource extends Resource
                             ->suffix(' fő'),
 
                             TextInput::make('payload_capacity')
-                            ->helperText('Adja meg a légijármű a pilótával együttes MAXIMÁLIS terhetőségét kg-ban.')
+                            ->helperText('Add meg a légijármű - a pilótával együttes - MAXIMÁLIS terhetőségét kg-ban.')
                             ->label('Terhetőség')
                             ->prefixIcon('tabler-weight')
                             ->required()
@@ -164,7 +164,7 @@ class AircraftResource extends Resource
                                     ->onColor('success')
                                     ->onIcon('tabler-check')
                                     ->offIcon('tabler-x')
-                                    ->helperText('Kapcsolja be amennyiben ez a légijármű VIP jegytípussal is használható.')
+                                    ->helperText('Kapcsold be amennyiben ez a légijármű VIP jegytípussal is használható.')
                                     ->label('VIP')
                                     ->default(0)
                                     ->live()
@@ -176,7 +176,7 @@ class AircraftResource extends Resource
                                     ->onColor('success')
                                     ->onIcon('tabler-check')
                                     ->offIcon('tabler-x')
-                                    ->helperText('Kapcsolja be amennyiben ez a légijármű PRIVÁT jegytípussal is használható.')
+                                    ->helperText('Kapcsold be amennyiben ez a légijármű PRIVÁT jegytípussal is használható.')
                                     ->label('Privát')
                                     ->default(0)
                                     ->live()

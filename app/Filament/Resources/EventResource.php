@@ -51,7 +51,7 @@ class EventResource extends Resource
                 Section::make() 
                 ->schema([
                     TextInput::make('name')
-                    ->helperText('Adja meg az esemény nevét. Érdemes olyat adni, amit később megkönnyíti az esemény keresését.')
+                    ->helperText('Add meg az esemény nevét. Érdemes olyat adni, amit később megkönnyíti az esemény keresését.')
                     ->label('Esemény neve')
                     ->prefixIcon('tabler-writing-sign')
                     ->required()
@@ -61,7 +61,7 @@ class EventResource extends Resource
                     ->rows(4)
                     ->cols(20)
                     ->autosize()
-                    ->helperText('Itt néhány sorban leírhatja ennek az eseménynek a jellemzőit.')
+                    ->helperText('Itt néhány sorban leírhatod ennek az eseménynek a jellemzőit.')
                     ->label('Leírás'),
                 ])
                 ->columnSpan([
@@ -77,7 +77,7 @@ class EventResource extends Resource
                     Fieldset::make('Esemény ideje')
                     ->schema([
                         DatePicker::make('start_date')
-                        ->helperText('Válassza ki az esemény kezdő dátumát.')
+                        ->helperText('Válaszd ki az esemény kezdő dátumát.')
                         ->label('Esemény kezdete')
                         ->prefixIcon('tabler-calendar')
                         ->weekStartsOnMonday()
@@ -85,7 +85,7 @@ class EventResource extends Resource
                         ->required()
                         ->native(false),
                         DatePicker::make('end_date')
-                        ->helperText('Válassza ki az esemény záró dátumát.')
+                        ->helperText('Válaszd ki az esemény záró dátumát.')
                         ->label('Esemény vége')
                         ->prefixIcon('tabler-calendar')
                         ->weekStartsOnMonday()
@@ -110,7 +110,7 @@ class EventResource extends Resource
                     ->onColor('success')
                     ->onIcon('tabler-check')
                     ->offIcon('tabler-x')
-                    ->helperText('Amennyiben ezt bekapcsolja, az esemény publikálásra kerül a naptárban.')
+                    ->helperText('Amennyiben ezt bekapcsolod, az esemény publikálásra kerül a naptárban.')
                     ->label('Publikálva')
                     ->default(0),
                 ])
@@ -155,7 +155,8 @@ class EventResource extends Resource
                 ->formatStateUsing(function($state, $record){
                     //dump($end_date = $record->end_date);
                     //$end_date = Carbon::parse($end_date)->translatedFormat('Y F d');
-                    return Carbon::parse($state)->translatedFormat('Y F d').' -> '.Carbon::parse($record->end_date)->translatedFormat('Y F d');
+                    //return Carbon::parse($state)->translatedFormat('Y F d').' -> '.Carbon::parse($record->end_date)->translatedFormat('Y F d');
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.').' -> '.Carbon::parse($record->end_date)->translatedFormat('Y.m.d.');
                 })
                 ->size('md')
                 ->sortable()

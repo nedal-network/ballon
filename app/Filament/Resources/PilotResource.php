@@ -40,19 +40,16 @@ class PilotResource extends Resource
                         ->schema([
                             Forms\Components\TextInput::make('lastname')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                /*->helperText('Adjon egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')*/
                                 ->label('Vezetéknév')
                                 ->placeholder('Gipsz')
                                 ->required(),
                             Forms\Components\TextInput::make('firstname')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
                                 ->label('Keresztnév')
                                 ->placeholder('Jakab')
                                 ->required(),
                             Forms\Components\TextInput::make('pilot_license_number')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
                                 ->label('Pilóta engedély azonosító')
                                 ->prefixIcon('tabler-id-badge-2')
                                 ->placeholder('PPL-SEP'),

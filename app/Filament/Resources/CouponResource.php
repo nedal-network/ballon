@@ -81,10 +81,36 @@ class CouponResource extends Resource
                                 Placeholder::make('coupon_code')
                                 ->hiddenLabel()
                                 ->content(function($record): HtmlString {
-                                    return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
-                                </svg>
-                                </svg></div><div style="float:left; position:relative;">'. $record->coupon_code.'</div>');
+                                    if (empty($record->auxiliary_coupon_code))
+                                    {
+                                        return new HtmlString('
+                                        <div id="coupon_inline">
+                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                            </svg>
+                                            </svg></div><div style="float:left; position:relative;">'. $record->coupon_code.'</div>
+                                        </div>
+                                        ');
+                                    }
+                                    if (!empty($record->auxiliary_coupon_code))
+                                    {
+                                        return new HtmlString('
+                                        <div id="coupon_inline">
+                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                            </svg>
+                                            </svg></div><div style="float:left; position:relative;">'. $record->coupon_code.'</div>
+                                            
+                                            <br>
+
+                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                            </svg>
+                                            </svg></div><div style="float:left; position:relative;">'. $record->auxiliary_coupon_code.'</div>
+
+                                        </div>
+                                        ');
+                                    }
                                 }),
                                 Placeholder::make('source')
                                 ->hiddenLabel()
@@ -143,7 +169,7 @@ class CouponResource extends Resource
                                     <path d="M4 11h16" />
                                     <path d="M11 15h1" />
                                     <path d="M12 15v3" />
-                                    </svg></div><div style="float:left; position:relative;">'. Carbon::parse($record->expiration_at)->translatedFormat('Y F d').'</div>');
+                                    </svg></div><div style="float:left; position:relative;">'. Carbon::parse($record->expiration_at)->translatedFormat('Y.m.d.').'</div>');
                                 }),
                             ])
                             ->columns([
@@ -256,11 +282,20 @@ class CouponResource extends Resource
                                         ->schema([
                                             TextInput::make('coupon_code')
                                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                                ->helperText('Adja meg a már korábban megkapott kuponkódját.')
-                                                ->label('Kuponkód')
+                                                ->helperText('Add meg a kupon azonosító 1-et.')
+                                                ->label('Kupon azonosító 1')
                                                 ->prefixIcon('iconoir-password-cursor')
                                                 ->placeholder('ABC-'. random_int(100000, 999999))
                                                 ->required()
+                                                ->minLength(3)
+                                                ->maxLength(255)
+                                                ->disabledOn('edit'),
+                                                TextInput::make('auxiliary_coupon_code')
+                                                /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
+                                                ->helperText('Add meg a kupon azonosító 2-őt.')
+                                                ->label('Kupon azonosító 2')
+                                                ->prefixIcon('iconoir-password-cursor')
+                                                ->placeholder('ABC-'. random_int(100000, 999999))
                                                 ->minLength(3)
                                                 ->maxLength(255)
                                                 ->disabledOn('edit'),
@@ -270,12 +305,30 @@ class CouponResource extends Resource
                                             'md' => 12,
                                             'lg' => 6,
                                             'xl' => 6,
-                                            '2xl' => 4,
+                                            '2xl' => 6,
                                         ]),
                                     Section::make()
                                         ->schema([
+                                            Select::make('source')
+                                            ->label('Kupon kibocsátója')
+                                            ->helperText('Válaszd ki honnan származik az adott kupon.')
+                                            ->options([
+                                                'Ballonozz' => 'Ballonozz.hu',
+                                                'Meglepkék' => 'Meglepkék',
+                                                'Élménypláza' => 'Élménypláza',
+                                                'ÉljAMának' => 'ÉljAMának',
+                                                'Aji kártya' => 'Aji kártya',
+                                                'Feldobox' => 'Feldobox',
+                                                'Egyéb' => 'Egyéb',
+                                            ])
+                                            ->required()
+                                            ->default('Ballonozz')
+                                            ->disabledOn('edit')
+                                            ->live()
+                                            ->native(false),
+                                            /*
                                             ToggleButtons::make('source')
-                                                ->helperText('Válassza ki honnan származik az adott kupon.')
+                                                ->helperText('Válaszd ki honnan származik az adott kupon.')
                                                 ->label('Válassza ki kuponjának forrását')
                                                 ->inline()
                                                 ->required()
@@ -297,6 +350,7 @@ class CouponResource extends Resource
                                                     'Ballonozz' => 'info',
                                                     'Egyéb' => 'info',
                                                 ]),
+                                                */
                                                 /*
                                                 Actions::make([Forms\Components\Actions\Action::make('Ellenőrzés')
                                                 ->action(
@@ -390,7 +444,7 @@ class CouponResource extends Resource
                                             'md' => 12,
                                             'lg' => 6,
                                             'xl' => 6,
-                                            '2xl' => 8,
+                                            '2xl' => 6,
                                         ]),
                                     ]),
 
@@ -409,19 +463,19 @@ class CouponResource extends Resource
                                 Fieldset::make('Utasok száma')
                                     ->schema([
                                         TextInput::make('adult')
-                                            ->helperText('Adja meg a kuponhoz tartozó felnőtt utasok számát.')
+                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                                             ->label('Felnőtt')
                                             ->prefixIcon('tabler-friends')
-                                            ->required()
+                                            //->required()
                                             ->disabledOn('edit')
                                             ->numeric()
                                             ->default(0)
-                                            ->minValue(1)
+                                            //->minValue(1)
                                             ->minLength(1)
                                             ->maxLength(10)
                                             ->suffix(' fő'),
                                         TextInput::make('children')
-                                            ->helperText('Adja meg a kuponhoz tartozó gyermek utasok számát.')
+                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                                             ->label('Gyermek')
                                             ->prefixIcon('tabler-horse-toy')
                                             ->disabledOn('edit')
@@ -442,7 +496,7 @@ class CouponResource extends Resource
                                     ->schema([
                                         DatePicker::make('expiration_at')
                                             ->label('Kupon lejárati dátum')
-                                            ->helperText('Adja meg a kuponján szereplő kupon lejárti dátumot.')
+                                            ->helperText('Add meg a kuponon szereplő lejárti dátumot.')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
                                             ->native(false)
@@ -470,7 +524,7 @@ class CouponResource extends Resource
                                             ->onColor('success')
                                             ->onIcon('tabler-check')
                                             ->offIcon('tabler-x')
-                                            ->helperText('Kapcsolja be amennyiben ez egy VIP kupon.')
+                                            ->helperText('Kapcsold be amennyiben ez egy VIP kupon.')
                                             ->label('VIP')
                                             ->disabledOn('edit')
                                             ->default(0),
@@ -479,7 +533,7 @@ class CouponResource extends Resource
                                             ->onColor('success')
                                             ->onIcon('tabler-check')
                                             ->offIcon('tabler-x')
-                                            ->helperText('Kapcsolja be amennyiben ez egy Privát kupon.')
+                                            ->helperText('Kapcsold be amennyiben ez egy Privát kupon.')
                                             ->label('Privát')
                                             ->disabledOn('edit')
                                             ->default(0),
@@ -567,8 +621,8 @@ class CouponResource extends Resource
                                 ->tel()
                                 ->label('Telefonszám')
                                 ->prefixIcon('tabler-device-mobile')
-                                ->placeholder('+36 __ ___ ____')
-                                ->mask('+36 99 999 9999')
+                                ->placeholder('+36_________')
+                                ->mask('+36999999999')
                                 ->maxLength(30)
                             ])
                             ->columns([
@@ -639,21 +693,32 @@ class CouponResource extends Resource
                 ->falseIcon('')
                 ->tooltip(fn($state, $record) => $state ? 'Összevonva az alábbi kupon(ok)al: '.implode(', ', $state->pluck('coupon_code')->toArray()):''),
                 TextColumn::make('coupon_code')
-                ->label('Kuponkód')
-                ->description(fn (Coupon $record): string => $record->source)
+                ->label('Kupon azonosító 1')
+                //->description(fn (Coupon $record): string => $record->source)
                 ->wrap()
                 ->color('Amber')
+                ->searchable(),
+                TextColumn::make('auxiliary_coupon_code')
+                ->label('Kupon azonosító 2')
+                ->wrap()
+                ->color('Amber')
+                ->searchable(),
+                TextColumn::make('tickettype.name')
+                ->label('Jegytípus')
+                ->searchable(),
+                TextColumn::make('source')
+                ->label('Kibocsátó')
                 ->searchable(),
                 TextColumn::make('adult')
                 ->label('Utasok')
                 ->formatStateUsing(function ($state, Coupon $payload) {
-                    return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span></p>
-                    <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span></p>';
+                    return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span> <span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span></p>';
                 })->html()
                 ->searchable()
                 ->visibleFrom('md'),
                 TextColumn::make('expiration_at')
                 ->label('Lejárat')
+                /*
                 ->formatStateUsing(function($state)
                 {
                     $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
@@ -662,6 +727,11 @@ class CouponResource extends Resource
                 ->description(function($state)
                 {
                     return Carbon::parse($state)->translatedFormat('Y F d');
+                })
+                */
+                ->formatStateUsing(function($state)
+                {
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
                 })
                 ->searchable(),
                 TextColumn::make('status')

@@ -13,9 +13,10 @@ use Tables\Columns\Text;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
 
 /* saját use-ok */
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
@@ -25,7 +26,6 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\Layout\Stack;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Forms\Components\Actions\Action;
 use App\Filament\Resources\LocationResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\LocationResource\RelationManagers;
@@ -51,7 +51,7 @@ class LocationResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                            ->helperText('Adjon egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')
+                            ->helperText('Adj egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')
                             ->label('Elnevezés')
                             ->prefixIcon('tabler-writing-sign')
                             ->placeholder('Békés Airport')
@@ -70,7 +70,7 @@ class LocationResource extends Resource
                     ->schema([
                         Select::make('region_id')
                             ->label('Régió')
-                            ->helperText('Válassza ki vagy a "+" gombra kattintva, hozzon létre egy új régiót, ahova tartozik az adott helyszín.')
+                            ->helperText('Válaszd ki vagy a "+" gombra kattintva, hozz létre egy új régiót, ahova tartozik az adott helyszín.')
                             ->prefixIcon('iconoir-strategy')
                             ->preload()
                             //->options(Region::all()->pluck('name', 'id'))
@@ -79,7 +79,7 @@ class LocationResource extends Resource
                             ->required()
                             ->searchable()
                             ->createOptionForm([
-                                TextInput::make('name')->label('Régió neve')->helperText('Adja meg az új régió nevét. Célszerű olyat választani ami a későbbiekben segítségére lehet a könnyebb azonosítás tekintetében.')
+                                TextInput::make('name')->label('Régió neve')->helperText('Add meg az új régió nevét. Célszerű olyat választani ami a későbbiekben segíthet a könnyebb azonosítás tekintetében.')
                                     ->required()->unique(),]),
                     ])->columnSpan([
                         'sm' => 6,
@@ -98,13 +98,13 @@ class LocationResource extends Resource
                         ->schema([
                             TextInput::make('zip_code')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                /*->helperText('Adjon egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')*/
+                                /*->helperText('Adj egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')*/
                                 ->label('Irányítószám')
                                 ->prefixIcon('tabler-mailbox')
                                 ->placeholder('5600'),
                             TextInput::make('settlement')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
+                                /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
                                 ->label('Település')
                                 ->prefixIcon('tabler-building-skyscraper')
                                 ->placeholder('Békéscsaba'),
@@ -120,7 +120,7 @@ class LocationResource extends Resource
                         ->schema([
                             TextInput::make('address')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
+                                /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
                                 ->label('Cím')
                                 ->prefixIcon('tabler-map-pin')
                                 ->placeholder('Repülőtér'),
@@ -132,7 +132,7 @@ class LocationResource extends Resource
                                 ->native(false),
                             TextInput::make('address_number')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
+                                /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
                                 ->label('Házszám')
                                 ->prefixIcon('tabler-number')
                                 ->numeric()
@@ -158,26 +158,40 @@ class LocationResource extends Resource
                         Fieldset::make('Helyszín')
                         ->schema([
                             TextInput::make('coordinates')
-                            ->helperText('Megadhatja a helyszín szélességi és hosszúsági koordinátáit.')
+                            ->helperText('Megadhatod a helyszín szélességi és hosszúsági koordinátáit.')
                             ->label('Koordináták')
                             ->prefixIcon('tabler-compass')
                             ->placeholder('47.6458345, 19.9761906'),
+                            
                             TextInput::make('online_map_link')
-                            ->helperText('Megadhat térkép linket a könnyebb útvonaltervezés céljából.')
+                            ->helperText('Megadhatod a helyszín, térkép linkjét a könnyebb útvonaltervezés céljából.')
                             ->label('Online térkép link')
                             ->prefixIcon('tabler-map-route')
-                            ->placeholder('https://www.google.com/maps/@47.6458345,19.9761906,19.5z?entry=ttu')
-                            ->live()
-                            ->suffixAction(
-                                Action::make('redirect')
-                                    ->icon('tabler-arrow-loop-right')
-                                    ->tooltip('Ide kattintva megnézhet egy új ablakban a behelyezett linket.')
-                                    ->url(function($state){return $state;})
-                                    ->openUrlInNewTab(),
-                            ),
+                            ->placeholder('https://www.google.com/maps?q=47.6458345,19.9761906')
+                            ->live(),
+                            
+                            Forms\Components\Actions::make([
+                                Forms\Components\Actions\Action::make('Megttekintés térképen')
+                                ->icon('tabler-arrow-loop-right')
+                                ->visible(function ($record) {
+                                    if (!empty($record->coordinates)) {
+                                        return true;
+                                    }
+                                })
+                                ->url(function ($record) {
+                                    return 'http://maps.google.com/maps?q='.$record->coordinates;
+                                })
+                                ->openUrlInNewTab()
+                                /*
+                                ->hidden(fn (GET $get, $operation): bool => ($operation=='create'))
+                                    ->action(function (Forms\Get $get, Forms\Set $set) {
+                                        $set('excerpt', str($get('content'))->words(45, end: ''));
+                                    })*/
+                            ]),
+
                             FileUpload::make('image_path')
                             ->label('Kép feltöltése')
-                            ->helperText('Feltölthet fényképet a helyszínről, hogy az könnyebben beazonosítható legyen.')
+                            ->helperText('Feltölthetsz fényképet a helyszínről, hogy az könnyebben beazonosítható legyen.')
                             ->directory('form-attachments')
                             ->image()
                             ->maxSize(10000),
@@ -203,13 +217,12 @@ class LocationResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Elnevezés')->searchable()
-                ->description(function ($state, Location $region) {
-                    $region_name = Region::find($region->region_id);
-                    return $region_name->name;
-                }),
                 TextColumn::make('region.name')
                 ->label('Régió'),
+
+                TextColumn::make('name')
+                ->label('Elnevezés')
+                ->searchable(),
                 
                 TextColumn::make('address')
                 ->label('Cím')
@@ -219,7 +232,12 @@ class LocationResource extends Resource
                 })->visibleFrom('md'),
                 
                 TextColumn::make('coordinates')
-                ->label('Navigáció')
+                ->label('Koordináták')
+                ->formatStateUsing(function ($state) {
+                    list($latitude, $longitude) = explode(",", $state);
+                    return '<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">' . $latitude . '</span>, <span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">' . $longitude . '</span></p>';
+                })
+                ->html()
                 ->icon('tabler-compass'),
                 TextColumn::make('online_map_link')
                 ->icon('tabler-map-route')
@@ -248,6 +266,20 @@ class LocationResource extends Resource
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
+                Action::make('coordinates')
+                    ->icon('tabler-arrow-loop-right')
+                    ->hiddenLabel()
+                    ->tooltip('Ide kattintva megtekintheti egy új ablakban a helyszínt a térképen.')
+                    ->url(function ($record) {
+                        //return 'https://www.google.com/maps/@'.$record->latitude.','.$record->longitude.','.$record->map_zoom.'z?entry=ttu';
+                        return 'http://maps.google.com/maps?q='.$record->coordinates;
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(function ($record) {
+                        if (!empty($record->coordinates)) {
+                            return true;
+                        }
+                    }),
                 Tables\Actions\DeleteAction::make()->label(false)->tooltip('Törlés'),
                 Tables\Actions\ForceDeleteAction::make()->label(false)->tooltip('Végleges törlés'),
                 Tables\Actions\RestoreAction::make()->label(false)->tooltip('Helyreállítás'),

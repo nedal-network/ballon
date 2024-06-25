@@ -24,9 +24,9 @@ class Checkin extends Page
     public $coupons;
     public $coupon_id;
     public $regions;
-    protected static ?string $title = 'Repüléseim';
-    protected ?string $heading = 'Repüléseid';
-    protected static ?string $navigationLabel = 'Repüléseim';
+    protected static ?string $title = 'Repülési időpontok';
+    protected ?string $heading = 'Repülési időpontok'; // Repülési időpontjaid
+    protected static ?string $navigationLabel = 'Repülési időpontok';
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static string $view = 'filament.pages.checkin';
     protected static ?int $navigationSort = 2;
@@ -34,7 +34,7 @@ class Checkin extends Page
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('redirect-to-coupon')->label('Nincs még kuponom, regisztrálok')
+            Action::make('redirect-to-coupon')->label('Kuponjaim')
                 ->color('info')
                 ->url(CouponResource::getUrl()),
         ];

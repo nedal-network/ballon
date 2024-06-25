@@ -53,8 +53,12 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
 
-                TextInput::make('phone')->label('Telefonszám')
-                    ->maxLength(255),
+                TextInput::make('phone')
+                ->tel()
+                ->label('Telefonszám')
+                ->placeholder('+36_________')
+                ->mask('+36999999999')
+                ->maxLength(30),
             
                 Group::make()->schema([
                     TextInput::make('password')->label('Jelszó')
@@ -100,18 +104,20 @@ class UserResource extends Resource
             ])
             ->columns([
                 TextColumn::make('name')->label('Név')
-                    ->searchable(),
+                ->searchable(),
                 TextColumn::make('email')
-                ->visibleFrom('md'),
+                ->searchable(),
+                TextColumn::make('phone')
+                ->searchable(),
                 TextColumn::make('created_at')
                 ->label('Regisztrált')
                 ->formatStateUsing(function ($state){
-                    return Carbon::parse($state)->translatedFormat('Y F d');
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
                 }),
                 TextColumn::make('last_login_at')
                 ->label('Utoljára itt')
                 ->formatStateUsing(function ($state){
-                    return Carbon::parse($state)->translatedFormat('Y F d');
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
                 })
                 ->description(function($state)
                 {
@@ -123,6 +129,7 @@ class UserResource extends Resource
                     }
                 }),
                 TextColumn::make('coupons')
+                /*
                 ->formatStateUsing(function($record)
                 {
                     $coupoAllNums = Coupon::where('user_id', $record->id)->get()->count();
@@ -138,6 +145,16 @@ class UserResource extends Resource
                     ';
                 })
                 ->html()
+                */
+                ->formatStateUsing(function($record)
+                {
+                    $couponStatusUnderProcess = Coupon::where('user_id', $record->id)->where('status', 0)->get()->count();
+                    $couponStatusCanBeUsed = Coupon::where('user_id', $record->id)->where('status', 1)->orwhere('status', 2)->get()->count();
+                    $couponStatusUsed = Coupon::where('user_id', $record->id)->where('status', 3)->get()->count();
+                    $couponStatusExpired = Coupon::where('user_id', $record->id)->where('status', 4)->get()->count();
+                    return $couponStatusUnderProcess.', '.$couponStatusCanBeUsed.', '.$couponStatusUsed.', '.$couponStatusExpired;
+                })
+                ->tooltip('Feldolgozás alatt, Felhasználható, Felhasznált, Lejárt')
                 ->label('Kuponok'),
                 TextColumn::make('roles.name')->label('Jogosultságok')
                     ->badge()

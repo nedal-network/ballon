@@ -16,10 +16,10 @@ class ListCoupons extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('redirect-to-chekin')->label('Repüléseim kiválasztása')
+            Actions\Action::make('redirect-to-chekin')->label('Repülés időpontok')
                 ->color('info')
                 ->url(Checkin::getUrl()),
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label('Új kupon megadása'),
             /*Actions\Action::make('edit')->url(route('posts.edit', ['post' => $this->post])),*/
         ];
     }

@@ -53,7 +53,7 @@ class TickettypeResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                            ->helperText('Adjon egy fantázianevet a jegytípusnak. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz.')
+                            ->helperText('Adj egy fantázianevet a jegytípusnak. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz.')
                             ->label('Megnevezés')
                             ->prefixIcon('tabler-writing-sign')
                             ->required()
@@ -64,7 +64,7 @@ class TickettypeResource extends Resource
                             ->rows(4)
                             ->cols(20)
                             ->autosize()
-                            ->helperText('Itt néhány sorban leírhatja ennek a jegytípusnak a jellemzőit.')
+                            ->helperText('Itt néhány sorban leírhatod ennek a jegytípusnak a jellemzőit.')
                             ->label('Leírás'),
                     ])->columnSpan([
                         'sm' => 6,
@@ -79,12 +79,12 @@ class TickettypeResource extends Resource
                             Fieldset::make('Jegytípus paraméterek')
                             ->schema([
                             ColorPicker::make('color')
-                                ->helperText('Válasszon egy egyedi színt a jegytípusnak, akönnyebb megkülömböztetés érdekében.')
+                                ->helperText('Válassz egy egyedi színt a jegytípusnak, a könnyebb megkülömböztetés érdekében.')
                                 ->label('Jegytípus színe')
                                 ->prefixIcon('tabler-color-swatch'),
 
                             ToggleButtons::make('aircrafttype')
-                                ->helperText('Válassza ki a légijármű típusát.')
+                                ->helperText('Válaszd ki a légijármű típusát.')
                                 ->label('Légijármű típusa')
                                 ->inline()
                                 /*->grouped()*/
@@ -127,7 +127,7 @@ class TickettypeResource extends Resource
                                 ->schema([
                                     Forms\Components\Select::make('aircrafts')
                                         ->label(false)
-                                        ->helperText('Itt rögzíthet több légijárművet az adott jegytípushoz.')
+                                        ->helperText('Itt rögzíthetsz több légijárművet az adott jegytípushoz.')
                                         ->multiple()
                                         ->relationship(titleAttribute: 'name')
                                         ->preload(),
@@ -156,7 +156,7 @@ class TickettypeResource extends Resource
                                     ->onColor('success')
                                     ->onIcon('tabler-check')
                                     ->offIcon('tabler-x')
-                                    ->helperText('Amennyiben ezt bekapcsolja, abban az esetben ez a jegytípus lesz az, amit alapértelmezettként használ későbbiekben a rendszer abba az esegtben, ha úgy vesz fel légijárművet, hogy annak nem ad meg jegytípust.')
+                                    ->helperText('Amennyiben ezt bekapcsolod, abban az esetben ez a jegytípus lesz az, amit alapértelmezettként használ későbbiekben a rendszer abba az esegtben, ha úgy veszel fel légijárművet, hogy annak nem adsz meg jegytípust.')
                                     ->label('Beállítás alapértelmezettként')
                                     //->disabled(fn (GET $get): bool => ($get('default')=='1'))
                                     ->default(0),
@@ -173,7 +173,7 @@ class TickettypeResource extends Resource
                             Forms\Components\Fieldset::make('Utasok száma')
                             ->schema([
                                 Forms\Components\TextInput::make('adult')
-                                ->helperText('Adja meg a jegytípushoz tartozó felnőtt utasok számát.')
+                                ->helperText('Add meg a jegytípushoz tartozó felnőtt utasok számát.')
                                 ->label('Felnőtt')
                                 ->prefixIcon('tabler-friends')
                                 ->required()
@@ -184,7 +184,7 @@ class TickettypeResource extends Resource
                                 ->suffix(' fő'),
 
                                 Forms\Components\TextInput::make('children')
-                                ->helperText('Adja meg a jegytípushoz tartozó gyermek utasok számát.')
+                                ->helperText('Add meg a jegytípushoz tartozó gyermek utasok számát.')
                                 ->label('Gyerek')
                                 ->prefixIcon('tabler-horse-toy')
                                 ->required()
@@ -203,7 +203,7 @@ class TickettypeResource extends Resource
                                 ->onColor('success')
                                 ->onIcon('tabler-check')
                                 ->offIcon('tabler-x')
-                                ->helperText('Kapcsolja be amennyiben ez egy VIP jegytípus.')
+                                ->helperText('Kapcsold be amennyiben ez egy VIP jegytípus.')
                                 ->label('VIP')
                                 ->default(0),
                             Forms\Components\Toggle::make('private')
@@ -211,7 +211,7 @@ class TickettypeResource extends Resource
                                 ->onColor('success')
                                 ->onIcon('tabler-check')
                                 ->offIcon('tabler-x')
-                                ->helperText('Kapcsolja be amennyiben ez egy Privát jegytípus.')
+                                ->helperText('Kapcsold be amennyiben ez egy Privát jegytípus.')
                                 ->label('Privát')
                                 ->default(0),
 
@@ -225,14 +225,14 @@ class TickettypeResource extends Resource
                             Forms\Components\Fieldset::make('Forrás beállítások')
                             ->schema([
                                 Forms\Components\TextInput::make('source')
-                                ->helperText('itt rögzítheti, hogy melyik szolgáltatótól érkezik az erre a jegyre vonatkozó hivatkozás. pl.: Meglepkék')
+                                ->helperText('itt rögzítheted, hogy melyik szolgáltatótól érkezik az erre a jegyre vonatkozó hivatkozás. pl.: Meglepkék')
                                 ->label('Forrás')
                                 ->prefixIcon('tabler-writing-sign')
                                 ->required()
                                 ->minLength(3)
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('name_stored_at_source')
-                                ->helperText('Rögzítse, hogy a forrásnál milyen néven szerepel az adott jegytípus.')
+                                ->helperText('Rögzítsd, hogy a forrásnál milyen néven szerepel az adott jegytípus.')
                                 ->label('Forrásnál tárol megnevezés')
                                 ->prefixIcon('tabler-writing-sign')
                                 ->required()
@@ -244,7 +244,7 @@ class TickettypeResource extends Resource
                                 ->schema([
                                     Forms\Components\Select::make('aircrafts')
                                         ->label(false)
-                                        ->helperText('Itt rögzíthet több légijárművet az adott jegytípushoz.')
+                                        ->helperText('Itt rögzíthetsz több légijárművet az adott jegytípushoz.')
                                         ->multiple()
                                         ->relationship(titleAttribute: 'name')
                                         ->preload(),

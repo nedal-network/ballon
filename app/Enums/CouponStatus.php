@@ -13,7 +13,7 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
     case Gift = 2; //ajándék
     case Used = 3; //felhasznált
     case Expired = 4; //lejárt
-    case Applicant = 5; //repülésre jelölt
+    case Applicant = 5; //jelentkezett
     
     public function getLabel(): string
     {
@@ -23,7 +23,7 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
             self::Gift => 'Ajándék',
             self::Used => 'Felhasznált',
             self::Expired => 'Lejárt',
-            self::Applicant => 'Jelölt',
+            self::Applicant => 'Jelentkezett',
         };
     }
 

@@ -50,15 +50,13 @@
 
     <div class="section">
         <div class="flex flex-wrap">
-            <h2 class="card accent font-bold"><span class="text-shadow">Van kuponod?</span></h2>
-            <h2 wire:click="login()" class="pl-2 pt-2 text-[#1e73be] transition duration-300 hover:text-[#333333] cursor-pointer">Jelentkezz be!</h2>
+            <h2 wire:click="login()" class="pl-2 pt-2 text-[#1e73be] transition duration-300 hover:text-[#333333] cursor-pointer">Bejelentkezés regisztrált felhasználóknak!</h2>
         </div>
     </div>
 
     <div class="section">
         <div class="flex flex-wrap">
-            <h2 class="card primary font-bold"><span class="text-shadow">Nincs fiókod?</span></h2>
-            <h2 class="pl-2 pt-2">Regisztrálj!</h2>
+            <h2 class="pl-2 pt-2">Regisztráció új felhasználóknak!</h2>
         </div>
         @livewire('registration')
     </div>

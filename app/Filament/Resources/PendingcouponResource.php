@@ -61,10 +61,17 @@ class PendingcouponResource extends Resource
                         Section::make()
                             ->schema([
                                 TextInput::make('coupon_code')
-                                    ->label('Kuponkód')
+                                    ->label('Kupon azonosító 1')
                                     ->prefixIcon('iconoir-password-cursor')
                                     ->placeholder('ABC-'. random_int(100000, 999999))
                                     ->required()
+                                    ->minLength(3)
+                                    ->maxLength(255)
+                                    ->disabledOn('edit'),
+                                    TextInput::make('auxiliary_coupon_code')
+                                    ->label('Kupon azonosító 2')
+                                    ->prefixIcon('iconoir-password-cursor')
+                                    //->placeholder('ABC-'. random_int(100000, 999999))
                                     ->minLength(3)
                                     ->maxLength(255)
                                     ->disabledOn('edit'),
@@ -91,22 +98,22 @@ class PendingcouponResource extends Resource
                                 Fieldset::make('Utasok száma')
                                     ->schema([
                                         TextInput::make('adult')
-                                            ->helperText('Adja meg a kuponhoz tartozó felnőtt utasok számát.')
+                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                                             ->label('Felnőtt')
                                             ->prefixIcon('tabler-friends')
-                                            ->required()
+                                            //->required()
                                             //->disabledOn('edit')
                                             ->numeric()
                                             ->default(0)
-                                            ->minValue(1)
+                                            //->minValue(1)
                                             ->minLength(1)
                                             ->maxLength(10)
                                             ->suffix(' fő'),  
                                         TextInput::make('children')
-                                            ->helperText('Adja meg a kuponhoz tartozó gyermek utasok számát.')
+                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                                             ->label('Gyermek')
                                             ->prefixIcon('tabler-horse-toy')
-                                            ->required()
+                                            //->required()
                                             //->disabledOn('edit')
                                             ->numeric()
                                             ->default(0)
@@ -129,7 +136,7 @@ class PendingcouponResource extends Resource
                                     Fieldset::make('Jóváhagyás')
                                         ->schema([
                                             Select::make('tickettype_id')
-                                                ->helperText('Válassza ki a kívánt jegytípust.')
+                                                ->helperText('Válaszd ki a kívánt jegytípust.')
                                                 ->label('Jegytípus')
                                                 ->prefixIcon('heroicon-o-ticket')
                                                 ->required()
@@ -144,8 +151,8 @@ class PendingcouponResource extends Resource
                                                 ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
                                             
                                             ToggleButtons::make('status')
-                                                ->helperText('Hagyja jóvá vagy utasítsa el ennek a kuponnak a felhasználást.')
-                                                ->label('Válassza ki kuponjának forrását')
+                                                ->helperText('Hagyd jóvá vagy utasítsd el ennek a kuponnak a felhasználást.')
+                                                ->label('Válaszd ki kupon státuszát')
                                                 ->inline()
                                                 ->required()
                                                 ->default('0')
@@ -172,7 +179,7 @@ class PendingcouponResource extends Resource
                                         ->schema([
                                             DatePicker::make('expiration_at')
                                                 ->label('Felhasználható')
-                                                ->helperText('Itt módosíthatja az adott kupon érvényességi idejét.')
+                                                ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                                                 ->prefixIcon('tabler-calendar')
                                                 ->weekStartsOnMonday()
                                                 ->native(false)
@@ -292,7 +299,7 @@ class PendingcouponResource extends Resource
                 ->visibleFrom('md'),
             TextColumn::make('created_at')
                 ->label('Rögzítve')
-                ->formatStateUsing(fn($state)=>Carbon::parse($state)->translatedFormat('Y F d'))
+                ->formatStateUsing(fn($state)=>Carbon::parse($state)->translatedFormat('Y.m.d.'))
                 ->wrap()
                 ->color('Amber')
                 ->searchable(),
@@ -300,12 +307,13 @@ class PendingcouponResource extends Resource
                 ->label('Lejárat')
                 ->formatStateUsing(function($state)
                 {
-                    $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-                    return abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
+                    
                 })
                 ->description(function($state)
                 {
-                    return Carbon::parse($state)->translatedFormat('Y F d');
+                    $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
+                    return abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
                 })
                 ->searchable()
                 ->color(function($state)
@@ -415,7 +423,7 @@ class PendingcouponResource extends Resource
                         Fieldset::make('Kiegészítő jegy részletei')
                         ->schema([
                             TextInput::make('adult')
-                            ->helperText('Adja meg a kuponhoz tartozó felnőtt utasok számát.')
+                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                             ->label('Felnőtt')
                             ->prefixIcon('tabler-friends')
                             ->required()
@@ -426,7 +434,7 @@ class PendingcouponResource extends Resource
                             ->maxLength(10)
                             ->suffix(' fő'),  
                             TextInput::make('children')
-                            ->helperText('Adja meg a kuponhoz tartozó gyermek utasok számát.')
+                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                             ->label('Gyermek')
                             ->prefixIcon('tabler-horse-toy')
                             ->required()
@@ -437,7 +445,7 @@ class PendingcouponResource extends Resource
                             ->maxLength(10)
                             ->suffix(' fő'),
                             TextInput::make('total_price')
-                            ->helperText('Adja meg a kiegészítő jegy árát.')
+                            ->helperText('Add meg a kiegészítő jegy árát.')
                             ->label('Helyszínen fizetendő')
                             ->prefixIcon('iconoir-hand-cash')
                             ->required()
@@ -491,7 +499,7 @@ class PendingcouponResource extends Resource
                         Fieldset::make('Ajándék jegy részletei')
                         ->schema([
                             TextInput::make('adult')
-                            ->helperText('Adja meg a kuponhoz tartozó felnőtt utasok számát.')
+                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                             ->label('Felnőtt')
                             ->prefixIcon('tabler-friends')
                             ->required()
@@ -503,7 +511,7 @@ class PendingcouponResource extends Resource
                             ->maxLength(10)
                             ->suffix(' fő'),  
                             TextInput::make('children')
-                            ->helperText('Adja meg a kuponhoz tartozó gyermek utasok számát.')
+                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                             ->label('Gyermek')
                             ->prefixIcon('tabler-horse-toy')
                             ->required()
@@ -514,7 +522,7 @@ class PendingcouponResource extends Resource
                             ->maxLength(10)
                             ->suffix(' fő'),
                             Select::make('tickettype_id')
-                            ->helperText('Válassza ki a kívánt jegytípust.')
+                            ->helperText('Válaszd ki a kívánt jegytípust.')
                             ->label('Jegytípus')
                             ->prefixIcon('heroicon-o-ticket')
                             ->required()
@@ -529,7 +537,7 @@ class PendingcouponResource extends Resource
                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
                             DatePicker::make('expiration_at')
                             ->label('Felhasználható')
-                            ->helperText('Itt módosíthatja az adott kupon érvényességi idejét.')
+                            ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                             ->prefixIcon('tabler-calendar')
                             ->weekStartsOnMonday()
                             ->native(false)

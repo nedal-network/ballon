@@ -65,7 +65,6 @@ class AircraftLocationPilotResource extends Resource
                         ->schema([
                             DatePicker::make('date')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                /*->helperText('Adjon egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')*/
                                 ->label('Dátum')
                                 ->prefixIcon('tabler-calendar')
                                 ->weekStartsOnMonday()
@@ -76,7 +75,6 @@ class AircraftLocationPilotResource extends Resource
 
                             TimePicker::make('time')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
                                 ->label('Időpont')
                                 ->prefixIcon('tabler-clock')
                                 //->placeholder(now())
@@ -116,7 +114,6 @@ class AircraftLocationPilotResource extends Resource
                             ->schema([
                                 Select::make('aircraft_id')
                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                    /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
                                     ->label('Légijármű')
                                     ->prefixIcon('tabler-ufo')
                                     ->options(Aircraft::all()->pluck('name', 'id'))
@@ -143,7 +140,6 @@ class AircraftLocationPilotResource extends Resource
                                     */
                                 Select::make('pilot_id')
                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                    /*->helperText('Ide a légijármű lajstromjelét adja meg.')*/
                                     ->label('Pilóta')
                                     ->prefixIcon('iconoir-user-square')
                                     ->options(Pilot::all()->pluck('fullname', 'id')) // <-ez egy modell szinten deklarált atribútum
@@ -171,7 +167,7 @@ class AircraftLocationPilotResource extends Resource
                             ->schema([
                                 ToggleButtons::make('status')
                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Válassza ki a légijármű típusát.')*/
-                                    ->helperText('A repülés terv státuszával megjelölheti az adott repülés állapotát.')
+                                    ->helperText('A repülés terv státuszával megjelölheted az adott repülés állapotát.')
                                     ->label('Repülési terv státusza')
                                     ->inline()
                                     /*->grouped()*/
@@ -233,7 +229,7 @@ class AircraftLocationPilotResource extends Resource
                         ->schema([
                             Textarea::make('public_description')
                                 ->label('')
-                                ->helperText('Adjon egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
+                                ->helperText('Adj egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
                                 ->rows(4)
                                 ->cols(20),
                             ])->columns(1),
@@ -251,7 +247,7 @@ class AircraftLocationPilotResource extends Resource
                             ->schema([
                                 Textarea::make('non_public_description')
                                     ->label('')
-                                    ->helperText('Adjon egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
+                                    ->helperText('Adj egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
                                     ->rows(4)
                                     ->cols(20),
                                 ])->columns(1),
@@ -274,8 +270,9 @@ class AircraftLocationPilotResource extends Resource
                 Group::make('date')
                     //->date()
                     ->getTitleFromRecordUsing(
-                        fn(AircraftLocationPilot $record): string => $record->date->format('Y-F-d')
+                        fn(AircraftLocationPilot $record): string => $record->date->format('Y.m.d.')
                     )
+                    
                     ->getTitleFromRecordUsing(function($record)
                     {
                         $day_name = date('D', strtotime($record->date));
@@ -286,8 +283,10 @@ class AircraftLocationPilotResource extends Resource
                         if ($day_name == 'Fri'){$day_name = 'péntek';}
                         if ($day_name == 'Sat'){$day_name = 'szombat';}
                         if ($day_name == 'Sun'){$day_name = 'vasárnap';}
-                        return Carbon::parse($record->date)->translatedFormat('Y F d').'. '.$day_name;
+                        //return Carbon::parse($record->date)->translatedFormat('Y F d').'. '.$day_name;
+                        return Carbon::parse($record->date)->translatedFormat('Y.m.d.');
                     })
+                    
                     ->orderQueryUsing(
                         fn(Builder $query, string $direction) => $query->orderBy('date', 'desc')
                     )
