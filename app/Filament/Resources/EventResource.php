@@ -82,16 +82,14 @@ class EventResource extends Resource
                         ->prefixIcon('tabler-calendar')
                         ->weekStartsOnMonday()
                         ->displayFormat('Y-m-d')
-                        ->required()
-                        ->native(false),
+                        ->required(),
                         DatePicker::make('end_date')
                         ->helperText('Válaszd ki az esemény záró dátumát.')
                         ->label('Esemény vége')
                         ->prefixIcon('tabler-calendar')
                         ->weekStartsOnMonday()
                         ->displayFormat('Y-m-d')
-                        ->required()
-                        ->native(false),
+                        ->required(),
                     ])->columns(1),
                 ])
                 ->columnSpan([

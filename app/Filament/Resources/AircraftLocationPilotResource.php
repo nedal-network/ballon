@@ -70,8 +70,7 @@ class AircraftLocationPilotResource extends Resource
                                 ->weekStartsOnMonday()
                                 //->placeholder(now())
                                 ->displayFormat('Y-m-d')
-                                ->required()
-                                ->native(false),
+                                ->required(),
 
                             TimePicker::make('time')
                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
@@ -79,8 +78,7 @@ class AircraftLocationPilotResource extends Resource
                                 ->prefixIcon('tabler-clock')
                                 //->placeholder(now())
                                 ->displayFormat('H:i:s')
-                                ->required()
-                                ->native(false),
+                                ->required(),
 
                             Select::make('period_of_time')
                                 ->label('Program tervezett időtartama')

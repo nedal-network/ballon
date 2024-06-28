@@ -182,7 +182,6 @@ class PendingcouponResource extends Resource
                                                 ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                                                 ->prefixIcon('tabler-calendar')
                                                 ->weekStartsOnMonday()
-                                                ->native(false)
                                                 ->format('Y-m-d')
                                                 ->displayFormat('Y-m-d')
                                                 ->default(now()),
@@ -375,8 +374,8 @@ class PendingcouponResource extends Resource
                 
                 Filter::make('created_at')
                     ->form([
-                        DatePicker::make('created_from')->label('Létrehozási dátumtól')->native(false)->format('Y-m-d')->displayFormat('Y-m-d'),
-                        DatePicker::make('created_until')->label('Létrehozási dátumig')->native(false)->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
+                        DatePicker::make('created_from')->label('Létrehozási dátumtól')->format('Y-m-d')->displayFormat('Y-m-d'),
+                        DatePicker::make('created_until')->label('Létrehozási dátumig')->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -540,7 +539,6 @@ class PendingcouponResource extends Resource
                             ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                             ->prefixIcon('tabler-calendar')
                             ->weekStartsOnMonday()
-                            ->native(false)
                             ->format('Y-m-d')
                             ->displayFormat('Y-m-d')
                             ->default(now()),

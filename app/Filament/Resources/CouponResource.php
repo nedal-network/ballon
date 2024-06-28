@@ -499,7 +499,6 @@ class CouponResource extends Resource
                                             ->helperText('Add meg a kuponon szereplő lejárti dátumot.')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
-                                            ->native(false)
                                             ->format('Y-m-d')
                                             ->displayFormat('Y-m-d')
                                             ->default(function (){
@@ -583,8 +582,7 @@ class CouponResource extends Resource
                                 ->label('Születési dátum')
                                 ->prefixIcon('tabler-calendar')
                                 ->weekStartsOnMonday()
-                                ->displayFormat('Y-m-d')
-                                ->native(false),
+                                ->displayFormat('Y-m-d'),
                                 TextInput::make('id_card_number')
                                 ->label('Igazolvány szám')
                                 ->prefixIcon('tabler-id')
