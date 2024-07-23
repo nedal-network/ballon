@@ -7,6 +7,7 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use App\Filament\Auth\Login;
+use App\Filament\Auth\Register;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use App\Filament\Pages\EditProfile;
@@ -30,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
+            ->registration(Register::class)
             ->userMenuItems([
                 'profile' => MenuItem::make()->url(fn (): string => EditProfile::getUrl()),
                 MenuItem::make()

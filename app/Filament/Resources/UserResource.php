@@ -108,6 +108,7 @@ class UserResource extends Resource
                 TextColumn::make('email')
                 ->searchable(),
                 TextColumn::make('phone')
+                ->label('Telefonszám')
                 ->searchable(),
                 TextColumn::make('created_at')
                 ->label('Regisztrált')
