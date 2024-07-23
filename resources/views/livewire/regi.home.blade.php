@@ -54,5 +54,15 @@
             <h2 wire:click="login()" class="pl-2 pt-2 text-[#1e73be] transition duration-300 hover:text-[#333333] cursor-pointer">Bejelentkezés és regisztráció!</h2>
         </div>
     </div>
+
+    <!--
+    <div class="section">
+        <div class="flex flex-wrap">
+            <h2 class="pl-2 pt-2">Regisztráció új felhasználóknak!</h2>
+        </div>
+        /*@livewire('registration')*/   
+    </div>
+    -->
+
     @endauth
 </div>
