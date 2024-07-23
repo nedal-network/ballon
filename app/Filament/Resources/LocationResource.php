@@ -124,6 +124,7 @@ class LocationResource extends Resource
                                 ->label('Cím')
                                 ->prefixIcon('tabler-map-pin')
                                 ->placeholder('Repülőtér'),
+                            /*
                             Select::make('area_type_id')
                                 ->label('Típus')
                                 ->prefixIcon('tabler-layout-list')
@@ -131,18 +132,17 @@ class LocationResource extends Resource
                                 ->searchable()
                                 ->native(false),
                             TextInput::make('address_number')
-                                /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
                                 ->label('Házszám')
                                 ->prefixIcon('tabler-number')
                                 ->numeric()
                                 ->placeholder('13'),
+                                */
                             ])->columns([
                                 'sm' => 1,
-                                'md' => 2,
-                                'lg' => 2,
-                                'xl' => 2,
-                                '2xl' => 3,
+                                'md' => 1,
+                                'lg' => 1,
+                                'xl' => 1,
+                                '2xl' => 1,
                                 ]),
 
                         ])->columnSpan([
@@ -228,7 +228,8 @@ class LocationResource extends Resource
                 ->label('Cím')
                 ->formatStateUsing(function ($state, Location $location) {
                     $areatype_name = AreaType::find($location->area_type_id);
-                    return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name->name . ' ' . $location->address_number .'.';
+                    //return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name->name . ' ' . $location->address_number .'.';
+                    return $location->zip_code . ' ' . $location->settlement . ', '. $location->address .'.';
                 })->visibleFrom('md'),
                 
                 TextColumn::make('coordinates')

@@ -31,10 +31,10 @@
                 <div class="grid grid-cols-2 my-4 ">
                     <h3 class="fi-header-heading text-sm tracking-tight text-gray-600 dark:text-white sm:text-sm my-4 col-span-full"><b>Légijármű leírása:</b><br>{{ $record->aircraft->description }}</h3>
                     <div>
-                        <h3 class="fi-header-heading text-sm tracking-tight text-gray-600 dark:text-white sm:text-sm"><b>Publikus megjegyzés:</b><br>{{ $record->aircraftlocationpilot?->public_description }}</h3>
+                        <h3 class="fi-header-heading text-sm tracking-tight text-gray-600 dark:text-white sm:text-sm"><b>Publikus megjegyzés:</b><br>{{ $record->public_description }}</h3>
                     </div>
                     <div>
-                        <h3 class="fi-header-heading text-sm tracking-tight text-gray-600 dark:text-white sm:text-sm"><b>NEM publikus megjegyzés:</b><br>{{ $record->aircraftlocationpilot?->non_public_description }}</h3>
+                        <h3 class="fi-header-heading text-sm tracking-tight text-gray-600 dark:text-white sm:text-sm"><b>NEM publikus megjegyzés:</b><br>{{ $record->non_public_description }}</h3>
                     </div>
                 </div>
             </div>

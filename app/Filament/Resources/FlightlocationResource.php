@@ -65,11 +65,16 @@ class FlightlocationResource extends Resource
                 ->label('Cím')
                 ->formatStateUsing(function (Flightlocation $location) {
                     $areatype_name = AreaType::find($location->area_type_id);
+                    /*
                     return ($location->zip_code ? $location->zip_code . ' ' : '') .
                     ($location->settlement ? $location->settlement . ', ' : '') .
                     ($location->address ? $location->address . ' ' : '') .
                     ($areatype_name?->name ? $areatype_name?->name . ' ' : '') .
                     ($location->address_number ? $location->address_number . '.' : '');
+                    */
+                    return ($location->zip_code ? $location->zip_code . ' ' : '') .
+                    ($location->settlement ? $location->settlement . ', ' : '') .
+                    ($location->address ? $location->address . ' ' : '');
                 })
                 ->searchable(['zip_code', 'settlement']),
 

@@ -90,6 +90,10 @@
                             <div class="@if($selected && $finalized && $checked) text-green-600 @elseif($finalized) text-zinc-400 @endif">@svg('tabler-flag-check')</div>
                         @endif
                     </div>
+
+                    <div class="flex justify-between" style="text-alaign: left;font-size:9pt;">
+                        <b>Info: </b>{{ $event->public_description }}
+                    </div>
                     
                     <div class="flex gap-2">
                         <div class="@if($selected && !$finalized || $finalized && $selected && $checked || !$selected && !$finalized) text-red-500 @else text-red-500/50 @endif"">
@@ -100,8 +104,13 @@
 
                     <div class="flex justify-between gap-2">
                         <div class="flex text-zinc-400 justify-self-center items-center">
-                            <x-heroicon-m-users class="w-5"/>
+                            <x-iconoir-user class="w-5"/>
                             <span class="ps-1 py-2 text-sm font-semibold">{{ $event->coupons->map(fn ($coupon) => $coupon->membersCount)->sum() }}</span>
+                        </div>
+                        <br>
+                        <div class="flex text-zinc-400 justify-self-center items-center">
+                            <x-iconoir-weight-alt class="w-5"/>
+                            <span class="ps-1 py-2 text-sm font-semibold">{{ $event->coupons->map(fn ($coupon) => $coupon->membersBodyWeight)->sum() }}kg</span>
                         </div>
                         <div>
                             @if($selected && $finalized && $checked) 
