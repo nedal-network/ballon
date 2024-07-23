@@ -89,6 +89,12 @@
                         @if ($finalized)
                             <div class="@if($selected && $finalized && $checked) text-green-600 @elseif($finalized) text-zinc-400 @endif">@svg('tabler-flag-check')</div>
                         @endif
+
+                        @if($selected && $finalized && $checked) 
+                                <div class="text-green-600 dark:text-green-400/80 font-semibold p-1.5">Résztveszek</div>
+                        @elseif($finalized)
+                                <div class="text-zinc-400 font-semibold p-1.5">Lezárva</div>
+                        @endif
                     </div>
 
                     <div class="flex justify-between" style="text-alaign: left;font-size:9pt;">
@@ -113,14 +119,9 @@
                             <span class="ps-1 py-2 text-sm font-semibold">{{ $event->coupons->map(fn ($coupon) => $coupon->membersBodyWeight)->sum() }}kg</span>
                         </div>
                         <div>
-                            @if($selected && $finalized && $checked) 
-                                <div class="text-green-600 dark:text-green-400/80 font-semibold p-1.5">Résztveszek</div>
-                            @elseif($finalized)
-                                <div class="text-zinc-400 font-semibold p-1.5">Lezárva</div>
-                            @endif
-                            
+                        
                             @if(!$selected && !$this->coupon->is_used)
-                                <x-filament::button wire:click="checkIn({{ $event->id }})">Beszállok</x-filament::button>
+                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-blue-600 hover:!bg-blue-700" >Beszállok</x-filament::button>
                             @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked)
                                 <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
                             @elseif($checked)

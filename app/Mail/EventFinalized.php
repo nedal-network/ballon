@@ -40,6 +40,7 @@ class EventFinalized extends Mailable
      */
     public function content(): Content
     {
+        //dd($this->event);
         return new Content(
             markdown: 'mail.event-finalized',
         );
