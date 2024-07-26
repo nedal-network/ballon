@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
                         ->icon('tabler-alert-triangle')
                         ->persistent()
                         ->actions(function () {
-                            if (str_contains($_SERVER['APP_URL'] . $_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
+                            if (str_contains(env('APP_URL') . $_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
                                 return [];
                             }
                             
