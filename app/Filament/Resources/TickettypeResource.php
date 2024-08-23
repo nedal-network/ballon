@@ -273,7 +273,13 @@ class TickettypeResource extends Resource
 
             TextColumn::make('name')
                 ->label('Megnevezés')
-                ->description(fn (Tickettype $record): string => $record->description)
+                //->description(fn (Tickettype $record): string => $record->description)
+                ->wrap()
+                ->searchable(),
+            
+            TextColumn::make('description')
+                ->label('Megjegyzés')
+                //->description(fn (Tickettype $record): string => $record->description)
                 ->wrap()
                 ->searchable(),
 
