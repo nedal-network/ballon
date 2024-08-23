@@ -306,7 +306,7 @@ class AircraftLocationPilotResource extends Resource
                     ->size('md'),
                 
                 TextColumn::make('date')
-                    ->icon('tabler-plane-departure')
+                    //->icon('tabler-plane-departure')
                     ->label('Időpont')
                     ->formatStateUsing(function($state, AircraftLocationPilot $fulldate)
                     {
@@ -327,7 +327,8 @@ class AircraftLocationPilotResource extends Resource
                         $minute_source = date('i', $timesource);
                         //return $carbondate.'. '.$day_name;
                         //return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$carbondate.'. '.$day_name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p><p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span> '.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>';
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span> '.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>';
+                        //return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span> '.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>';
+                        return$hour_source.':'.$minute_source;
                     })->html()
                     ->searchable(),
                 /* 
@@ -343,8 +344,8 @@ class AircraftLocationPilotResource extends Resource
                     }),
                 */
                 TextColumn::make('region_id')
-                    ->icon('iconoir-strategy')
-                    ->label('Régió és Helyszín')
+                    //->icon('iconoir-strategy')
+                    ->label('Régió')
                     ->formatStateUsing(function($state, AircraftLocationPilot $fulldate)
                     {
                         /*
@@ -359,8 +360,11 @@ class AircraftLocationPilotResource extends Resource
                         <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$region_name->name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p>
                         <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$location_name?->name.'</span></p>';
                         */
+                        /*
                         return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$region_name->name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p>
                         <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$location_name?->name.'</span></p>';
+                        */
+                        return $region_name->name;
                     })->html()
                     /*
                     ->formatStateUsing(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
@@ -377,8 +381,14 @@ class AircraftLocationPilotResource extends Resource
                     })
                     */
                     ->searchable(),
+                TextColumn::make('location_id')
+                ->label('Helyszín')
+                ->formatStateUsing(function ($state){
+                    $location_name = Location::find($state);
+                    return $location_name->name;
+                }),
                 TextColumn::make('aircraft_id')
-                    ->icon('iconoir-airplane-rotation')
+                    //->icon('iconoir-airplane-rotation')
                     ->label('Légijármű')
                     ->searchable()
                     ->formatStateUsing(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
@@ -390,8 +400,11 @@ class AircraftLocationPilotResource extends Resource
                         <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$aircraft->name.' </span></p>
                         <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$pilot?->lastname.' '.$pilot?->firstname.'</span></p>';
                         */
+                        /*
                         return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$aircraft->registration_number.' </span></p>
                         <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$aircraft->name.'</span></p>';
+                        */
+                        return '('.$aircraft->registration_number.') '.$aircraft->name;
                     })->html()
                     ->visibleFrom('md'),
                     /*
@@ -400,9 +413,8 @@ class AircraftLocationPilotResource extends Resource
                         return $aircraft->name;
                     })
                     */
-                   
                 TextColumn::make('pilot.fullname')
-                    ->icon('iconoir-user-square')
+                    //->icon('iconoir-user-square')
                     ->label('Pilóta')
                     ->searchable(),
                 
