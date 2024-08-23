@@ -241,13 +241,16 @@ class PendingcouponResource extends Resource
         ->columns([
             TextColumn::make('coupon_code')
                 ->label('Kuponkód')
-                ->description(fn (Pendingcoupon $record): string => $record->source)
+                //->description(fn (Pendingcoupon $record): string => $record->source)
                 ->wrap()
                 ->color('Amber')
                 ->searchable(['coupon_code','source']),
             TextColumn::make('user.name')
                 ->label('Kapcsolattartó')
-                ->description(fn ($record): string => $record->user->email)
+                //->description(fn ($record): string => $record->user->email)
+                ->formatStateUsing(function($record){
+                    return $record->user->name.' ('.$record->user->email.')';
+                })
                 ->wrap()
                 ->color('Amber')
                 ->searchable(),
@@ -306,14 +309,18 @@ class PendingcouponResource extends Resource
                 ->label('Lejárat')
                 ->formatStateUsing(function($state)
                 {
-                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
+                    //return Carbon::parse($state)->translatedFormat('Y.m.d.');
+
+                    $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
+                    return Carbon::parse($state)->translatedFormat('Y.m.d.').', '.abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
                     
                 })
-                ->description(function($state)
+                
+                /*->description(function($state)
                 {
                     $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
                     return abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
-                })
+                })*/
                 ->searchable()
                 ->color(function($state)
                 {
