@@ -222,16 +222,16 @@ class AircraftResource extends Resource
     {
         return $table
             ->columns([
-                /*
+                
                 TextColumn::make('registration_number')
                     ->label('Lajtsrom-jel')
-                    ->description(fn (Aircraft $record): string => $record->name)
+                    //->description(fn (Aircraft $record): string => $record->name)
                     ->searchable(['registration_number','name'])
                     ->visibleFrom('md'),
-                */
+                
                 TextColumn::make('name')
                     ->label('Megnevezés')
-                    ->description(fn (Aircraft $record): string => $record->registration_number)
+                    //->description(fn (Aircraft $record): string => $record->registration_number)
                     ->searchable(['name','registration_number']),
                 TextColumn::make('type')
                     ->label('Típus')
