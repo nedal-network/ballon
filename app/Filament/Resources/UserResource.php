@@ -118,17 +118,15 @@ class UserResource extends Resource
                 TextColumn::make('last_login_at')
                 ->label('Utoljára itt')
                 ->formatStateUsing(function ($state){
-                    return Carbon::parse($state)->translatedFormat('Y.m.d.');
-                })
-                ->description(function($state)
-                {
+                    $last_date = Carbon::parse($state)->translatedFormat('Y.m.d.');
                     $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-                    if ($diff_day_nums == 0){return 'mai napon';}
+                    if ($diff_day_nums == 0){return $last_date.', mai napon';}
                     if ($diff_day_nums != 0)
                     {
-                        return abs($diff_day_nums).($diff_day_nums < 0 ? : ' napja');
+                        return $last_date.', '.abs($diff_day_nums).($diff_day_nums < 0 ? : ' napja');
                     }
                 }),
+                
                 TextColumn::make('coupons')
                 /*
                 ->formatStateUsing(function($record)
