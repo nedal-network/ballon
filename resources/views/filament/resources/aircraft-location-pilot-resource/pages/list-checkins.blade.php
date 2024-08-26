@@ -9,7 +9,7 @@
                         $record->region?->name   && $subHeading[] = $record->region->name;
                         $record->location?->name && $subHeading[] = $record->location->name;
                     @endphp
-                    <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">{{ Carbon\Carbon::parse($record->date . ' ' . $record->time)->translatedFormat('Y F d. H:i') }}</h1>
+                    <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">{{ Carbon\Carbon::parse($record->date . ' ' . $record->time)->translatedFormat('Y.m.d., H:i') }}</h1>
                     <h2 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-2xl">{{ implode(', ', $subHeading) }}</h2>
                     
                     
@@ -78,7 +78,7 @@
                 </label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->coupon_code }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->name }}</span></label>
-                <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->pivot->created_at)->translatedFormat('Y F d. H:i') }}</span></label>
+                <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->pivot->created_at)->translatedFormat('Y.m.d., H:i') }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->tickettype->name }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '>=', now())->count() }}/{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '<', now())->count() }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->membersCount }}</span></label>
