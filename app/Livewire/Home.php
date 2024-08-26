@@ -8,7 +8,7 @@ class Home extends Component
 {
     public function login()
     {
-        return redirect()->route('filament.admin.auth.login');
+        return redirect('https://utasfoglalo.hu');
     }
 
     public function render()
