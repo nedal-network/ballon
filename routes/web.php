@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Http;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::domain('ballonozz')->group(function () {
+Route::domain('ballonozz.utasfoglalo')->group(function () {
     Route::get('/', Home::class)->name('home');
 });
 
