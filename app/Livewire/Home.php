@@ -8,7 +8,7 @@ class Home extends Component
 {
     public function login()
     {
-        return redirect('https://utasfoglalo.hu');
+        return redirect('https://utasfoglalo.hu/user');
     }
 
     public function render()
