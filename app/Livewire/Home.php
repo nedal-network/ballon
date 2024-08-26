@@ -8,6 +8,7 @@ class Home extends Component
 {
     public function login()
     {
+        // TODO .env 'https://utasfoglalo.hu/' . 'user'
         return redirect('https://utasfoglalo.hu/user');
     }
 
