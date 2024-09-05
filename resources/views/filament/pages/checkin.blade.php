@@ -125,7 +125,7 @@
                             @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked)
                                 <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
                             @elseif($checked)
-                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})" disabled>Kiszállok</x-filament::button>
+                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkOut({{ $event->id }})" disabled>Kiszállok</x-filament::button>
                             @else
                                 <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
                             @endif
