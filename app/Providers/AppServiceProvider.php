@@ -83,9 +83,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerNavigationItems([
                 NavigationItem::make('go_home')
                     ->label('Vissza a kezdőlapra')
-                    //->url('/', shouldOpenInNewTab: true)
-                    //->url('/')
-                    ->url('https://ballonozz.utasfoglalo.hu')
+                    ->url('/')
                     ->icon('iconoir-hot-air-balloon')
                     ->activeIcon('iconoir-hot-air-balloon')
                     ->sort(1),

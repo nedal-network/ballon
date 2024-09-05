@@ -24,18 +24,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $host = request()->server('HTTP_HOST');
-        $requestUri = request()->getRequestUri();
-
-        if ($host === 'utasfoglalo' && $requestUri === '/') { // TODO .env utasfoglalo
-            // TODO utasfoglalo landing page?
-            abort(404);
-        }
-
-        if (str_contains($host, '.utasfoglalo') && $requestUri !== '/') { // TODO .env utasfoglalo
-            abort(404);
-        }
-
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });

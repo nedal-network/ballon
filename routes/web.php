@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Http;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', Home::class)->name('home');
+Route::domain('ballonozz.'.config('app.domain'))->group(function () {
+    Route::get('/', Home::class)->name('ballonozz.home');
+});
+Route::view('/', 'welcome');
 
 Route::get('/test', function(){
     //dump(env('AIRCRAFT_PASSENGER_LIMIT', 30));

@@ -8,8 +8,7 @@ class Home extends Component
 {
     public function login()
     {
-        // TODO .env 'https://utasfoglalo.hu/' . 'user'
-        return redirect('https://utasfoglalo.hu/user');
+        return redirect()->route('filament.admin.pages.dashboard');
     }
 
     public function render()

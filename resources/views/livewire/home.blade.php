@@ -42,10 +42,7 @@
     -->
     <div class="grid z-10">
         <div class="grid md:grid-cols-2 w-full justify-items-center gap-5 relative min-h-10 md:order-6">
-            @php
-                // TODO .env 'https://utasfoglalo.hu/' . 'user'
-            @endphp
-            <button onclick="location.href='https://utasfoglalo.hu/user'" type="button" class="btn primary hover:bg-custom-secondary transition duration-300 absolute left-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%]"><span class="text-shadow text-lg">Vissza a kuponjaimhoz!</span></button>
+            <a href="{{ App\Filament\Resources\CouponResource::getUrl() }}" class="btn primary hover:bg-custom-secondary transition duration-300 absolute left-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%]"><span class="text-shadow text-lg">Vissza a kuponjaimhoz!</span></a>
         </div>
     </div>
 
@@ -53,7 +50,6 @@
 
     <div class="section">
         <div class="flex flex-wrap">
-            <!--<h2 wire:click="login()" class="pl-2 pt-2 text-[#1e73be] transition duration-300 hover:text-[#333333] cursor-pointer">Bejelentkezés regisztrált felhasználóknak!</h2>-->
             <h2 wire:click="login()" class="pl-2 pt-2 text-[#1e73be] transition duration-300 hover:text-[#333333] cursor-pointer">Bejelentkezés és regisztráció!</h2>
         </div>
     </div>
