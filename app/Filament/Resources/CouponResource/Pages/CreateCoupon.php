@@ -142,7 +142,7 @@ class CreateCoupon extends CreateRecord
             }
         }
 
-        if ($checking_the_existence_of_a_coupon == 0 && $data['source'] == 'Egyéb')
+        if ($checking_the_existence_of_a_coupon == 0 && !in_array($this->data['source'],['Ballonozz']))
         {
             $data['tickettype_id'] = NULL;
             $data['status'] = CouponStatus::UnderProcess;

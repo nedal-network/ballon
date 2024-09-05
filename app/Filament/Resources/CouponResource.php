@@ -100,7 +100,7 @@ class CouponResource extends Resource
                                         <path d="M13.4 23H10.6C10.2686 23 10 22.7314 10 22.4V20.6C10 20.2686 10.2686 20 10.6 20H13.4C13.7314 20 14 20.2686 14 20.6V22.4C14 22.7314 13.7314 23 13.4 23Z" stroke="currentColor" stroke-linecap="round"/>
                                         </svg></div><div style="float:left; position:relative;">'.$record->source.'.hu</div>');
                                                         }
-                                                        if ($record->source == 'Egyéb') {
+                                                        if ($record->source != 'Ballonozz') {
                                                             return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 16v.01" />
                                         <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
