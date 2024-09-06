@@ -445,7 +445,7 @@ class CouponResource extends Resource
                     ->visible(fn (GET $get, $operation, $record) => $operation == 'edit' && ($record->membersCount > 0))
                     ->schema([
                         Section::make()
-                            ->extraAttributes(fn($record) => $record->missing_data ? ['style' => 'border: 1px solid #ff0000;'] : [])
+                            ->extraAttributes(fn ($record) => $record->missing_data ? ['style' => 'border: 1px solid #ff0000;'] : [])
                             ->schema([
                                 Repeater::make('passengers')
                                     ->addActionLabel('Új utas felvétele')

@@ -55,20 +55,20 @@ class PilotResource extends Resource
                                             ->prefixIcon('tabler-id-badge-2')
                                             ->placeholder('PPL-SEP'),
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 3,
-                                    '2xl' => 3,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 3,
+                                        '2xl' => 3,
+                                    ]),
 
                             ])->columnSpan([
-                            'sm' => 4,
-                            'md' => 4,
-                            'lg' => 4,
-                            'xl' => 3,
-                            '2xl' => 3,
-                        ]),
+                                'sm' => 4,
+                                'md' => 4,
+                                'lg' => 4,
+                                'xl' => 3,
+                                '2xl' => 3,
+                            ]),
                     ]),
             ]);
     }

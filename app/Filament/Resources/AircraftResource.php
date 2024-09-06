@@ -101,12 +101,12 @@ class AircraftResource extends Resource
                                         '2xl' => 2,
                                     ]),
                             ])->columnSpan([
-                            'sm' => 4,
-                            'md' => 4,
-                            'lg' => 4,
-                            'xl' => 2,
-                            '2xl' => 2,
-                        ]),
+                                'sm' => 4,
+                                'md' => 4,
+                                'lg' => 4,
+                                'xl' => 2,
+                                '2xl' => 2,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -136,12 +136,12 @@ class AircraftResource extends Resource
                                             ->suffix(' kg'),
 
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 2,
-                                    '2xl' => 2,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 2,
+                                        '2xl' => 2,
+                                    ]),
                                 /*
                         Fieldset::make('Extra beállítások')
                             ->schema([
@@ -198,20 +198,20 @@ class AircraftResource extends Resource
                                             ->multiple()
                                             ->preload(),
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 2,
-                                    '2xl' => 2,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 2,
+                                        '2xl' => 2,
+                                    ]),
 
                             ])->columnSpan([
-                            'sm' => 4,
-                            'md' => 4,
-                            'lg' => 4,
-                            'xl' => 2,
-                            '2xl' => 2,
-                        ]),
+                                'sm' => 4,
+                                'md' => 4,
+                                'lg' => 4,
+                                'xl' => 2,
+                                '2xl' => 2,
+                            ]),
                     ]),
             ]);
     }

@@ -122,11 +122,11 @@ class Coupon extends Model
 
                 $isParent = $this->parent_id === null;
 
-                if ($this->status == CouponStatus::Applicant) { // Ha már jelentkezett láthassa a kuponját
+                if ($this->status == CouponStatus::Applicant) { // Ha már beválogatták láthassa a kuponját
                     return true;
                 }
 
-                if (!$this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift, CouponStatus::Applicant]) && $isParent && $this->isValid) {
+                if (!$this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
                     return true;
                 }
 
@@ -138,7 +138,7 @@ class Coupon extends Model
     protected function missingData(): Attribute
     {
         return Attribute::make(
-            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift]) && ! $this->isValid,
+            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed]) && ! $this->isValid,
         );
     }
 

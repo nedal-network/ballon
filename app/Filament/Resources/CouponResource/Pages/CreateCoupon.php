@@ -140,7 +140,7 @@ class CreateCoupon extends CreateRecord
                             $payment_total_price = $coupons_data['voucher_price'];
                             $coupon_expiration_date = substr($coupons_data['voucher_end_date'], 0, 10);
 
-                            $members = array_map(fn($item) => intval(trim($item)), explode('+',str_replace(['részére', 'felnőtt', 'gyerek'],'',$coupons_data['product_options'][0]['selected'])));
+                            $members = array_map(fn ($item) => intval(trim($item)), explode('+', str_replace(['részére', 'felnőtt', 'gyerek'], '', $coupons_data['product_options'][0]['selected'])));
 
                             $data['tickettype_id'] = 2; //Normál repülés
                             $data['adult'] = $members[0];
