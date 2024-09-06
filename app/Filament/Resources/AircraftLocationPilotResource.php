@@ -110,7 +110,9 @@ class AircraftLocationPilotResource extends Resource
                                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
                                             ->label('Légijármű')
                                             ->prefixIcon('tabler-ufo')
-                                            ->options(Aircraft::all()->pluck('name', 'id'))
+                                            ->relationship('aircraft', 'name')
+                                            ->getOptionLabelFromRecordUsing(fn ($record) => "($record->registration_number) $record->name")
+                                            ->preload()
                                             ->native(false)
                                             ->required()
                                             ->searchable(),

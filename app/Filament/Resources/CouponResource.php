@@ -308,20 +308,48 @@ class CouponResource extends Resource
                                             ->schema([
                                                 TextInput::make('coupon_code')
                                                     /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                                    ->helperText('Add meg a kupon azonosító 1-et.')
+                                                    ->helperText(function (GET $get) {
+                                                        switch ($get('source')) {
+                                                            case 'Ballonozz':
+                                                                return 'Megrendelési azonosító (#1234) csak szám része (1234)';
+                                                            case 'Meglepkék':
+                                                                return '7 jegyű kupon kód (AB12345)';
+                                                            case 'Élménypláza':
+                                                                return 'Voucher kód (123456)';
+                                                            case 'ÉljAMának':
+                                                                return '3x5 jegyű azonosító (12345-12345-12345)';
+                                                            case 'Aji kártya':
+                                                            case 'Feldobox':
+                                                                return '10 jegyű azonosító (0123456789)';
+                                                            default:
+                                                                return '';
+                                                        }
+                                                    })
                                                     ->label('Kupon azonosító 1')
                                                     ->prefixIcon('iconoir-password-cursor')
-                                                    ->placeholder('ABC-'.random_int(100000, 999999))
                                                     ->required()
                                                     ->minLength(3)
                                                     ->maxLength(255)
                                                     ->disabledOn('edit'),
                                                 TextInput::make('auxiliary_coupon_code')
                                                 /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                                    ->helperText('Add meg a kupon azonosító 2-őt.')
+                                                    ->helperText(function (GET $get) {
+                                                        switch ($get('source')) {
+                                                            case 'Ballonozz':
+                                                            case 'Meglepkék':
+                                                            case 'ÉljAMának':
+                                                            case 'Feldobox':
+                                                                return 'Hagyd üresen';
+                                                            case 'Élménypláza':
+                                                                return 'Voucher biztonsági kód (123456)';
+                                                            case 'Aji kártya':
+                                                                return '4 jegyű pin kód';
+                                                            default:
+                                                                return '';
+                                                        }
+                                                    })
                                                     ->label('Kupon azonosító 2')
                                                     ->prefixIcon('iconoir-password-cursor')
-                                                    ->placeholder('ABC-'.random_int(100000, 999999))
                                                     ->minLength(3)
                                                     ->maxLength(255)
                                                     ->disabledOn('edit'),
@@ -515,7 +543,7 @@ class CouponResource extends Resource
                                                     ->label('Telefonszám')
                                                     ->prefixIcon('tabler-device-mobile')
                                                     ->placeholder('+36_________')
-                                                    ->mask('+36999999999')
+                                                    ->mask('+99999999999')
                                                     ->maxLength(30),
                                             ])
                                             ->columns([
