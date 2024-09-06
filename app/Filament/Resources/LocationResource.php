@@ -57,12 +57,12 @@ class LocationResource extends Resource
                                     ->minLength(3)
                                     ->maxLength(255),
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 6,
-                            'xl' => 6,
-                            '2xl' => 4,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 6,
+                                'xl' => 6,
+                                '2xl' => 4,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -80,12 +80,12 @@ class LocationResource extends Resource
                                         TextInput::make('name')->label('Régió neve')->helperText('Add meg az új régió nevét. Célszerű olyat választani ami a későbbiekben segíthet a könnyebb azonosítás tekintetében.')
                                             ->required()->unique(), ]),
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 6,
-                            'xl' => 6,
-                            '2xl' => 4,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 6,
+                                'xl' => 6,
+                                '2xl' => 4,
+                            ]),
                     ]),
 
                 Grid::make(12)
@@ -107,12 +107,12 @@ class LocationResource extends Resource
                                             ->prefixIcon('tabler-building-skyscraper')
                                             ->placeholder('Békéscsaba'),
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 3,
-                                    '2xl' => 3,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 3,
+                                        '2xl' => 3,
+                                    ]),
 
                                 Fieldset::make('Cím')
                                     ->schema([
@@ -136,20 +136,20 @@ class LocationResource extends Resource
                                 ->placeholder('13'),
                                 */
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 1,
-                                    'lg' => 1,
-                                    'xl' => 1,
-                                    '2xl' => 1,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 1,
+                                        'lg' => 1,
+                                        'xl' => 1,
+                                        '2xl' => 1,
+                                    ]),
 
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 7,
-                            'xl' => 8,
-                            '2xl' => 7,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 7,
+                                'xl' => 8,
+                                '2xl' => 7,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -194,19 +194,19 @@ class LocationResource extends Resource
                                             ->image()
                                             ->maxSize(10000),
                                     ])->columns([
-                                    'sm' => 2,
-                                    'md' => 2,
-                                    'lg' => 1,
-                                    'xl' => 1,
-                                    '2xl' => 1,
-                                ]),
+                                        'sm' => 2,
+                                        'md' => 2,
+                                        'lg' => 1,
+                                        'xl' => 1,
+                                        '2xl' => 1,
+                                    ]),
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 5,
-                            'xl' => 4,
-                            '2xl' => 5,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 5,
+                                'xl' => 4,
+                                '2xl' => 5,
+                            ]),
                     ]),
             ]);
     }

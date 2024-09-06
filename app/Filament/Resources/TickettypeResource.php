@@ -66,12 +66,12 @@ class TickettypeResource extends Resource
                                     ->helperText('Itt néhány sorban leírhatod ennek a jegytípusnak a jellemzőit.')
                                     ->label('Leírás'),
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 3,
-                            'xl' => 2,
-                            '2xl' => 2,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 3,
+                                'xl' => 2,
+                                '2xl' => 2,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -160,12 +160,12 @@ class TickettypeResource extends Resource
                                     //->disabled(fn (GET $get): bool => ($get('default')=='1'))
                                     ->default(0),
                             ])->columnSpan([
-                            'sm' => 6,
-                            'md' => 6,
-                            'lg' => 6,
-                            'xl' => 2,
-                            '2xl' => 2,
-                        ]),
+                                'sm' => 6,
+                                'md' => 6,
+                                'lg' => 6,
+                                'xl' => 2,
+                                '2xl' => 2,
+                            ]),
                         /*
                     Section::make()
                     ->schema([

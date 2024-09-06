@@ -97,12 +97,12 @@ class AircraftLocationPilotResource extends Resource
                                             ->required()
                                             ->native(false),
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 2,
-                                    '2xl' => 3,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 2,
+                                        '2xl' => 3,
+                                    ]),
 
                                 Fieldset::make('Tervezett repülés paraméterei')
                                     ->schema([
@@ -140,20 +140,20 @@ class AircraftLocationPilotResource extends Resource
                                             ->native(false)
                                             ->searchable(),
                                     ])->columns([
-                                    'sm' => 1,
-                                    'md' => 2,
-                                    'lg' => 2,
-                                    'xl' => 2,
-                                    '2xl' => 3,
-                                ]),
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 2,
+                                        '2xl' => 3,
+                                    ]),
 
                             ])->columnSpan([
-                            'sm' => 12,
-                            'md' => 12,
-                            'lg' => 12,
-                            'xl' => 8,
-                            '2xl' => 8,
-                        ]),
+                                'sm' => 12,
+                                'md' => 12,
+                                'lg' => 12,
+                                'xl' => 8,
+                                '2xl' => 8,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -204,12 +204,12 @@ class AircraftLocationPilotResource extends Resource
                                             ->default(0),
                                     ])->columns(1),
                             ])->columnSpan([
-                            'sm' => 12,
-                            'md' => 12,
-                            'lg' => 12,
-                            'xl' => 4,
-                            '2xl' => 4,
-                        ]),
+                                'sm' => 12,
+                                'md' => 12,
+                                'lg' => 12,
+                                'xl' => 4,
+                                '2xl' => 4,
+                            ]),
 
                     ]),
 
@@ -226,12 +226,12 @@ class AircraftLocationPilotResource extends Resource
                                             ->cols(20),
                                     ])->columns(1),
                             ])->columnSpan([
-                            'sm' => 12,
-                            'md' => 12,
-                            'lg' => 12,
-                            'xl' => 6,
-                            '2xl' => 6,
-                        ]),
+                                'sm' => 12,
+                                'md' => 12,
+                                'lg' => 12,
+                                'xl' => 6,
+                                '2xl' => 6,
+                            ]),
 
                         Section::make()
                             ->schema([
@@ -244,12 +244,12 @@ class AircraftLocationPilotResource extends Resource
                                             ->cols(20),
                                     ])->columns(1),
                             ])->columnSpan([
-                            'sm' => 12,
-                            'md' => 12,
-                            'lg' => 12,
-                            'xl' => 6,
-                            '2xl' => 6,
-                        ]),
+                                'sm' => 12,
+                                'md' => 12,
+                                'lg' => 12,
+                                'xl' => 6,
+                                '2xl' => 6,
+                            ]),
 
                     ]),
             ]);
