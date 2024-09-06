@@ -18,7 +18,7 @@ class CreateCoupon extends CreateRecord
     protected function getFormActions(): array
     {
         return [
-            parent::getCreateFormAction()->label(fn() => $this->data['source'] == 'Egyéb' ? 'Létrehozás' : 'Ellenőrzés'),
+            parent::getCreateFormAction()->label(fn() => in_array($this->data['source'],['Ballonozz']) ? 'Ellenőrzés' : 'Létrehozás'),
             parent::getCancelFormAction(),
         ];
     }
@@ -42,7 +42,7 @@ class CreateCoupon extends CreateRecord
         {
             try {
                 $response_coupon = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/orders/'.$data['coupon_code']);
-            
+
                 //Felőtt(3db->3f): 1567
                 //Családi(1db->2f+2gy): 1508 érvénes
                 //1526 nem érvényes
@@ -124,7 +124,7 @@ class CreateCoupon extends CreateRecord
                         ->icon('tabler-alert-triangle')
                         ->danger()
                         ->send();
-                        
+
                     $this->halt();
                 }
             } catch (\Throwable $th) {
@@ -142,7 +142,7 @@ class CreateCoupon extends CreateRecord
             }
         }
 
-        if ($checking_the_existence_of_a_coupon == 0 && $data['source'] == 'Egyéb')
+        if ($checking_the_existence_of_a_coupon == 0 && !in_array($this->data['source'],['Ballonozz']))
         {
             $data['tickettype_id'] = NULL;
             $data['status'] = CouponStatus::UnderProcess;
