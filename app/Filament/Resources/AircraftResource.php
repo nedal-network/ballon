@@ -2,43 +2,41 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\AircraftResource\Pages;
+use App\Models\Aircraft;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+/* saját use-ok */
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use App\Models\Aircraft;
-use Filament\Forms\Form;
-use App\Models\Tickettype;
-use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Grid;
-
-/* saját use-ok */
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Textarea;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Support\Contracts\HasLabel;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Components\Actions\Action;
-use App\Filament\Resources\AircraftResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\AircraftResource\RelationManagers;
 
 class AircraftResource extends Resource
 {
     protected static ?string $model = Aircraft::class;
 
     protected static ?string $navigationIcon = 'iconoir-airplane-rotation';
+
     protected static ?string $modelLabel = 'légijármű';
+
     protected static ?string $pluralModelLabel = 'légijárművek';
 
     protected static ?string $navigationGroup = 'Alapadatok';
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -46,105 +44,105 @@ class AircraftResource extends Resource
         return $form
             ->schema([
                 Grid::make(4)
-                ->schema([
-                    Section::make() 
                     ->schema([
-                        TextInput::make('name')
-                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                            ->helperText('Adj egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')
-                            ->label('Megnevezés')
-                            ->prefixIcon('tabler-writing-sign')
-                            ->required()
-                            ->minLength(3)
-                            ->maxLength(255),
-                        Textarea::make('description')
-                            ->label('Leírás')
-                            ->helperText('Adj egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
-                            ->rows(4)
-                            ->cols(20),
-                        Fieldset::make('Besorolás')
+                        Section::make()
                             ->schema([
-                                ToggleButtons::make('type')
-                                    /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Válassza ki a légijármű típusát.')*/
-                                    ->helperText('Válaszd ki a légijármű típusát.')
-                                    ->label('Típus')
-                                    ->inline()
-                                    /*->grouped()*/
-                                    ->live()
-                                    ->afterStateUpdated(fn (Set $set) => $set ('tickettypes', NULL))
-                                    ->required()
-                                    ->options([
-                                        '0' => 'Hőlégballon',
-                                        '1' => 'Kisrepülő',
-                                    ])
-                                    ->icons([
-                                        '0' => 'iconoir-hot-air-balloon',
-                                        '1' => 'iconoir-airplane',
-                                    ])
-                                    ->colors([
-                                        '0' => 'info',
-                                        '1' => 'info',
-                                    ])
-                                    ->default(0),
-                                TextInput::make('registration_number')
-                                    /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                    ->helperText('Ide a légijármű lajstromjelét add meg.')
-                                    ->label('Lajstrom-jel')
-                                    ->prefixIcon('tabler-license')
-                                    ->placeholder('HA-1234 vagy HA-ABCD')
+                                TextInput::make('name')
+                                    /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
+                                    ->helperText('Adj egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')
+                                    ->label('Megnevezés')
+                                    ->prefixIcon('tabler-writing-sign')
                                     ->required()
                                     ->minLength(3)
-                                    ->maxLength(10),
-                                ])->columns([
+                                    ->maxLength(255),
+                                Textarea::make('description')
+                                    ->label('Leírás')
+                                    ->helperText('Adj egy rövid leírást a légijárműhöz. Az ide rögzített leírás megjeleník a Repülési tervek/Jeletkezők részben.')
+                                    ->rows(4)
+                                    ->cols(20),
+                                Fieldset::make('Besorolás')
+                                    ->schema([
+                                        ToggleButtons::make('type')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Válassza ki a légijármű típusát.')*/
+                                            ->helperText('Válaszd ki a légijármű típusát.')
+                                            ->label('Típus')
+                                            ->inline()
+                                            /*->grouped()*/
+                                            ->live()
+                                            ->afterStateUpdated(fn (Set $set) => $set('tickettypes', null))
+                                            ->required()
+                                            ->options([
+                                                '0' => 'Hőlégballon',
+                                                '1' => 'Kisrepülő',
+                                            ])
+                                            ->icons([
+                                                '0' => 'iconoir-hot-air-balloon',
+                                                '1' => 'iconoir-airplane',
+                                            ])
+                                            ->colors([
+                                                '0' => 'info',
+                                                '1' => 'info',
+                                            ])
+                                            ->default(0),
+                                        TextInput::make('registration_number')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
+                                            ->helperText('Ide a légijármű lajstromjelét add meg.')
+                                            ->label('Lajstrom-jel')
+                                            ->prefixIcon('tabler-license')
+                                            ->placeholder('HA-1234 vagy HA-ABCD')
+                                            ->required()
+                                            ->minLength(3)
+                                            ->maxLength(10),
+                                    ])->columns([
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                        'xl' => 2,
+                                        '2xl' => 2,
+                                    ]),
+                            ])->columnSpan([
+                            'sm' => 4,
+                            'md' => 4,
+                            'lg' => 4,
+                            'xl' => 2,
+                            '2xl' => 2,
+                        ]),
+
+                        Section::make()
+                            ->schema([
+                                Fieldset::make('Terhelhetőség')
+                                    ->schema([
+                                        TextInput::make('number_of_person')
+                                            ->helperText('Add meg a MAXIMÁLISAN szállítható személyek számát.')
+                                            ->label('Szállítható személyek száma')
+                                            ->prefixIcon('fluentui-people-team-24-o')
+                                            ->required()
+                                            ->numeric()
+                                            ->default(0)
+                                            ->minLength(1)
+                                            ->maxLength(10)
+                                            ->suffix(' fő'),
+
+                                        TextInput::make('payload_capacity')
+                                            ->helperText('Add meg a légijármű - a pilótával együttes - MAXIMÁLIS terhetőségét kg-ban.')
+                                            ->label('Terhetőség')
+                                            ->prefixIcon('tabler-weight')
+                                            ->required()
+                                            ->numeric()
+                                            ->default(0)
+                                            ->step(10)
+                                            ->minLength(2)
+                                            ->maxLength(10)
+                                            ->suffix(' kg'),
+
+                                    ])->columns([
                                     'sm' => 1,
                                     'md' => 2,
                                     'lg' => 2,
                                     'xl' => 2,
                                     '2xl' => 2,
                                 ]),
-                    ])->columnSpan([
-                        'sm' => 4,
-                        'md' => 4,
-                        'lg' => 4,
-                        'xl' => 2,
-                        '2xl' => 2,
-                    ]),
-
-                    Section::make() 
-                    ->schema([
-                        Fieldset::make('Terhelhetőség')
-                        ->schema([
-                            TextInput::make('number_of_person')
-                            ->helperText('Add meg a MAXIMÁLISAN szállítható személyek számát.')
-                            ->label('Szállítható személyek száma')
-                            ->prefixIcon('fluentui-people-team-24-o')
-                            ->required()
-                            ->numeric()
-                            ->default(0)
-                            ->minLength(1)
-                            ->maxLength(10)
-                            ->suffix(' fő'),
-
-                            TextInput::make('payload_capacity')
-                            ->helperText('Add meg a légijármű - a pilótával együttes - MAXIMÁLIS terhetőségét kg-ban.')
-                            ->label('Terhetőség')
-                            ->prefixIcon('tabler-weight')
-                            ->required()
-                            ->numeric()
-                            ->default(0)
-                            ->step(10)
-                            ->minLength(2)
-                            ->maxLength(10)
-                            ->suffix(' kg'),
-
-                        ])->columns([
-                            'sm' => 1,
-                            'md' => 2,
-                            'lg' => 2,
-                            'xl' => 2,
-                            '2xl' => 2,
-                        ]),
-                        /*
+                                /*
                         Fieldset::make('Extra beállítások')
                             ->schema([
                                 Toggle::make('unlimited')
@@ -184,22 +182,22 @@ class AircraftResource extends Resource
                                     ->dehydrated(true),
 
                             ])->columns(3),*/
-                        
-                            Fieldset::make('Társított jegytípusok')
-                            ->schema([
-                                Select::make('tickettypes')
-                                ->label('Jegytípusok')
-                                ->relationship(titleAttribute: 'name', modifyQueryUsing: fn (Builder $query, $get) => $query->where('aircrafttype',$get('type')),)
-                                ->loadingMessage('Jegytípusok betöltése...')
-                                ->suffixAction(function () {
-                                    return Action::make('remove_all')
-                                        ->icon('heroicon-s-x-circle')
-                                        ->tooltip('Összes törlése')
-                                        ->action(fn ($set) => $set('tickettypes', null));
-                                })
-                                ->multiple()
-                                ->preload(),
-                                ])->columns([
+
+                                Fieldset::make('Társított jegytípusok')
+                                    ->schema([
+                                        Select::make('tickettypes')
+                                            ->label('Jegytípusok')
+                                            ->relationship(titleAttribute: 'name', modifyQueryUsing: fn (Builder $query, $get) => $query->where('aircrafttype', $get('type')))
+                                            ->loadingMessage('Jegytípusok betöltése...')
+                                            ->suffixAction(function () {
+                                                return Action::make('remove_all')
+                                                    ->icon('heroicon-s-x-circle')
+                                                    ->tooltip('Összes törlése')
+                                                    ->action(fn ($set) => $set('tickettypes', null));
+                                            })
+                                            ->multiple()
+                                            ->preload(),
+                                    ])->columns([
                                     'sm' => 1,
                                     'md' => 2,
                                     'lg' => 2,
@@ -207,14 +205,14 @@ class AircraftResource extends Resource
                                     '2xl' => 2,
                                 ]),
 
-                    ])->columnSpan([
-                        'sm' => 4,
-                        'md' => 4,
-                        'lg' => 4,
-                        'xl' => 2,
-                        '2xl' => 2,
+                            ])->columnSpan([
+                            'sm' => 4,
+                            'md' => 4,
+                            'lg' => 4,
+                            'xl' => 2,
+                            '2xl' => 2,
+                        ]),
                     ]),
-                ]), 
             ]);
     }
 
@@ -222,26 +220,26 @@ class AircraftResource extends Resource
     {
         return $table
             ->columns([
-                
+
                 TextColumn::make('registration_number')
                     ->label('Lajtsrom-jel')
                     //->description(fn (Aircraft $record): string => $record->name)
-                    ->searchable(['registration_number','name'])
+                    ->searchable(['registration_number', 'name'])
                     ->visibleFrom('md'),
-                
+
                 TextColumn::make('name')
                     ->label('Megnevezés')
                     //->description(fn (Aircraft $record): string => $record->registration_number)
-                    ->searchable(['name','registration_number']),
+                    ->searchable(['name', 'registration_number']),
                 TextColumn::make('type')
                     ->label('Típus')
                     ->badge()
                     ->size('md'),
                 TextColumn::make('number_of_person')->label('Száll.szem.száma')
-                    ->formatStateUsing(fn($state)=>$state.' fő')
+                    ->formatStateUsing(fn ($state) => $state.' fő')
                     ->visibleFrom('lg'),
                 TextColumn::make('payload_capacity')->label('Max. terhelhetőség')
-                    ->formatStateUsing(fn($state)=>$state.' kg')
+                    ->formatStateUsing(fn ($state) => $state.' kg')
                     ->visibleFrom('lg'),
                 /*
                 IconColumn::make('unlimited')
@@ -279,11 +277,11 @@ class AircraftResource extends Resource
                     ->size(IconColumn\IconColumnSize::Medium),
                 */
             ])
-            
+
             ->filters([
                 Tables\Filters\Filter::make('type')
                     ->query(fn (Builder $query) => $query->where('type', true)),
-                    Tables\Filters\SelectFilter::make('type')
+                Tables\Filters\SelectFilter::make('type')
                     ->label('Típus')
                     ->options([
                         '0' => 'Hőlégballon',

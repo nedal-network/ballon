@@ -2,14 +2,13 @@
 
 namespace App\Mail;
 
-use App\Models\User;
 use App\Models\Coupon;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 
 class CouponApproved extends Mailable
 {
@@ -21,7 +20,8 @@ class CouponApproved extends Mailable
     public function __construct(
         public User $user,
         public Coupon $coupon
-    ) {}
+    ) {
+    }
 
     /**
      * Get the message envelope.

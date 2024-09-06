@@ -28,10 +28,10 @@ class UserExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'A felhasználók exportálása kész. és ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exportálva.';
+        $body = 'A felhasználók exportálása kész. és '.number_format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exportálva.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' exportálás sikertelen.';
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' exportálás sikertelen.';
         }
 
         return $body;

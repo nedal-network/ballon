@@ -15,7 +15,7 @@ class ClientScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (!Auth::user()?->hasRole(['admin', 'super_admin']) ?? false) {
+        if (! Auth::user()?->hasRole(['admin', 'super_admin']) ?? false) {
             if ($model instanceof Coupon) {
                 $builder->where('user_id', Auth::id());
             }

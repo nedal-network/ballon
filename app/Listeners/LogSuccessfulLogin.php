@@ -2,12 +2,9 @@
 
 namespace App\Listeners;
 
-
 use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 class LogSuccessfulLogin
 {

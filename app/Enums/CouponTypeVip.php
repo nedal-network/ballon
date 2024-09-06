@@ -8,8 +8,8 @@ use Filament\Support\Contracts\HasLabel;
 
 enum CouponTypeVip: string implements HasColor, HasIcon, HasLabel
 {
-    case VipFalse = "0";
-    case VipTrue = "1";
+    case VipFalse = '0';
+    case VipTrue = '1';
 
     public function getLabel(): string
     {
@@ -19,7 +19,7 @@ enum CouponTypeVip: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::VipFalse => 'gray',

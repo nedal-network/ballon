@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('aircraft_location_pilots', function (Blueprint $table) {
             $table->integer('region_id')->unsigned()->default(1)->after('aircraft_id');
             $table->foreign('region_id')->references('id')->on('regions');
-            $table->integer('location_id')->nullable()->unsigned()->change();            
+            $table->integer('location_id')->nullable()->unsigned()->change();
         });
     }
 

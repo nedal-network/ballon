@@ -3,22 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PassengerResource\Pages;
-use App\Filament\Resources\PassengerResource\RelationManagers;
 use App\Models\Passenger;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PassengerResource extends Resource
 {
     protected static ?string $model = Passenger::class;
 
     protected static ?string $navigationIcon = 'iconoir-people-tag';
+
     protected static ?string $modelLabel = 'utas';
+
     protected static ?string $pluralModelLabel = 'utasok';
 
     protected static bool $shouldRegisterNavigation = false;
@@ -39,7 +37,7 @@ class PassengerResource extends Resource
                     ->label('Utas')
                     ->searchable()
                     ->formatStateUsing(function ($state, Passenger $passenger) {
-                        return $passenger->lastname . ' ' . $passenger->firstname;
+                        return $passenger->lastname.' '.$passenger->firstname;
                     }),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->label('Születési dátum')

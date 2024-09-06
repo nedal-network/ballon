@@ -3,29 +3,30 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PilotResource\Pages;
-use App\Filament\Resources\PilotResource\RelationManagers;
 use App\Models\Pilot;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+/* saját use-ok */
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-/* saját use-ok */
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 
 class PilotResource extends Resource
 {
     protected static ?string $model = Pilot::class;
 
     protected static ?string $navigationIcon = 'iconoir-user-square';
+
     protected static ?string $modelLabel = 'pilóta';
+
     protected static ?string $pluralModelLabel = 'pilóták';
 
     protected static ?string $navigationGroup = 'Alapadatok';
+
     protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
@@ -33,42 +34,42 @@ class PilotResource extends Resource
         return $form
             ->schema([
                 Grid::make(4)
-                ->schema([
-                    Section::make() 
                     ->schema([
-                        Forms\Components\Fieldset::make('Pilóta adatai')
-                        ->schema([
-                            Forms\Components\TextInput::make('lastname')
-                                /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                ->label('Vezetéknév')
-                                ->placeholder('Gipsz')
-                                ->required(),
-                            Forms\Components\TextInput::make('firstname')
-                                /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                ->label('Keresztnév')
-                                ->placeholder('Jakab')
-                                ->required(),
-                            Forms\Components\TextInput::make('pilot_license_number')
-                                /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                ->label('Pilóta engedély azonosító')
-                                ->prefixIcon('tabler-id-badge-2')
-                                ->placeholder('PPL-SEP'),
-                            ])->columns([
-                                'sm' => 1,
-                                'md' => 2,
-                                'lg' => 2,
-                                'xl' => 3,
-                                '2xl' => 3,
+                        Section::make()
+                            ->schema([
+                                Forms\Components\Fieldset::make('Pilóta adatai')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('lastname')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
+                                            ->label('Vezetéknév')
+                                            ->placeholder('Gipsz')
+                                            ->required(),
+                                        Forms\Components\TextInput::make('firstname')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
+                                            ->label('Keresztnév')
+                                            ->placeholder('Jakab')
+                                            ->required(),
+                                        Forms\Components\TextInput::make('pilot_license_number')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
+                                            ->label('Pilóta engedély azonosító')
+                                            ->prefixIcon('tabler-id-badge-2')
+                                            ->placeholder('PPL-SEP'),
+                                    ])->columns([
+                                    'sm' => 1,
+                                    'md' => 2,
+                                    'lg' => 2,
+                                    'xl' => 3,
+                                    '2xl' => 3,
                                 ]),
 
-                        ])->columnSpan([
+                            ])->columnSpan([
                             'sm' => 4,
                             'md' => 4,
                             'lg' => 4,
                             'xl' => 3,
                             '2xl' => 3,
                         ]),
-                ]),
+                    ]),
             ]);
     }
 
@@ -78,14 +79,14 @@ class PilotResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('lastname')
                     ->label('Név')
-                    ->searchable(['lastname','firstname'])
+                    ->searchable(['lastname', 'firstname'])
                     ->formatStateUsing(function ($state, Pilot $pilot) {
-                        return $pilot->lastname . ' ' . $pilot->firstname;
+                        return $pilot->lastname.' '.$pilot->firstname;
                     }),
                 Tables\Columns\TextColumn::make('pilot_license_number')
-                ->label('Pilóta engedély')
-                ->searchable()
-                ->visibleFrom('md'),
+                    ->label('Pilóta engedély')
+                    ->searchable()
+                    ->visibleFrom('md'),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make()->native(false),

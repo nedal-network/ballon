@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\TickettypeResource\Pages;
 
+use App\Filament\Resources\TickettypeResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use App\Filament\Resources\TickettypeResource;
 
 class ListTickettypes extends ListRecords
 {

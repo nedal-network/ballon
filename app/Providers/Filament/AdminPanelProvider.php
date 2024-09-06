@@ -2,25 +2,24 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages;
-use Filament\Panel;
-use Filament\Widgets;
-use Filament\PanelProvider;
 use App\Filament\Auth\Login;
 use App\Filament\Auth\Register;
-use Filament\Navigation\MenuItem;
-use Filament\Support\Colors\Color;
 use App\Filament\Pages\EditProfile;
 use Filament\Http\Middleware\Authenticate;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Filament\Navigation\MenuItem;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\AuthenticateSession;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -35,9 +34,9 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 'profile' => MenuItem::make()->url(fn (): string => EditProfile::getUrl()),
                 MenuItem::make()
-                ->label('Vissza a kezőoldalra')
-                ->icon('iconoir-hot-air-balloon')
-                ->url('/')
+                    ->label('Vissza a kezőoldalra')
+                    ->icon('iconoir-hot-air-balloon')
+                    ->url('/'),
                 //->openUrlInNewTab()
             ])
             ->colors([
@@ -67,13 +66,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth(\Filament\Support\Enums\MaxWidth::Full)
             ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
             ->passwordReset()
             ->emailVerification()
             ->profile()
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications();
-            //->databaseNotificationsPolling('30s');
+        //->databaseNotificationsPolling('30s');
     }
 }

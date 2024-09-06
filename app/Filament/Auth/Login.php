@@ -2,14 +2,14 @@
 
 namespace App\Filament\Auth;
 
-use App\Models\User;
-use Filament\Facades\Filament;
 use App\Http\Responses\LoginResponse;
+use App\Models\User;
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use Filament\Facades\Filament;
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Login as BaseAuth;
-use Filament\Models\Contracts\FilamentUser;
-use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
- 
+
 class Login extends BaseAuth
 {
     public function authenticate(): ?LoginResponse
@@ -37,7 +37,7 @@ class Login extends BaseAuth
         if (User::onlyTrashed()->firstWhere('email', $data['email'])) {
             Notification::make()
                 ->title('Kitiltva')
-                ->body('További információkért írjon az ' . env('INFO_EMAIL') . ' email címre')
+                ->body('További információkért írjon az '.env('INFO_EMAIL').' email címre')
                 ->danger()
                 ->send();
 

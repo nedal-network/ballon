@@ -2,15 +2,14 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\AircraftLocationPilot;
 use App\Models\Coupon;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Models\AircraftLocationPilot;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 
 class KickedFromEvent extends Mailable
 {
@@ -23,7 +22,8 @@ class KickedFromEvent extends Mailable
         public User $user,
         public Coupon $coupon,
         public AircraftLocationPilot $event,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the message envelope.

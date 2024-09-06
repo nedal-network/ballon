@@ -8,8 +8,8 @@ use Filament\Support\Contracts\HasLabel;
 
 enum TicketTypePrivate: string implements HasColor, HasIcon, HasLabel
 {
-    case PrivateFalse = "0";
-    case PrivateTrue = "1";
+    case PrivateFalse = '0';
+    case PrivateTrue = '1';
 
     public function getLabel(): string
     {
@@ -19,7 +19,7 @@ enum TicketTypePrivate: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::PrivateFalse => 'gray',

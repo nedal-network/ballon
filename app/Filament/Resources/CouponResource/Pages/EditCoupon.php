@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\CouponResource\Pages;
 
+use App\Filament\Resources\CouponResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use App\Filament\Resources\CouponResource;
 use Illuminate\Contracts\Support\Htmlable;
 
 class EditCoupon extends EditRecord
@@ -20,14 +20,15 @@ class EditCoupon extends EditRecord
     }
     */
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
-        return "Kupon adatok megadása";
+        return 'Kupon adatok megadása';
     }
-    
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['custom_children_ids'] = $this->record->childrenCoupons()->where('source', '!=', 'Kiegészítő')->pluck('id')->toArray();
+
         return $data;
     }
 }

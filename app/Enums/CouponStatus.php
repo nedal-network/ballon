@@ -14,7 +14,7 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
     case Used = 3; //felhasznált
     case Expired = 4; //lejárt
     case Applicant = 5; //jelentkezett
-    
+
     public function getLabel(): string
     {
         return match ($this) {
@@ -35,7 +35,7 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::UnderProcess => 'warning',
@@ -52,7 +52,7 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::UnderProcess => 'tabler-progress-check',
             self::CanBeUsed => 'tabler-discount-check',
-            self::Gift => 'tabler-gift',   
+            self::Gift => 'tabler-gift',
             self::Used => 'tabler-circle-x',
             self::Expired => 'tabler-soup',
             self::Applicant => 'tabler-plane-departure',

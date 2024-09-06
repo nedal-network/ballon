@@ -20,6 +20,6 @@ class CalendarAction extends Action
 
         $this->label('Naptár nézet');
         $this->color('info');
-        $this->url(route('filament.admin.resources.aircraft-location-pilots.calendar') . '?view=' . env('DEFAULT_CALENDAR_VIEW', 'havi'));
+        $this->url(route('filament.admin.resources.aircraft-location-pilots.calendar').'?view='.env('DEFAULT_CALENDAR_VIEW', 'havi'));
     }
 }

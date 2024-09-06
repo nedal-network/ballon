@@ -6,7 +6,6 @@ use App\Models\AircraftLocationPilot;
 use App\Models\Coupon;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -23,7 +22,8 @@ class EventFinalized extends Mailable
         public User $user,
         public Coupon $coupon,
         public AircraftLocationPilot $event,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the message envelope.

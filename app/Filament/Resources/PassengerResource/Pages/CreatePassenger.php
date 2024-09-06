@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\PassengerResource\Pages;
 
 use App\Filament\Resources\PassengerResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePassenger extends CreateRecord

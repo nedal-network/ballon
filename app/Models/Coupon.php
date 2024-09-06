@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Mail\CouponExpired;
 use App\Enums\AircraftType;
 use App\Enums\CouponStatus;
 use App\Mail\CouponApproved;
+use App\Mail\CouponExpired;
 use App\Models\Scopes\ClientScope;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 
 #[ScopedBy([ClientScope::class])]
@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Mail;
 class Coupon extends Model
 {
     protected $table = 'coupons';
+
     protected $guarded = ['custom_children_ids'];
+
     private $checkList = [];
+
     protected $casts = [
         'status' => CouponStatus::class,
         'aircraft_type' => AircraftType::class,
@@ -27,32 +30,33 @@ class Coupon extends Model
     protected static function booted(): void
     {
         static::updated(function (self $coupon) {
-            
+
             switch ($coupon->status) {
                 case CouponStatus::CanBeUsed:
                     switch ($coupon->getOriginal('status')) {
                         case CouponStatus::UnderProcess:
                             Mail::to($coupon->user)->queue(new CouponApproved(
-                                user:   $coupon->user,
+                                user: $coupon->user,
                                 coupon: $coupon
                             ));
                             break;
                     }
                     break;
 
-                # case CouponStatus::Applicant: --> mail: App\Filament\Resources\AircraftLocationPilotResource\Pages\ListCheckins.php
+                    // case CouponStatus::Applicant: --> mail: App\Filament\Resources\AircraftLocationPilotResource\Pages\ListCheckins.php
 
-                # case CouponStatus::Used: --> mail: App\Models\AircraftLocationPilot.php
+                    // case CouponStatus::Used: --> mail: App\Models\AircraftLocationPilot.php
 
                 case CouponStatus::Expired:
                     Mail::to($coupon->user)->queue(new CouponExpired(
-                        user:   $coupon->user,
+                        user: $coupon->user,
                         coupon: $coupon
                     ));
                     break;
             }
         });
     }
+
     public function passengers()
     {
         return $this->hasMany(Passenger::class);
@@ -76,12 +80,9 @@ class Coupon extends Model
     private function validatePassengersData(self $coupon): void
     {
         foreach ($coupon->passengers as $p) {
-            if ($p->firstname && $p->lastname && $p->date_of_birth && $p->id_card_number && $p->body_weight)
-            {
+            if ($p->firstname && $p->lastname && $p->date_of_birth && $p->id_card_number && $p->body_weight) {
                 $this->checkList[] = true;
-            } 
-            else 
-            {
+            } else {
                 $this->checkList[] = false;
             }
         }
@@ -92,7 +93,7 @@ class Coupon extends Model
         return Attribute::make(
             get: function () {
                 $noOneMissing = $this->membersCount == ($this->passengers->count() + $this->childrenCoupons?->map(fn ($coupon) => $coupon->passengers->count())->sum() ?? 0);
-                
+
                 $this->validatePassengersData($this);
                 if ($this->childrenCoupons) {
                     $this->childrenCoupons->map(fn ($coupon) => $this->validatePassengersData($coupon));
@@ -107,7 +108,7 @@ class Coupon extends Model
     {
         return Attribute::make(
             get: function () {
-                
+
                 $isParent = $this->parent_id === null;
 
                 if ($this->expiration_at > now() && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift, CouponStatus::Applicant]) && $isParent && $this->isValid) {
@@ -122,7 +123,7 @@ class Coupon extends Model
     protected function missingData(): Attribute
     {
         return Attribute::make(
-            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift]) && !$this->isValid,
+            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift]) && ! $this->isValid,
         );
     }
 

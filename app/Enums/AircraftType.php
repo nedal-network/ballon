@@ -8,9 +8,9 @@ use Filament\Support\Contracts\HasLabel;
 
 enum AircraftType: string implements HasColor, HasIcon, HasLabel
 {
-    case Ballon = "0";
-    case Airplane = "1";
-    case Rocket = "2";
+    case Ballon = '0';
+    case Airplane = '1';
+    case Rocket = '2';
 
     public function getLabel(): string
     {
@@ -21,7 +21,7 @@ enum AircraftType: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Ballon => 'gray',

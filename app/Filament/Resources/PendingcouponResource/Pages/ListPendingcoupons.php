@@ -4,8 +4,8 @@ namespace App\Filament\Resources\PendingcouponResource\Pages;
 
 use App\Filament\Resources\PendingcouponResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 
 class ListPendingcoupons extends ListRecords
 {

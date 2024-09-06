@@ -8,12 +8,12 @@ use Filament\Support\Contracts\HasLabel;
 
 enum AircraftLocationPilotStatus: string implements HasColor, HasIcon, HasLabel
 {
-    case Draft = "0"; //tervezett
-    case Published = "1"; //publikált
-    Case Finalized ="2"; //véglegesített
-    case Executed = "3"; //végrehajtott
-    case Deleted = "4"; //törölt
-    case Feedback = "5"; //visszajelzés
+    case Draft = '0'; //tervezett
+    case Published = '1'; //publikált
+    case Finalized = '2'; //véglegesített
+    case Executed = '3'; //végrehajtott
+    case Deleted = '4'; //törölt
+    case Feedback = '5'; //visszajelzés
 
     public function getLabel(): string
     {
@@ -27,7 +27,7 @@ enum AircraftLocationPilotStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Draft => 'warning',

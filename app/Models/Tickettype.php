@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-
 use App\Enums\AircraftType;
-use App\Enums\TicketTypeVip;
-use App\Enums\TicketTypePrivate;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tickettype extends Model
 {
     protected $guarded = [];
+
     protected $casts = [
         'aircrafttype' => AircraftType::class,
     ];

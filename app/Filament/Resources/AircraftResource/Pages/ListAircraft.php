@@ -4,8 +4,8 @@ namespace App\Filament\Resources\AircraftResource\Pages;
 
 use App\Filament\Resources\AircraftResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 
 class ListAircraft extends ListRecords
 {

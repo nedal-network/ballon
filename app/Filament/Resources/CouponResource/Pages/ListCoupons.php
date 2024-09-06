@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\CouponResource\Pages;
 
-use Filament\Actions;
-use App\Enums\CouponStatus;
 use App\Filament\Pages\Checkin;
+use App\Filament\Resources\CouponResource;
+use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use App\Filament\Resources\CouponResource;
 
 class ListCoupons extends ListRecords
 {
@@ -38,5 +37,4 @@ class ListCoupons extends ListRecords
             */
         ];
     }
-
 }

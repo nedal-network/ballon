@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\PendingcouponResource\Pages;
 
+use App\Filament\Resources\PendingcouponResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Forms\Components\Actions\Action;
-use App\Filament\Resources\PendingcouponResource;
 
 class EditPendingcoupon extends EditRecord
 {
@@ -30,11 +29,10 @@ class EditPendingcoupon extends EditRecord
         ];
     }
 
-    public function saveAnother():void
+    public function saveAnother(): void
     {
         $resources = static::getResource();
         $this->save(false);
         $this->redirect($resources::getUrl('create'));
     }
-
 }

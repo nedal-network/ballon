@@ -2,20 +2,19 @@
 
 namespace App\Providers;
 
-use App\Models\Coupon;
-use App\Enums\CouponStatus;
-use Filament\Facades\Filament;
-use Filament\View\PanelsRenderHook;
-use Illuminate\Support\Facades\Blade;
-use Filament\Navigation\NavigationItem;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\ServiceProvider;
-use Filament\Notifications\Notification;
 use App\Filament\Resources\CouponResource;
-use Filament\Notifications\Actions\Action;
-use Filament\Support\Facades\FilamentView;
 use App\Http\Responses\LogoutResponse;
+use App\Models\Coupon;
+use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
+use Filament\Navigation\NavigationItem;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,44 +35,40 @@ class AppServiceProvider extends ServiceProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_START,
-            function()
-            {
-                if (auth()->user() && !auth()->user()->hasRole(['admin', 'super_admin'])) {
+            function () {
+                if (auth()->user() && ! auth()->user()->hasRole(['admin', 'super_admin'])) {
                     $coupons_not_filled_with_passengers = 0;
-                    foreach (Coupon::all() as $coupon) 
-                    {
-                        if ($coupon->missingData) 
-                        {
+                    foreach (Coupon::all() as $coupon) {
+                        if ($coupon->missingData) {
                             $coupons_not_filled_with_passengers++;
                         }
                     }
-                    if($coupons_not_filled_with_passengers>0)
-                    {
+                    if ($coupons_not_filled_with_passengers > 0) {
                         Notification::make()
-                        ->title('Hiányzó utasadatok!')
-                        ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
-                        ->iconColor('danger')
-                        ->color('danger')
-                        ->icon('tabler-alert-triangle')
-                        ->persistent()
-                        ->actions(function () {
-                            if (str_contains(env('APP_URL') . $_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
-                                return [];
-                            }
-                            
-                            return [
-                                Action::make('redirect')
-                                    ->button()
-                                    ->label('Ugrás a kitöltendő kuponokhoz')
-                                    ->url(CouponResource::getUrl() . '?activeTab=Figyelmeztet%C3%A9sek')
-                            ];
-                        })
-                        ->send();
+                            ->title('Hiányzó utasadatok!')
+                            ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
+                            ->iconColor('danger')
+                            ->color('danger')
+                            ->icon('tabler-alert-triangle')
+                            ->persistent()
+                            ->actions(function () {
+                                if (str_contains(env('APP_URL').$_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
+                                    return [];
+                                }
+
+                                return [
+                                    Action::make('redirect')
+                                        ->button()
+                                        ->label('Ugrás a kitöltendő kuponokhoz')
+                                        ->url(CouponResource::getUrl().'?activeTab=Figyelmeztet%C3%A9sek'),
+                                ];
+                            })
+                            ->send();
                     }
                 }
             }
         );
-        
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_START,
             fn (): string => Blade::render('@vite([\'resources/css/checking.css\', \'resources/css/list-checkins.css\'])'),
