@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\AircraftLocationPilotStatus;
+use App\Enums\CouponStatus;
 use App\Filament\Resources\CouponResource;
 use App\Mail\JoinToEvent;
 use App\Mail\LeaveFromEvent;
@@ -137,6 +138,15 @@ class Checkin extends Page
         CheckinModel::where('aircraft_location_pilot_id', $event->id)
             ->where('coupon_id', $this->coupon->id)
             ->delete();
+
+        
+        if ($this->coupon->status == CouponStatus::Applicant && !$this->coupon->isExpired) {
+            $this->coupon->update(['status' => CouponStatus::CanBeUsed]);
+        }
+        
+        if ($this->coupon->isExpired) {
+            $this->coupon->update(['status' => CouponStatus::Expired]);
+        }
 
         Mail::to(Auth::user())->queue(new LeaveFromEvent(
             user: Auth::user(),
