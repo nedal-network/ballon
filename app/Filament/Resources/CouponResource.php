@@ -92,7 +92,7 @@ class CouponResource extends Resource
                                                 Placeholder::make('source')
                                                     ->hiddenLabel()
                                                     ->content(function ($record) {
-                                                        if ($record->source == 'Ballonozz') {
+                                                        if (in_array($record->source, ['Ballonozz', 'Meglepkék'])) {
                                                             return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;">
                                         <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="gray">
                                         <path d="M4 9.5C4 14.0714 9.71429 17.5 9.71429 17.5H14.2857C14.2857 17.5 20 14.0714 20 9.5C20 4.92857 16.4183 1.5 12 1.5C7.58172 1.5 4 4.92857 4 9.5Z" stroke="currentColor" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,8 +100,7 @@ class CouponResource extends Resource
                                         <path d="M14.8843 2C17.8843 8 13.8843 17.5 13.8843 17.5" stroke="currentColor" stroke-linejoin="round"/>
                                         <path d="M13.4 23H10.6C10.2686 23 10 22.7314 10 22.4V20.6C10 20.2686 10.2686 20 10.6 20H13.4C13.7314 20 14 20.2686 14 20.6V22.4C14 22.7314 13.7314 23 13.4 23Z" stroke="currentColor" stroke-linecap="round"/>
                                         </svg></div><div style="float:left; position:relative;">'.$record->source.'.hu</div>');
-                                                        }
-                                                        if ($record->source != 'Ballonozz') {
+                                                        } else {
                                                             return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 16v.01" />
                                         <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
@@ -373,7 +372,7 @@ class CouponResource extends Resource
                             ])->columns(6),
 
                         Section::make()
-                            ->hidden(fn (GET $get, $operation): bool => (in_array($get('source'), ['Ballonozz']) && $operation == 'create'))
+                            ->hidden(fn (GET $get, $operation): bool => (in_array($get('source'), ['Ballonozz', 'Meglepkék']) && $operation == 'create'))
                             ->schema([
                                 Fieldset::make('Utasok száma')
                                     ->schema([
@@ -446,6 +445,7 @@ class CouponResource extends Resource
                     ->visible(fn (GET $get, $operation, $record) => $operation == 'edit' && ($record->membersCount > 0))
                     ->schema([
                         Section::make()
+                            ->extraAttributes(fn($record) => $record->missing_data ? ['style' => 'border: 1px solid #ff0000;'] : [])
                             ->schema([
                                 Repeater::make('passengers')
                                     ->addActionLabel('Új utas felvétele')
@@ -468,25 +468,29 @@ class CouponResource extends Resource
                                                     ->prefixIcon('tabler-writing-sign')
                                                     ->placeholder('Jakab')
                                                     ->minLength(3)
-                                                    ->maxLength(255),
+                                                    ->maxLength(255)
+                                                    ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
                                                 DatePicker::make('date_of_birth')
                                                     ->label('Születési dátum')
                                                     ->prefixIcon('tabler-calendar')
                                                     ->weekStartsOnMonday()
-                                                    ->displayFormat('Y-m-d'),
+                                                    ->displayFormat('Y-m-d')
+                                                    ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
                                                 TextInput::make('id_card_number')
                                                     ->label('Igazolvány szám')
                                                     ->prefixIcon('tabler-id')
                                                     ->placeholder('432654XX')
                                                     ->minLength(3)
-                                                    ->maxLength(10),
+                                                    ->maxLength(10)
+                                                    ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
                                                 TextInput::make('body_weight')
                                                     ->label('Testsúly')
                                                     ->prefixIcon('iconoir-weight-alt')
                                                     ->numeric()
                                                     ->minLength(1)
                                                     ->maxLength(10)
-                                                    ->suffix(' kg'),
+                                                    ->suffix(' kg')
+                                                    ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
                                             ])
                                             ->columns([
                                                 'sm' => 1,
