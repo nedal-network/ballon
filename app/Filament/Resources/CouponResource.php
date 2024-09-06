@@ -515,7 +515,7 @@ class CouponResource extends Resource
                                                     ->label('Telefonszám')
                                                     ->prefixIcon('tabler-device-mobile')
                                                     ->placeholder('+36_________')
-                                                    ->mask('+36999999999')
+                                                    ->mask('+99999999999')
                                                     ->maxLength(30),
                                             ])
                                             ->columns([
