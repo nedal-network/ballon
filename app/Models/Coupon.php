@@ -111,7 +111,7 @@ class Coupon extends Model
 
                 $isParent = $this->parent_id === null;
 
-                if ($this->expiration_at > now() && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift, CouponStatus::Applicant]) && $isParent && $this->isValid) {
+                if ($this->expiration_at > now() && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
                     return true;
                 }
 
@@ -123,7 +123,7 @@ class Coupon extends Model
     protected function missingData(): Attribute
     {
         return Attribute::make(
-            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift]) && ! $this->isValid,
+            get: fn () => in_array($this->status, [CouponStatus::CanBeUsed]) && ! $this->isValid,
         );
     }
 
