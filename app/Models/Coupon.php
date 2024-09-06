@@ -94,7 +94,7 @@ class Coupon extends Model
         return Attribute::make(
 
             get: function () {
-                return Carbon::parse($this->expiration_at) < Carbon::parse(now()->format('Y-m-d'));
+                return Carbon::parse($this->expiration_at) < today();
             }
         );
     }
