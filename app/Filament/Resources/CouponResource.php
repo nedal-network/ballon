@@ -443,7 +443,7 @@ class CouponResource extends Resource
                     ])->columns(12),
 
                 Grid::make(12)
-                    ->visible(fn (GET $get, $operation, $record) => ($record->membersCount > 0) && $operation == 'edit')
+                    ->visible(fn (GET $get, $operation, $record) => $operation == 'edit' && ($record->membersCount > 0))
                     ->schema([
                         Section::make()
                             ->schema([
