@@ -265,25 +265,21 @@ class PendingcouponResource extends Resource
                             $passenger_nums = '<p>0+0</p>';
                         }
 
-                        if (! empty($payload->total_price)) {
-                            $price = '<p style="font-size:9pt; color:gray; line-height:10px;"><b>Ára: </b>'.number_format($payload->total_price, 0, ',', ' ').' Ft.</p>';
-                        }
-                        if (empty($payload->total_price)) {
-                            $price = '';
-                        }
-
                         if (! empty($payload->description)) {
                             $description = '<p style="font-size:9pt; color:gray;"><b>Megjegyzés: </b>'.$payload->description.'</p>';
                         }
                         if (empty($payload->description)) {
                             $description = '';
                         }
-                        $totalpassengermessage = $passenger_nums.$price.$description;
+                        $totalpassengermessage = $passenger_nums.$description;
 
                         return $totalpassengermessage;
                     })->html()
                     ->searchable()
                     ->visibleFrom('md'),
+                TextColumn::make('total_price')
+                    ->label('Ár')
+                    ->formatStateUsing(fn ($state) => number_format($state, 0, ',', ' ').' Ft'),
                 TextColumn::make('created_at')
                     ->label('Rögzítve')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.'))
