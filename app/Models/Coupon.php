@@ -7,6 +7,7 @@ use App\Enums\CouponStatus;
 use App\Mail\CouponApproved;
 use App\Mail\CouponExpired;
 use App\Models\Scopes\ClientScope;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -88,6 +89,16 @@ class Coupon extends Model
         }
     }
 
+    protected function isExpired(): Attribute
+    {
+        return Attribute::make(
+
+            get: function () {
+                return Carbon::parse($this->expiration_at) < Carbon::parse(now()->format('Y-m-d'));
+            }
+        );
+    }
+
     protected function isValid(): Attribute
     {
         return Attribute::make(
@@ -111,7 +122,11 @@ class Coupon extends Model
 
                 $isParent = $this->parent_id === null;
 
-                if ($this->expiration_at > now() && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift, CouponStatus::Applicant]) && $isParent && $this->isValid) {
+                if ($this->status == CouponStatus::Applicant) { // Ha már jelentkezett láthassa a kuponját
+                    return true;
+                }
+
+                if (!$this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Gift, CouponStatus::Applicant]) && $isParent && $this->isValid) {
                     return true;
                 }
 
