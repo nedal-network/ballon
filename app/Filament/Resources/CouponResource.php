@@ -196,7 +196,7 @@ class CouponResource extends Resource
                         ->schema([
 
                             Fieldset::make()
-                            ->label('Kuponok öszvonása')
+                            ->label('Kuponok öszvonása / szétválasztása')
                             ->schema([
                                 Select::make('custom_children_ids')
                                 ->label('Válasszon kuponjai közül')
@@ -211,19 +211,63 @@ class CouponResource extends Resource
                                 ->preload(),
 
                                 Actions::make([Forms\Components\Actions\Action::make('merge_coupons')
-                                ->label('Kupon(ok) összevonása ezzel a kuponnal')
+                                ->label('Kuponok összevonása / szétválasztása')
                                 ->extraAttributes(['type'=>'submit'])
                                 ->action(
                                     function($livewire, $record)
                                     {
-                                        //dd($data = $livewire->form->getState());
-                                        //Coupon::where('coupon_code', $data['children_coupon'])->update(['parent_coupon'=>$record->coupon_code]);
-                                        //$record->childrenCoupons()->save(Coupon::find($data['children_coupon']));
-                                        $datas = $livewire->form->getState();
-                                        Coupon::where('parent_id', $record->id)->where('source', '!=', 'Kiegészítő')->update(['parent_id' => null]);
-                                        foreach ($datas['custom_children_ids'] as $id) {
-                                            $record->childrenCoupons()->save(Coupon::find($id));
+                                        $data = $livewire->form->getState();
+
+                                        $virtualCoupons = $record->childrenCoupons->where('source', 'Kiegészítő');
+
+                                        // Maradék utasok száma
+                                        $mod = $record->passengers->count() - ($virtualCoupons->sum('members_count') + $record->adult + $record->children);
+
+                                        $modPassengers = collect([]);
+
+                                        if ($mod > 0) {
+                                            // A szülő kupon utasai közül kiválasztjuk az utolsó $mod utast 
+                                            $modPassengers = $record->passengers->slice($record->passengers->count() - $mod, $mod); // maradék utasok
                                         }
+                                        
+                                        // Az öszes gyerek kupon ID kivéve a virtuálisak
+                                        $childrenCouponIds = $record->childrenCoupons
+                                                                    ->whereNotIn('id', $virtualCoupons->pluck('id'))
+                                                                    ->pluck('id')
+                                                                    ->toArray(); 
+
+                                        $separableCouponIds = array_diff($childrenCouponIds, $data['custom_children_ids']); // Szétválaszható kupon ID-k
+                                        $mergeableCouponIds = array_diff($data['custom_children_ids'], $childrenCouponIds); // Összevonható kupon ID-k
+                                        
+
+                                        // Kuponok szétválasztása
+                                        $index = 0;
+                                        foreach ($record->childrenCoupons->whereIn('id', $separableCouponIds) as $childCoupon) {
+                                            $childCoupon->update(['parent_id' => null]); // kupon leválasztása a szülőről
+
+                                            $passengers = $modPassengers->slice($index, $childCoupon->membersCount); // kiválasztunk annyi utast amennyi utasa lehet a kuponnak
+                                            
+                                            $childCoupon->passengers()->saveMany($passengers);  // áthelyezzük az utasokat
+
+                                            $record->passengers()->whereIn('id', $passengers->pluck('id'))->delete(); // töröljük a volt szülő kuponból az áthelyezett utasokat
+
+                                            $index += $childCoupon->membersCount;
+                                        }
+
+                                        
+                                        // Kuponok öszvonása
+                                        $mergeableCoupons = Coupon::whereIn('id', $mergeableCouponIds)->get();
+
+                                        if ($mergeableCoupons->count()) {
+
+                                            foreach ($mergeableCoupons as $coupon) {
+                                                $coupon->passengers()->update(['coupon_id' => $record->id]);
+                                            }
+                                            
+                                            $record->childrenCoupons()->saveMany($mergeableCoupons);
+                                        }
+
+                                        $record->refresh();
                                     }),
                                 ]),
 
@@ -559,7 +603,6 @@ class CouponResource extends Resource
                         ->addActionLabel('Új utas felvétele')
                         ->label('Utasok')
                         ->relationship()
-                        ->minItems(fn (Get $get) => $get('adult')+$get('children'))
                         ->maxItems(fn ($record) => $record->membersCount)
                         ->schema([
                             Fieldset::make('Kötelező utasadatok')
