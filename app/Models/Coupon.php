@@ -94,7 +94,7 @@ class Coupon extends Model
         return Attribute::make(
 
             get: function () {
-                return Carbon::parse($this->expiration_at) < Carbon::parse(now()->format('Y-m-d'));
+                return Carbon::parse($this->expiration_at) < today();
             }
         );
     }
@@ -126,7 +126,7 @@ class Coupon extends Model
                     return true;
                 }
 
-                if (!$this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
+                if (! $this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
                     return true;
                 }
 
