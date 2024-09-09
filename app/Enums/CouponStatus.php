@@ -10,9 +10,9 @@ enum CouponStatus: int implements HasColor, HasIcon, HasLabel
 {
     case UnderProcess = 0; //feldolgozás alatt
     case CanBeUsed = 1; //felhasználható
+    case Applicant = 2; //jelentkezett
     case Used = 3; //felhasznált
     case Expired = 4; //lejárt
-    case Applicant = 5; //jelentkezett
 
     public function getLabel(): string
     {

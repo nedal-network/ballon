@@ -164,6 +164,8 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('kupon_filter')->label('Kuponok')
+                    ->url(fn ($record): string => route('filament.admin.resources.pendingcoupons.index').'?tableFilters[user_id][value]='.$record->id),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Impersonate::make()
                     ->tooltip('Átjelentkezés')

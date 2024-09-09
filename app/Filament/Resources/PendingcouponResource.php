@@ -7,6 +7,7 @@ use App\Filament\Resources\PendingcouponResource\Pages;
 use App\Models\Coupon;
 use App\Models\Pendingcoupon;
 use App\Models\Tickettype;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
@@ -322,7 +323,16 @@ class PendingcouponResource extends Resource
                     ->visibleFrom('md'),
             ])*/
             ->filters([
-
+                SelectFilter::make('user_id')
+                    ->label('Kapcsolattartó')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->getSearchResultsUsing(function (string $search) {
+                        return User::where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%")->select('id', 'name', 'email')->limit(50)->get()->mapWithKeys(function (User $user, int $key) {
+                            return [$user->id => $user->name.' ('.$user->email.')'];
+                        });
+                    })
+                    ->native(false),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')->label('Létrehozási dátumtól')->format('Y-m-d')->displayFormat('Y-m-d'),
