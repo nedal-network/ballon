@@ -66,7 +66,10 @@
 
                     divEl.innerHTML = '<strong>' + arg.event.extendedProps.start_time + '</strong>&nbsp;'
                     divEl.innerHTML += arg.event.title
-                    divEl.innerHTML += '<br>' + arg.event.extendedProps.reg_num
+                    console.log(arg.event.extendedProps.reg_num)
+                    if(arg.event.extendedProps.reg_num !== undefined) {
+                        divEl.innerHTML += '<br>' + arg.event.extendedProps.reg_num
+                    }
 
                     let arrayOfDomNodes = [divEl]
                     return {
