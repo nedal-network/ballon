@@ -23,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -663,7 +664,15 @@ class CouponResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()->label('Mind törlése'),
                 ]),
             ])
-            ->modifyQueryUsing(fn (Builder $query) => $query->whereNull('parent_id'));
+            ->modifyQueryUsing(fn (Builder $query) => $query->whereNull('parent_id'))
+            ->defaultGroup(
+                Group::make('status')
+                    ->getTitleFromRecordUsing(function ($record) {
+                        return 'Státusz: '.$record->status->getLabel();
+                    })
+                    ->titlePrefixedWithLabel(false)
+                    ->collapsible(),
+            );
     }
 
     public static function getRelations(): array
