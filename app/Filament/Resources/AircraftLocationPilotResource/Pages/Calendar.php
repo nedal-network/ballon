@@ -28,6 +28,7 @@ class Calendar extends Page
                 $this->events[] = [
                     'title' => $extraevent->name,
                     'start' => Carbon::parse($extraevent->start_date.' 00:00:00')->format('Y-m-d H:i:s'),
+                    'start_time' => Carbon::parse($extraevent->time)->format('H:i'),
                     'end' => Carbon::parse($extraevent->end_date.' 23:59:59')->format('Y-m-d H:i:s'),
                     'description' => '<div class="dark:text-black">Esemény: '.($extraevent->name ?? 'Ismeretlen').'</div><div class="dark:text-black">'.($extraevent->description ?? 'Nincs leírás').'</div>',
                     'color' => $extraeventcolor,
