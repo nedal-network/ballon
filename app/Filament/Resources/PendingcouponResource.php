@@ -242,7 +242,6 @@ class PendingcouponResource extends Resource
 
                         return $totalpassengermessage;
                     })->html()
-                    ->searchable()
                     ->visibleFrom('md'),
                 TextColumn::make('total_price')
                     ->label('Ár')
@@ -251,8 +250,7 @@ class PendingcouponResource extends Resource
                     ->label('Rögzítve')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.'))
                     ->wrap()
-                    ->color('Amber')
-                    ->searchable(),
+                    ->color('Amber'),
                 TextColumn::make('expiration_at')
                     ->label('Lejárat')
                     ->formatStateUsing(function ($state) {
@@ -269,7 +267,6 @@ class PendingcouponResource extends Resource
                     $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
                     return abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
                 })*/
-                    ->searchable()
                     ->color(function ($state) {
                         $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
                         if ($diff_day_nums > 0 && $diff_day_nums < 31) {
