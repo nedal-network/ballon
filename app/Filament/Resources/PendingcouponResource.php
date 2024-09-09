@@ -16,6 +16,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
@@ -132,10 +133,7 @@ class PendingcouponResource extends Resource
                                             ->label('Jegytípus')
                                             ->prefixIcon('heroicon-o-ticket')
                                             ->required()
-                                            //->disabledOn('edit')
-                                            //->options(Tickettype::all()->pluck('name', 'id'))
                                             ->native(false)
-                                            //->relationship('tickettype')
                                             ->relationship(
                                                 name: 'tickettype',
                                                 modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
@@ -148,22 +146,9 @@ class PendingcouponResource extends Resource
                                             ->inline()
                                             ->required()
                                             ->default('0')
-                                            //->disabledOn('edit')
+                                            ->disabled(fn (Get $get) => Carbon::parse($get('expiration_at')) < today())
                                             ->live()
-                                            ->options(CouponStatus::class)
-                                        /*->options([
-                                                    '0' => 'Nem hagyom jóvá',
-                                                    '1' => 'Jóváhagyom',
-                                                ])
-                                                ->icons([
-                                                    '0' => 'heroicon-o-hand-thumb-down',
-                                                    '1' => 'heroicon-o-hand-thumb-up',
-                                                ])
-                                                ->colors([
-                                                    '0' => 'danger',
-                                                    '1' => 'success',
-                                                ])
-                                                */,
+                                            ->options(CouponStatus::class),
 
                                     ])->columns(2),
 
@@ -176,6 +161,7 @@ class PendingcouponResource extends Resource
                                             ->weekStartsOnMonday()
                                             ->format('Y-m-d')
                                             ->displayFormat('Y-m-d')
+                                            ->live()
                                             ->default(now()),
                                     ])->columns(2),
                             ])//->columnSpan(6),
@@ -204,25 +190,6 @@ class PendingcouponResource extends Resource
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             )
-        /*
-        ->defaultSort('expiration_at', 'desc')
-        ->defaultGroup('status')
-        ->groups([
-            Group::make('status')
-                ->label('Státusz')
-                ->collapsible(),
-        ])
-        ->groupingSettingsHidden()
-        ->recordClasses(fn (Model $record) => $record->expiration_at < now() ? 'opacity-[50%]' : null)
-        */
-        /*
-        ->recordClasses(fn (Pendingcoupon $record) => match ($record->status) {
-            CouponStatus::UnderProcess => 'bg-yellow-300 text-gray-600 dark:bg-yellow-300 daryk:text-gray-600',
-            //CouponStatus::CanBeUsed => 'bg-orange dark:bg-orange',
-            //CouponStatus::Used => 'bg-green dark:bg-green',
-            default => null,
-        })
-        */
             ->recordClasses(function (Pendingcoupon $record) {
                 $diff_day_nums = Carbon::parse($record->expiration_at)->diffInDays('now', false);
                 if ($diff_day_nums > 0 && $diff_day_nums < 31) {
@@ -403,6 +370,13 @@ class PendingcouponResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link()->modalWidth(MaxWidth::ScreenExtraLarge)
+                    ->mutateFormDataUsing(function (array $data, $record): array {
+                        if (Carbon::parse($data['expiration_at']) < today() && $record->status != CouponStatus::Applicant) {
+                            $data['status'] = CouponStatus::Expired;
+                        }
+
+                        return $data;
+                    })
                     ->extraModalFooterActions([
                         TableAction::make('Kiegészítő jegy')
                             ->form([
