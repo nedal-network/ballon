@@ -111,7 +111,7 @@ class AircraftLocationPilotResource extends Resource
                                             ->label('Légijármű')
                                             ->prefixIcon('tabler-ufo')
                                             ->relationship('aircraft', 'name')
-                                            ->getOptionLabelFromRecordUsing(fn ($record) => "($record->registration_number) $record->name")
+                                            ->getOptionLabelFromRecordUsing(fn ($record) => "({$record->registration_number}) {$record->name}")
                                             ->preload()
                                             ->native(false)
                                             ->required()
