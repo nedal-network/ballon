@@ -14,6 +14,10 @@ class LoginResponse extends \Filament\Http\Responses\Auth\LoginResponse
             return parent::toResponse($request);
         }
 
-        return redirect()->to(Checkin::getUrl());
+        if(auth()->user()->last_login_at!=null) {
+            return redirect()->to(Checkin::getUrl());
+        }
+
+        return redirect()->route('filament.admin.pages.dashboard');
     }
 }
