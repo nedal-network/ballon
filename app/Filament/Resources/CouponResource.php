@@ -532,7 +532,7 @@ class CouponResource extends Resource
                                             ->schema([
                                                 Placeholder::make('created')
                                                     ->label('')
-                                                    ->content('Kérem adja meg elérhetőségeit, az esetleges, fontos kapcsolatfelvétel céljából. Az itt megadott adatait csak és kizárólag fontos, eseménybeni változásokkor használjuk.'),
+                                                    ->content('Kérjük add meg az elérhetőségedet, az esetleges, fontos kapcsolatfelvétel céljából. Az itt megadott adatait csak és kizárólag fontos, eseménybeni változásokkor használjuk.'),
                                                 TextInput::make('email')
                                                     ->email()
                                                     ->label('Email cím')
