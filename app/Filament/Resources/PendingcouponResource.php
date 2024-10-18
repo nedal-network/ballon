@@ -255,12 +255,8 @@ class PendingcouponResource extends Resource
                 TextColumn::make('expiration_at')
                     ->label('Lejárat')
                     ->formatStateUsing(function ($state) {
-                        //return Carbon::parse($state)->translatedFormat('Y.m.d.');
-
-                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-
-                        return Carbon::parse($state)->translatedFormat('Y.m.d.').', '.abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
-
+                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false) * -1;
+                        return ($diff_day_nums > 0 ? '+' : '') . $diff_day_nums;
                     })
 
                     /*->description(function($state)
