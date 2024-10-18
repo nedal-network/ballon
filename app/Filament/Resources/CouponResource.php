@@ -187,7 +187,7 @@ class CouponResource extends Resource
                                                     ->label('Válasszon kuponjai közül')
                                                     ->multiple()
                                                     ->options(function ($record) {
-                                                        $coupons = Coupon::whereIn('status', [1, 2])->where('coupon_code', '!=', $record->coupon_code)->where('source', '!=', 'Kiegészítő')->doesntHave('childrenCoupons')->get();
+                                                        $coupons = Coupon::whereIn('status', [CouponStatus::CanBeUsed, CouponStatus::Applicant])->where('coupon_code', '!=', $record->coupon_code)->where('source', '!=', 'Kiegészítő')->doesntHave('childrenCoupons')->get();
                                                         foreach ($coupons as $coupon) {
                                                             $filteredcoupons[$coupon->id] = 'Kuponkód: '.$coupon->coupon_code.' -> (felnőtt: '.$coupon->adult.' fő, gyermek: '.$coupon->children.' fő)';
                                                         }
@@ -696,6 +696,6 @@ class CouponResource extends Resource
         /** @var class-string<Model> $modelClass */
         $modelClass = static::$model;
 
-        return (string) $modelClass::where('status', '1')->orwhere('status', '2')->count();
+        return (string) $modelClass::where('status', CouponStatus::CanBeUsed)->orwhere('status', CouponStatus::Applicant)->count();
     }
 }

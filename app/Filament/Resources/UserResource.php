@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\CouponStatus;
 use App\Filament\Exports\UserExporter;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\Coupon;
@@ -127,30 +128,14 @@ class UserResource extends Resource
                     }),
 
                 TextColumn::make('coupons')
-                /*
-                ->formatStateUsing(function($record)
-                {
-                    $coupoAllNums = Coupon::where('user_id', $record->id)->get()->count();
-                    $couponStatusUnderProcess = Coupon::where('user_id', $record->id)->where('status', 0)->get()->count();
-                    $couponStatusCanBeUsed = Coupon::where('user_id', $record->id)->where('status', 1)->orwhere('status', 2)->get()->count();
-                    $couponStatusUsed = Coupon::where('user_id', $record->id)->where('status', 3)->get()->count();
-                    $couponStatusExpired = Coupon::where('user_id', $record->id)->where('status', 4)->get()->count();
-                    return '<p class="text-xs text-gray-500 dark: text-xs text-gray-400"><b>Összesen:</b> '.$coupoAllNums.' kupon, ebből:</p>
-                    <p class="text-xs text-gray-500 dark: text-xs text-gray-400"><b>Feldolgozás alatt:</b> '.$couponStatusUnderProcess.' kupon</p>
-                    <p class="text-xs text-gray-500 dark: text-xs text-gray-400"><b>Felhasználható:</b> '.$couponStatusCanBeUsed.' kupon</p>
-                    <p class="text-xs text-gray-500 dark: text-xs text-gray-400"><b>Felhasznált:</b> '.$couponStatusUsed.' kupon</p>
-                    <p class="text-xs text-gray-500 dark: text-xs text-gray-400"><b>Lejárt:</b> '.$couponStatusExpired.' kupon</p>
-                    ';
-                })
-                ->html()
-                */
                     ->formatStateUsing(function ($record) {
-                        $couponStatusUnderProcess = Coupon::where('user_id', $record->id)->where('status', 0)->get()->count();
-                        $couponStatusCanBeUsed = Coupon::where('user_id', $record->id)->where('status', 1)->orwhere('status', 2)->get()->count();
-                        $couponStatusUsed = Coupon::where('user_id', $record->id)->where('status', 3)->get()->count();
-                        $couponStatusExpired = Coupon::where('user_id', $record->id)->where('status', 4)->get()->count();
+                        $coupons = $record->coupons;
+                        $couponStatusUnderProcess = $coupons->where('status', CouponStatus::UnderProcess)->count();
+                        $couponStatusCanBeUsed = $coupons->whereIn('status', [CouponStatus::CanBeUsed, CouponStatus::Applicant])->count();
+                        $couponStatusUsed = $coupons->where('status', CouponStatus::CanBeUsed)->count();
+                        $couponStatusExpired = $coupons->where('status', CouponStatus::Expired)->count();
 
-                        return $couponStatusUnderProcess.', '.$couponStatusCanBeUsed.', '.$couponStatusUsed.', '.$couponStatusExpired;
+                        return implode(', ', [$couponStatusUnderProcess, $couponStatusCanBeUsed, $couponStatusUsed, $couponStatusExpired]);
                     })
                     ->tooltip('Feldolgozás alatt, Felhasználható, Felhasznált, Lejárt')
                     ->label('Kuponok'),

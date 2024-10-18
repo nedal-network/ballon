@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AircraftLocationPilotResource\Pages;
 
+use App\Enums\AircraftLocationPilotStatus;
 use App\Filament\CustomActions;
 use App\Filament\Resources\AircraftLocationPilotResource;
 use Filament\Actions;
@@ -24,11 +25,11 @@ class ListAircraftLocationPilots extends ListRecords
     {
         return [
             null => Tab::make('Mind'),
-            'Tervezett' => Tab::make()->query(fn ($query) => $query->where('status', '0'))->icon('tabler-player-pause'),
-            'Publikált' => Tab::make()->query(fn ($query) => $query->where('status', '1'))->icon('tabler-player-play'),
-            'Véglegesített' => Tab::make()->query(fn ($query) => $query->where('status', '2'))->icon('tabler-flag-check'),
-            'Végrehajtott' => Tab::make()->query(fn ($query) => $query->where('status', '3'))->icon('tabler-player-stop'),
-            'Törölt' => Tab::make()->query(fn ($query) => $query->where('status', '4'))->icon('tabler-playstation-x'),
+            'Tervezett' => Tab::make()->query(fn ($query) => $query->where('status', AircraftLocationPilotStatus::Draft))->icon('tabler-player-pause'),
+            'Publikált' => Tab::make()->query(fn ($query) => $query->where('status', AircraftLocationPilotStatus::Published))->icon('tabler-player-play'),
+            'Véglegesített' => Tab::make()->query(fn ($query) => $query->where('status', AircraftLocationPilotStatus::Finalized))->icon('tabler-flag-check'),
+            'Végrehajtott' => Tab::make()->query(fn ($query) => $query->where('status', AircraftLocationPilotStatus::Executed))->icon('tabler-player-stop'),
+            'Törölt' => Tab::make()->query(fn ($query) => $query->where('status', AircraftLocationPilotStatus::Deleted))->icon('tabler-playstation-x'),
         ];
     }
 }
