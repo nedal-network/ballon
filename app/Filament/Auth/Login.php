@@ -36,8 +36,8 @@ class Login extends BaseAuth
 
         if (User::onlyTrashed()->firstWhere('email', $data['email'])) {
             Notification::make()
-                ->title('Kitiltva')
-                ->body('További információkért írjon az '.env('INFO_EMAIL').' email címre')
+                ->title('Felhasználó törölve')
+                ->body('Ezzel az e-mail címmel korábban törölve lett egy felhasználó a rendszerből. Ha szeretnél újra regisztrálni ezzel a címmel, írj üzenetet a '.env('INFO_EMAIL').' -ra.')
                 ->danger()
                 ->send();
 
