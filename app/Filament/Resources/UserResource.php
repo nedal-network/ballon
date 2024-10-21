@@ -17,6 +17,8 @@ use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
@@ -118,12 +120,7 @@ class UserResource extends Resource
                     ->formatStateUsing(function ($state) {
                         $last_date = Carbon::parse($state)->translatedFormat('Y.m.d.');
                         $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-                        if ($diff_day_nums == 0) {
-                            return $last_date.', mai napon';
-                        }
-                        if ($diff_day_nums != 0) {
-                            return $last_date.', '.abs($diff_day_nums).($diff_day_nums < 0 ?: ' napja');
-                        }
+                        return $diff_day_nums;
                     }),
 
                 TextColumn::make('coupons')
@@ -161,7 +158,7 @@ class UserResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\Action::make('kupon_filter')->label('Kuponok')
@@ -171,6 +168,8 @@ class UserResource extends Resource
                     ->tooltip('Átjelentkezés')
                     ->redirectTo(route('filament.admin.pages.dashboard'))
                     ->icon('tabler-ghost-2'),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -193,5 +192,13 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }

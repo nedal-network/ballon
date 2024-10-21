@@ -255,12 +255,8 @@ class PendingcouponResource extends Resource
                 TextColumn::make('expiration_at')
                     ->label('Lejárat')
                     ->formatStateUsing(function ($state) {
-                        //return Carbon::parse($state)->translatedFormat('Y.m.d.');
-
-                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-
-                        return Carbon::parse($state)->translatedFormat('Y.m.d.').', '.abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
-
+                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false) * -1;
+                        return ($diff_day_nums > 0 ? '+' : '') . $diff_day_nums;
                     })
 
                     /*->description(function($state)
@@ -541,7 +537,29 @@ class PendingcouponResource extends Resource
                             }),
                     ]),
                 //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
-                Tables\Actions\DeleteAction::make()->label(false)->tooltip('Törlés'),
+                Tables\Actions\DeleteAction::make()
+                ->label(false)
+                ->tooltip('Törlés')
+                ->action(function($action) {
+                    try {
+                        $result = $action->process(static fn (Model $record) => $record->delete());
+                    } catch (\Throwable $th) {
+                        $result = false;
+                        if($th->errorInfo[0] == "23000" && $th->errorInfo[1] == 1451) { //idegene kulcs miatt nem törölhető
+                            $action->failureNotificationTitle('Aktív jelentkezéssel rendelkezik!<br>Nem törölhető!');
+                        } else {
+                            $action->failureNotificationTitle('Hiba történt!');
+                        }
+                    } finally {
+                        if (! $result) {
+                            $action->failure();
+
+                            return;
+                        }
+
+                        $action->success();
+                    }
+                }),
                 //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
 
             ])

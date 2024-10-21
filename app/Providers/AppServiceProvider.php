@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
                             $coupons_not_filled_with_passengers++;
                         }
                     }
-                    if ($coupons_not_filled_with_passengers > 0) {
+                    if ($coupons_not_filled_with_passengers > 0 && !str_contains(env('APP_URL').$_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
                         Notification::make()
                             ->title('Hiányzó utasadatok!')
                             ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
@@ -52,15 +52,11 @@ class AppServiceProvider extends ServiceProvider
                             ->icon('tabler-alert-triangle')
                             ->persistent()
                             ->actions(function () {
-                                if (str_contains(env('APP_URL').$_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
-                                    return [];
-                                }
-
                                 return [
                                     Action::make('redirect')
                                         ->button()
                                         ->label('Ugrás a kitöltendő kuponokhoz')
-                                        ->url(CouponResource::getUrl().'?activeTab=Figyelmeztet%C3%A9sek'),
+                                        ->url(CouponResource::getUrl()),
                                 ];
                             })
                             ->send();
