@@ -277,7 +277,7 @@ class CouponResource extends Resource
                                                             if ($virtualcoupon->description) {
                                                                 $filteredvirtualcoupons[$virtualcoupon->id] .= '<div class="text-xs pl-2">Megjegyzés: '.$virtualcoupon->description.'</div>';
                                                             }
-                                                            if ($virtualcoupon->description) {
+                                                            if ($virtualcoupon->total_price) {
                                                                 $filteredvirtualcoupons[$virtualcoupon->id] .= '<div class="text-xs pl-2">Ár: <strong>'.number_format($virtualcoupon->total_price, 0, '', ' ').' Ft</strong></div>';
                                                             }
                                                         }
