@@ -28,7 +28,7 @@ class AircraftLocationPilot extends Model
     {
         static::updated(function (self $event) {
 
-            if ($event->status === AircraftLocationPilotStatus::Executed || $event->status === AircraftLocationPilotStatus::Deleted) {
+            if (in_array($event->status, [AircraftLocationPilotStatus::Executed, AircraftLocationPilotStatus::Deleted, AircraftLocationPilotStatus::Feedback])) {
 
                 $checkedCoupons = array_filter($event->coupons->map(function ($coupon) {
 
@@ -49,11 +49,13 @@ class AircraftLocationPilot extends Model
                         foreach ($event->coupons as $coupon) {
 
                             foreach ($coupon->passengers as $passenger) {
-                                Mail::to($passenger->email)->queue(new EventExecuted(
-                                    passenger: $passenger,
-                                    coupon: $coupon,
-                                    event: $event
-                                ));
+                                if ($passenger->email) {
+                                    Mail::to($passenger->email)->queue(new EventExecuted(
+                                        passenger: $passenger,
+                                        coupon: $coupon,
+                                        event: $event
+                                    ));
+                                }
                             }
                         }
                         break;
@@ -68,7 +70,7 @@ class AircraftLocationPilot extends Model
 
                         Checkin::where('aircraft_location_pilot_id', $event->id)->whereIn('coupon_id', $checkedCoupons)->update(['status' => 0]);
 
-                        if ($event->getOriginal('status') !== AircraftLocationPilotStatus::Executed) {
+                        if (! in_array($event->getOriginal('status'), [AircraftLocationPilotStatus::Executed, AircraftLocationPilotStatus::Feedback])) {
                             foreach ($event->coupons as $coupon) {
                                 Mail::to($coupon->user)->queue(new EventDeleted(
                                     user: $coupon->user,
