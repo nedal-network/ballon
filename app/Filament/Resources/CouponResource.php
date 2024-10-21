@@ -270,11 +270,19 @@ class CouponResource extends Resource
                                                     ->hiddenLabel()
                                                     ->content(function ($record) {
                                                         $virtualcoupons = Coupon::where('parent_id', '=', $record->id)->where('source', '=', 'Kiegészítő')->get();
+                                                        $summ_price = 0;
                                                         foreach ($virtualcoupons as $virtualcoupon) {
+                                                            $summ_price += $virtualcoupon->total_price;
                                                             $filteredvirtualcoupons[$virtualcoupon->id] = 'Kuponkód: '.$virtualcoupon->coupon_code.' -> (felnőtt: '.$virtualcoupon->adult.' fő, gyermek: '.$virtualcoupon->children.' fő)';
+                                                            if ($virtualcoupon->description) {
+                                                                $filteredvirtualcoupons[$virtualcoupon->id] .= '<div class="text-xs pl-2">Megjegyzés: '.$virtualcoupon->description.'</div>';
+                                                            }
+                                                            if ($virtualcoupon->description) {
+                                                                $filteredvirtualcoupons[$virtualcoupon->id] .= '<div class="text-xs pl-2">Ár: <strong>'.number_format($virtualcoupon->total_price, 0, '', ' ').' Ft</strong></div>';
+                                                            }
                                                         }
 
-                                                        return new HtmlString(implode(',<br>', $filteredvirtualcoupons ??= []));
+                                                        return new HtmlString(implode('<br>', $filteredvirtualcoupons ??= []).($summ_price > 0 ? '<div class="text-base pt-1 mt-2 border-t">Helyszínen összesen fizetendő: <strong>'.number_format($summ_price, 0, '', ' ').' Ft</strong></div>' : ''));
                                                     }),
 
                                             ])
@@ -618,12 +626,14 @@ class CouponResource extends Resource
                     ->formatStateUsing(function ($state, Coupon $payload) {
                         $extra_adult = 0;
                         $extra_children = 0;
+                        $summ_price = 0;
                         if ($payload->childrenCoupons) {
                             $extra_adult += $payload->childrenCoupons->map(fn ($coupon) => $coupon->adult)->sum();
                             $extra_children += $payload->childrenCoupons->map(fn ($coupon) => $coupon->children)->sum();
+                            $summ_price += $payload->childrenCoupons->map(fn ($coupon) => ($coupon->source == 'Kiegészítő' ? $coupon->total_price : 0))->sum();
                         }
 
-                        return '<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.($extra_adult > 0 ? '+'.$extra_adult : '').'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span> <span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.($extra_children > 0 ? '+'.$extra_children : '').'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span></p>';
+                        return '<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.($extra_adult > 0 ? '+'.$extra_adult : '').'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span> <span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.($extra_children > 0 ? '+'.$extra_children : '').'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span>'.($summ_price > 0 ? '<br><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">Fizetendő:</span> '.number_format($summ_price, 0, '', ' ').' Ft' : '').'</p>';
                     })->html()
                     ->searchable()
                     ->visibleFrom('md'),
