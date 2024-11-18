@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
                             $coupons_not_filled_with_passengers++;
                         }
                     }
-                    if ($coupons_not_filled_with_passengers > 0 && !str_contains(env('APP_URL').$_SERVER['REQUEST_URI'], CouponResource::getUrl())) {
+                    if ($coupons_not_filled_with_passengers > 0 && ! str_contains(CouponResource::getUrl(), $_SERVER['REQUEST_URI'])) {
                         Notification::make()
                             ->title('Hiányzó utasadatok!')
                             ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
