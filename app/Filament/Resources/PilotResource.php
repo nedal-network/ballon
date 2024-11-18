@@ -49,6 +49,15 @@ class PilotResource extends Resource
                                             ->label('Keresztnév')
                                             ->placeholder('Jakab')
                                             ->required(),
+                                        Forms\Components\TextInput::make('phone')
+                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
+                                            ->tel()
+                                            ->label('Telefonszám')
+                                            ->prefixIcon('tabler-device-mobile')
+                                            ->placeholder('+36_________')
+                                            ->mask('+99999999999')
+                                            ->maxLength(30)
+                                            ->required(),
                                         Forms\Components\TextInput::make('pilot_license_number')
                                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
                                             ->label('Pilóta engedély azonosító')
@@ -58,16 +67,9 @@ class PilotResource extends Resource
                                         'sm' => 1,
                                         'md' => 2,
                                         'lg' => 2,
-                                        'xl' => 3,
-                                        '2xl' => 3,
+                                        'xl' => 4,
+                                        '2xl' => 4,
                                     ]),
-
-                            ])->columnSpan([
-                                'sm' => 4,
-                                'md' => 4,
-                                'lg' => 4,
-                                'xl' => 3,
-                                '2xl' => 3,
                             ]),
                     ]),
             ]);

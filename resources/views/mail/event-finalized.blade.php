@@ -46,6 +46,11 @@
         <p>Kérlek, vedd figyelembe, hogy az időponton +-30 percet és a helyszínen is változtatunk a repülés előtti napokban, ha ezt az időjárás előrejelzés alapján szükségesnek látjuk. Ha ezt megtesszük, arról e-mail, vagy sms értesítést fogsz kapni.
         <p>A helyszínre a kijutást neked kell egyénileg megoldani a változtatást követően is, illetve javasoljuk, hogy a helyszínnel kapcsolatban részletesen tájékozódj a weboldalon és érdeklődj, ha esetleg nem vagy biztos benne, hogy megtalálod. A repülés előtt már nincs kapacitásunk téged útba igazítani, ha akkor derül ki, hogy a címet nem találod meg és így lemaradsz a repülésről.
         <p>Egy repülés lemondáskor minden résztvevőnek egyszerre kerül kiküldésre a lemondásról szóló üzenet. Amég ez nem történik meg, addig a repülés végleges.
+        <p>
+            A repülési előtti órákban az ottani csapatot (jellemzően a pilótát) az alábbi elérhetőségen éred el szükség esetén elsődlegesen sms-ben. (két repülés között a pilóták jellemzően pihenő idejüket töltik és nem veszik fel a telefont) {{ $event->pilot->fullname }}, {{ $event->pilot->phone }}
+            <br>
+            Kérünk, hogy ha szerinted aznap nem tűnik jónak az időjárás a programhoz, akkor a repülés esélyeivel kapcsolatban NE keresd a pilótát, mivel erről nem fog neked semmilyen információt adni. Egy repülés lemondáskor minden résztvevőnek egyszerre kerül kiküldésre a lemondásról szóló üzenet. Amég ez nem történik meg, addig a repülés végleges.
+        </p>
         <p>Kérjük, ne feledkezz el a személyenkénti kitöltött felelősség vállalási nyilatkozatról, továbbá tájékozódj a repülési feltételekről, ruházati követelményekről is, ha esetleg ezt az információt nem ismerted meg.
     </div>
 </x-mail::message>
