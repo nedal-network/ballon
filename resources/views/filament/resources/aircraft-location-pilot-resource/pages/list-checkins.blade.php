@@ -16,7 +16,7 @@
                 @php
                     $bodiesWeight = 0;
                     $membersCount = 0;
-                    foreach ($record->coupons->whereIn('id', $selectedCoupons) as $coupon) {
+                    foreach ($record->coupons->whereIn('id', $this->selectedCoupons) as $coupon) {
                         $bodiesWeight += $coupon->membersBodyWeight;
                         $membersCount += $coupon->membersCount;
                     }
@@ -38,19 +38,33 @@
         </header>
 
         @php
-            $columns = 9;
+            $columns = 8;
             $grid_cols = '3.5rem';
             for ($i = 1; $i < $columns; $i++) {
                 $grid_cols .= ' auto';
             }
             $style = 'grid-column: span ' . $columns - 1 . ' / span ' . $columns - 1 . ';';
         @endphp
+
+        <div class="flex gap-4 h-min items-center">
+            @php
+                $selectedCoupons = $record->coupons->whereIn('id', $this->selectedCoupons);
+                $selectedPassengers = $selectedCoupons->map(fn ($coupon) => $coupon->passengers)->flatten();
+            @endphp
+            <h4>Kijelölt utasok adatainak másolás:</h4>
+            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedPassengers->where('email', '!=', '')->implode('email', ';') }}'); new FilamentNotification().title('Email címek vágólapra másolva').icon('tabler-mail-forward').success().send()">
+                <x-tabler-mail-forward class="h-5" />
+            </x-filament::button>
+
+            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedPassengers->where('phone', '!=', '')->implode('phone', ';') }}'); new FilamentNotification().title('Telefonszámok vágólapra másolva').icon('tabler-device-mobile').success().send()">
+                <x-tabler-device-mobile class="h-5" />
+            </x-filament::button>
+        </div>
         <div class="custom-table grid overflow-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10" style="grid-template-columns: {{ $grid_cols }};">
 
             <div class="thead"></div>
             <div class="thead">Kupon kód</div>
             <div class="thead">Kapcsolattartó</div>
-            <div class="thead">Utas adatok</div>
             <div class="thead">Jelentkezett ekkor</div>
             <div class="thead">Jegytípus</div>
             <div class="thead">A/I</div>
@@ -73,9 +87,11 @@
                 <label id="checkbox" class="tbody @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif> <input id="coupon-{{ $coupon->id }}" class="checkbox ms-2" type="checkbox" @disabled($isCheckedAlready || $coupon->missingData) wire:model.live="selectedCoupons" value="{{ $coupon->id }}">
                 </label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->coupon_code }}</span></label>
-                <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->name }}</span><span class="text-sm"><br>{{ $coupon->user->email }}<br>{{ $coupon->user->phone }}</span></label>
-                <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><button style="width: 35px; --c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="bg-custom-600 dark:bg-custom-500 dark:focus-visible:ring-custom-400/50 dark:hover:bg-custom-400 fi-ac-action fi-ac-btn-action fi-btn fi-btn-color-primary fi-btn-size-md fi-color-custom fi-color-primary fi-size-md focus-visible:ring-custom-500/50 hover:bg-custom-500 relative mb-2 inline-grid grid-flow-col items-center justify-center gap-1.5 rounded py-1 text-sm font-semibold text-white shadow-sm outline-none transition duration-75 focus-visible:ring-2" @click="navigator.clipboard.writeText('{{ implode(';', $coupon->passengers->where('email', '!=', '')->pluck('email')->toArray()) }}'); new FilamentNotification().title('Email címek vágólapra másolva').icon('tabler-mail-forward').success().send()"><x-tabler-mail-forward style="height: 16px;" /></button><br><button style="width: 35px; --c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="bg-custom-600 dark:bg-custom-500 dark:focus-visible:ring-custom-400/50 dark:hover:bg-custom-400 fi-ac-action fi-ac-btn-action fi-btn fi-btn-color-primary fi-btn-size-md fi-color-custom fi-color-primary fi-size-md focus-visible:ring-custom-500/50 hover:bg-custom-500 relative mt-2 inline-grid grid-flow-col items-center justify-center gap-1.5 rounded py-1 text-sm font-semibold text-white shadow-sm outline-none transition duration-75 focus-visible:ring-2" @click="navigator.clipboard.writeText('{{ implode(';', $coupon->passengers->where('phone', '!=', '')->pluck('phone')->toArray()) }}'); new FilamentNotification().title('Telefonszámok vágólapra másolva').icon('tabler-device-mobile').success().send()"><x-tabler-device-mobile
-                            style="height: 16px;" /></button></label>
+                <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
+                    <span style="opacity: 1">{{ $coupon->user->name }}</span>
+                    <span class="text-sm">{{ $coupon->user->email }}</span>
+                    <span class="text-sm">{{ $coupon->user->phone }}</span>
+                </label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->pivot->created_at)->translatedFormat('Y.m.d., H:i') }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->tickettype->name }}</span></label>
                 <label for="coupon-{{ $coupon->id }}" class="tbody min-w-1 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '>=', now())->count() }}/{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '<', now())->count() }}</span></label>
