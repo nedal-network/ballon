@@ -89,6 +89,7 @@ class PilotResource extends Resource
                     ->label('Pilóta engedély')
                     ->searchable()
                     ->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('phone')->label('Telefonszám')
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make()->native(false),
