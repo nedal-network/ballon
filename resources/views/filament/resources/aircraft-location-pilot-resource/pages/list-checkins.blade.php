@@ -49,14 +49,14 @@
         <div class="flex gap-4 h-min items-center">
             @php
                 $selectedCoupons = $record->coupons->whereIn('id', $this->selectedCoupons);
-                $selectedPassengers = $selectedCoupons->map(fn ($coupon) => $coupon->passengers)->flatten();
+                $selectedContacts = $selectedCoupons->map(fn ($coupon) => $coupon->user)->flatten();
             @endphp
             <h4>Kijelölt utasok adatainak másolás:</h4>
-            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedPassengers->where('email', '!=', '')->implode('email', ';') }}'); new FilamentNotification().title('Email címek vágólapra másolva').icon('tabler-mail-forward').success().send()">
+            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedContacts->where('email', '!=', '')->implode('email', ';') }}'); new FilamentNotification().title('Email címek vágólapra másolva').icon('tabler-mail-forward').success().send()">
                 <x-tabler-mail-forward class="h-5" />
             </x-filament::button>
 
-            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedPassengers->where('phone', '!=', '')->implode('phone', ';') }}'); new FilamentNotification().title('Telefonszámok vágólapra másolva').icon('tabler-device-mobile').success().send()">
+            <x-filament::button x-data="" @click="navigator.clipboard.writeText('{{ $selectedContacts->where('phone', '!=', '')->implode('phone', ';') }}'); new FilamentNotification().title('Telefonszámok vágólapra másolva').icon('tabler-device-mobile').success().send()">
                 <x-tabler-device-mobile class="h-5" />
             </x-filament::button>
         </div>
