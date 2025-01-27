@@ -60,6 +60,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             $notification->url = Filament::getVerifyEmailUrl($user);
 
             $user->notify($notification);
+
+            if (! $user->roles->count()) {
+                $user->assignRole('vásárló');
+            }
         });
     }
 
