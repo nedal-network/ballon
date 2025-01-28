@@ -254,10 +254,7 @@ class PendingcouponResource extends Resource
                     ->color('Amber'),
                 TextColumn::make('expiration_at')
                     ->label('Lejárat')
-                    ->formatStateUsing(function ($state) {
-                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false) * -1;
-                        return ($diff_day_nums > 0 ? '+' : '') . $diff_day_nums;
-                    })
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.'))
 
                     /*->description(function($state)
                 {

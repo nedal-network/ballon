@@ -117,11 +117,7 @@ class UserResource extends Resource
                     }),
                 TextColumn::make('last_login_at')
                     ->label('Utoljára itt')
-                    ->formatStateUsing(function ($state) {
-                        $last_date = Carbon::parse($state)->translatedFormat('Y.m.d.');
-                        $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-                        return $diff_day_nums;
-                    }),
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.')),
 
                 TextColumn::make('coupons')
                 /*
