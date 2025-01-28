@@ -66,6 +66,9 @@ class CreateCoupon extends CreateRecord
                                     $response_product_attributes = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/products/'.$response_product_id);
                                     if ($response_product_attributes->successful()) {
                                         $product_attributes = $response_product_attributes->json();
+                                        if (count($product_attributes['attributes']) < 3) {
+                                            continue;
+                                        }
                                         $data['tickettype_id'] = ($product_attributes['attributes'][0]['options'][0]) * 1;
                                         $data['adult'] = ($product_attributes['attributes'][1]['options'][0]) * $response_item_nums;
                                         $data['children'] = ($product_attributes['attributes'][2]['options'][0]) * $response_item_nums;
