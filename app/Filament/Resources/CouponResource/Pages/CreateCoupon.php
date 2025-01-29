@@ -38,9 +38,9 @@ class CreateCoupon extends CreateRecord
         }
         if ($checking_the_existence_of_a_coupon == 0) {
             if ($data['source'] == 'Ballonozz') {
+                $data['coupon_code'] = str_replace('#', '', $data['coupon_code']);
                 try {
                     $response_coupon = Http::withBasicAuth(env('BALLONOZZ_API_USER_KEY'), env('BALLONOZZ_API_SECRET_KEY'))->get('https://ballonozz.hu/wp-json/wc/v3/orders/'.$data['coupon_code']);
-
                     //Felőtt(3db->3f): 1567
                     //Családi(1db->2f+2gy): 1508 érvénes
                     //1526 nem érvényes
