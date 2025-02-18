@@ -158,7 +158,7 @@ class EventResource extends Resource
                 TextColumn::make('description')
                     ->label('Leírás')
                     ->formatStateUsing(function ($state) {
-                        $text = '';
+                        $text = $state;
                         $wrapText = '...';
                         $count = 60;
                         if (strlen($state) > $count) {
