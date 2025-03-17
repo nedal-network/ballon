@@ -103,6 +103,8 @@ class UserResource extends Resource
                     ]),
             ])
             ->columns([
+                TextColumn::make('id')->label('ID')
+                    ->searchable(),
                 TextColumn::make('name')->label('Név')
                     ->searchable(),
                 TextColumn::make('email')

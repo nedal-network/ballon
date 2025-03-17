@@ -28,6 +28,7 @@ use Filament\Pages\Page;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\HtmlString;
 use Illuminate\Validation\Rules\Password;
 
 class EditProfile extends Page implements HasForms
@@ -40,7 +41,6 @@ class EditProfile extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'tabler-user-circle';
 
-    //protected static bool $shouldRegisterNavigation = false;
     public ?array $profileData = [];
 
     public ?array $passwordData = [];
@@ -63,7 +63,9 @@ class EditProfile extends Page implements HasForms
         return $form
             ->schema([
                 Forms\Components\Section::make('Felhasználói profil')
-                    ->description('Itt frissítheted felhasználóneved és a regisztrációhoz használt e-mail címed.')
+                    ->description(
+                        fn ($record) => new HtmlString("Itt frissítheted felhasználóneved és a regisztrációhoz használt e-mail címed. <strong>Felhasználó azonosító: {$record->id}<strong>")
+                    )
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Név')
