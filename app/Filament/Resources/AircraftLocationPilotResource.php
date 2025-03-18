@@ -3,15 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Enums\AircraftLocationPilotStatus;
+use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\AircraftLocationPilotResource\Pages;
 use App\Models\Aircraft;
 use App\Models\AircraftLocationPilot;
 use App\Models\Location;
 use App\Models\Pilot;
 use App\Models\Region;
-use Filament\Actions\Action;
-/* saját use-ok */
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -25,8 +23,6 @@ use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -59,13 +55,12 @@ class AircraftLocationPilotResource extends Resource
                             ->schema([
                                 Fieldset::make('Tervezett repülés ideje')
                                     ->schema([
-                                        DatePicker::make('date')
+                                        CustomDatePicker::make('date')
                                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
                                             ->label('Dátum')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
-                                            //->placeholder(now())
-                                            ->displayFormat('Y-m-d')
+                                            ->format('Y-m-d')
                                             ->required(),
 
                                         TimePicker::make('time')

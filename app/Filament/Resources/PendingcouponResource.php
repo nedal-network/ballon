@@ -3,12 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Enums\CouponStatus;
+use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\PendingcouponResource\Pages;
-use App\Models\Coupon;
 use App\Models\Pendingcoupon;
 use App\Models\Tickettype;
 use App\Models\User;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -30,8 +29,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Laravel\SerializableClosure\Serializers\Native;
 
 class PendingcouponResource extends Resource
 {
@@ -155,13 +152,13 @@ class PendingcouponResource extends Resource
 
                                 Fieldset::make('Érvényesség hosszabbítás')
                                     ->schema([
-                                        DatePicker::make('expiration_at')
+                                        CustomDatePicker::make('expiration_at')
                                             ->label('Felhasználható')
                                             ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
                                             ->format('Y-m-d')
-                                            ->displayFormat('Y-m-d')
+                                            ->displayFormat('Y.m.d.')
                                             ->live()
                                             ->default(now()),
                                     ])->columns(2),
@@ -328,8 +325,8 @@ class PendingcouponResource extends Resource
                     ->native(false),
                 Filter::make('created_at')
                     ->form([
-                        DatePicker::make('created_from')->label('Létrehozási dátumtól')->format('Y-m-d')->displayFormat('Y-m-d'),
-                        DatePicker::make('created_until')->label('Létrehozási dátumig')->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
+                        CustomDatePicker::make('created_from')->label('Létrehozási dátumtól')->format('Y-m-d')->displayFormat('Y.m.d.'),
+                        CustomDatePicker::make('created_until')->label('Létrehozási dátumig')->format('Y-m-d')->displayFormat('Y.m.d.')->default(now()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -353,8 +350,8 @@ class PendingcouponResource extends Resource
                 /*
                 Filter::make('expiration_at')
                     ->form([
-                        DatePicker::make('expiration_from')->label('Lejárati dátumtól')->native(false)->format('Y-m-d')->displayFormat('Y-m-d'),
-                        DatePicker::make('expiration_until')->label('Lejárati dátumig')->native(false)->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
+                        CustomDatePicker::make('expiration_from')->label('Lejárati dátumtól')->native(false)->format('Y-m-d')->displayFormat('Y-m-d'),
+                        CustomDatePicker::make('expiration_until')->label('Lejárati dátumig')->native(false)->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -495,13 +492,13 @@ class PendingcouponResource extends Resource
                                                 modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
                                             )
                                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
-                                        DatePicker::make('expiration_at')
+                                        CustomDatePicker::make('expiration_at')
                                             ->label('Felhasználható')
                                             ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
                                             ->format('Y-m-d')
-                                            ->displayFormat('Y-m-d')
+                                            ->displayFormat('Y.m.d.')
                                             ->default(now()),
                                     ])->columns(2),
 

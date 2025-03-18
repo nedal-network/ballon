@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\EventResource\Pages;
 use App\Models\Event;
 use Carbon\Carbon;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
@@ -72,19 +72,19 @@ class EventResource extends Resource
                             ->schema([
                                 Fieldset::make('Esemény ideje')
                                     ->schema([
-                                        DatePicker::make('start_date')
+                                        CustomDatePicker::make('start_date')
                                             ->helperText('Válaszd ki az esemény kezdő dátumát.')
                                             ->label('Esemény kezdete')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
-                                            ->displayFormat('Y-m-d')
+                                            ->format('Y-m-d')
                                             ->required(),
-                                        DatePicker::make('end_date')
+                                        CustomDatePicker::make('end_date')
                                             ->helperText('Válaszd ki az esemény záró dátumát.')
                                             ->label('Esemény vége')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
-                                            ->displayFormat('Y-m-d')
+                                            ->format('Y-m-d')
                                             ->required(),
                                     ])->columns(1),
                             ])
@@ -183,9 +183,13 @@ class EventResource extends Resource
                 Filter::make('events')
                     ->label('Események')
                     ->form([
-                        DatePicker::make('event_start')
+                        CustomDatePicker::make('event_start')
+                            ->format('Y-m-d')
+                            ->displayFormat('Y.m.d.')
                             ->label('Esemény kezdete'),
-                        DatePicker::make('event_end')
+                        CustomDatePicker::make('event_end')
+                            ->format('Y-m-d')
+                            ->displayFormat('Y.m.d.')
                             ->label('Esemény vége'),
                     ])
                     ->indicateUsing(function (array $data): array {

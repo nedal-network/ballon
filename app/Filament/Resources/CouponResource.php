@@ -3,12 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Enums\CouponStatus;
+use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\CouponResource\Pages;
 use App\Models\Coupon;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
@@ -70,8 +69,7 @@ class CouponResource extends Resource
                                             </svg></div><div style="float:left; position:relative;">'.$record->coupon_code.'</div>
                                         </div>
                                         ');
-                                                        }
-                                                        if (! empty($record->auxiliary_coupon_code)) {
+                                                        } else {
                                                             return new HtmlString('
                                         <div id="coupon_inline">
                                             <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
@@ -445,13 +443,12 @@ class CouponResource extends Resource
                                     ]),
                                 Fieldset::make('Érvényesség')
                                     ->schema([
-                                        DatePicker::make('expiration_at')
+                                        CustomDatePicker::make('expiration_at')
                                             ->label('Kupon lejárati dátum')
                                             ->helperText('Add meg a kuponon szereplő lejárti dátumot.')
                                             ->prefixIcon('tabler-calendar')
                                             ->weekStartsOnMonday()
                                             ->format('Y-m-d')
-                                            ->displayFormat('Y-m-d')
                                             ->default(function () {
                                                 return Carbon::today()->addDay();
                                             })
@@ -507,11 +504,11 @@ class CouponResource extends Resource
                                                     ->minLength(3)
                                                     ->maxLength(255)
                                                     ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
-                                                DatePicker::make('date_of_birth')
+                                                CustomDatePicker::make('date_of_birth')
                                                     ->label('Születési dátum')
                                                     ->prefixIcon('tabler-calendar')
                                                     ->weekStartsOnMonday()
-                                                    ->displayFormat('Y-m-d')
+                                                    ->format('Y-m-d')
                                                     ->extraInputAttributes(fn ($state) => $state == '' ? ['style' => 'background-color: #ff00004d'] : []),
                                                 TextInput::make('id_card_number')
                                                     ->label('Igazolvány szám')

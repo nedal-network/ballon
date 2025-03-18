@@ -22,7 +22,7 @@
             @php
                 $dateTime = Carbon\Carbon::parse("{$event->date} {$event->time}");
             @endphp
-            <strong>Dátum: </strong>{{ $dateTime->format('Y.m.d') }}, {{ ucfirst($dateTime->translatedFormat('l')) }} <strong>Tervezett találkozási időpont: </strong>{{ $dateTime->format('H:i') }}<br>
+            <strong>Dátum: </strong>{{ $dateTime->format('Y.m.d.') }}, {{ ucfirst($dateTime->translatedFormat('l')) }} <strong>Tervezett találkozási időpont: </strong>{{ $dateTime->format('H:i') }}<br>
             <strong>Helyszín: </strong><a href="{{ $event->location->online_map_link }}">{{ $event->location->name }}, {{ $event->location->zip_code }} {{ $event->location->settlement }}, {{ $event->location->address }} {{ $event->location->address_number }}</a><br>
             @php
                 $times = [

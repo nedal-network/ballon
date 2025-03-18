@@ -10,7 +10,7 @@
             @php
                 $dateTime = Carbon\Carbon::parse("{$event->date} {$event->time}");
             @endphp
-            <strong>Dátum: </strong>{{ $dateTime->format('Y.m.d') }}, {{ ucfirst($dateTime->translatedFormat('l')) }} <strong>Tervezett találkozási időpont: </strong>{{ $dateTime->format('H:i') }}
+            <strong>Dátum: </strong>{{ $dateTime->format('Y.m.d.') }}, {{ ucfirst($dateTime->translatedFormat('l')) }} <strong>Tervezett találkozási időpont: </strong>{{ $dateTime->format('H:i') }}
         </p>
     </div>
 </x-mail::message>
