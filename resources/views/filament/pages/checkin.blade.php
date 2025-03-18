@@ -121,15 +121,17 @@
                         </div>
                         <div>
                             @if (!$selected && !$this->coupon->isExpired)
-                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-blue-600 hover:!bg-blue-700">Beszállok</x-filament::button>
+                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-blue-600 hover:!bg-blue-700">Jelölöm</x-filament::button>
                             @elseif(!$selected && $this->coupon->isExpired)
-                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-gray-600/50 hover:!bg-gray-700/50" disabled>Beszállok</x-filament::button>
+                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-gray-600/50 hover:!bg-gray-700/50" disabled>Jelölöm</x-filament::button>
+                            @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked && $finalized)
+                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
                             @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked)
-                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
+                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Törlés</x-filament::button>
                             @elseif($checked)
-                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkOut({{ $event->id }})" disabled>Kiszállok</x-filament::button>
+                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkOut({{ $event->id }})" disabled>Törlés</x-filament::button>
                             @else
-                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
+                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Törlés</x-filament::button>
                             @endif
                         </div>
                     </div>
