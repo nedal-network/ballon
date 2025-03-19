@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AircraftLocationPilotStatus;
 use App\Enums\AircraftType;
 use App\Enums\CouponStatus;
 use App\Mail\CouponApproved;
@@ -89,10 +90,22 @@ class Coupon extends Model
         }
     }
 
+    protected function isCheckedToAnEvent(): Attribute
+    {
+        return Attribute::make(
+            get: function (): bool {
+                return $this->aircraftLocationPilots
+                    ->whereIn('status', [
+                        AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized
+                    ])
+                    ->count();
+            }
+        );
+    }
+
     protected function isExpired(): Attribute
     {
         return Attribute::make(
-
             get: function () {
                 return Carbon::parse($this->expiration_at) < today();
             }

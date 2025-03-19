@@ -177,7 +177,6 @@ class CouponResource extends Resource
                             ->schema([
                                 Grid::make(12)
                                     ->schema([
-
                                         Fieldset::make()
                                             ->label('Kuponok öszvonása / szétválasztása')
                                             ->schema([
@@ -195,7 +194,15 @@ class CouponResource extends Resource
                                                     ->preload(),
 
                                                 Actions::make([Forms\Components\Actions\Action::make('merge_coupons')
-                                                    ->label('Kuponok összevonása / szétválasztása')
+                                                    ->disabled(fn ($record, string $operation) => $operation == 'edit' && $record->isCheckedToAnEvent)
+                                                    ->label(function ($record, string $operation) {
+                                                        if ($operation == 'edit' && $record->isCheckedToAnEvent) {
+                                                            return 'Kuponok összevonása / szétválasztása előtt töröld a jelölésed minden repülésről';
+                                                        }
+
+                                                        return 'Kuponok összevonása / szétválasztása';
+                                                    })
+                                                    ->color(fn ($record, string $operation) => ($operation == 'edit' && $record->isCheckedToAnEvent) ? 'danger' : 'primary')
                                                     ->extraAttributes(['type' => 'submit'])
                                                     ->action(
                                                         function ($livewire, $record) {
