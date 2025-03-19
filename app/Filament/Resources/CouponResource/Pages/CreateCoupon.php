@@ -25,7 +25,12 @@ class CreateCoupon extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = Auth::id();
-        $checking_the_existence_of_a_coupon = Coupon::where('coupon_code', $data['coupon_code'])->get()->count();
+        $checking_the_existence_of_a_coupon = Coupon::query()
+            ->where('coupon_code', $data['coupon_code'])
+            ->where('auxiliary_coupon_code', $data['auxiliary_coupon_code'])
+            ->where('source', $data['source'])
+            ->get()
+            ->count();
         if ($checking_the_existence_of_a_coupon != 0) {
             Notification::make()
                 ->title('Hibás kuponkódott adott meg!')
