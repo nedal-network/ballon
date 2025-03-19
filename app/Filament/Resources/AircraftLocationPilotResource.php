@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\AircraftLocationPilotStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\AircraftLocationPilotResource\Pages;
+use App\Filament\Resources\AircraftLocationPilotResource\Pages\ListCheckins;
 use App\Models\Aircraft;
 use App\Models\AircraftLocationPilot;
 use App\Models\Location;
@@ -440,7 +441,7 @@ class AircraftLocationPilotResource extends Resource
                 Tables\Actions\Action::make('checkins')
                     ->label('')
                     ->icon('tabler-users-group')
-
+                    ->tooltip(ListCheckins::getNavigationLabel())
                     ->badge(function ($record) {
                         if ($record->coupons->count()) {
                             return $record->coupons->map(fn ($coupon) => $coupon->membersCount)->sum();
@@ -455,7 +456,10 @@ class AircraftLocationPilotResource extends Resource
                 EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
-                DeleteAction::make()->label(false)->tooltip('Törlés'),
+                DeleteAction::make()
+                    ->hidden(fn ($record) => (bool) $record->coupons->count())
+                    ->label(false)
+                    ->tooltip('Törlés'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
