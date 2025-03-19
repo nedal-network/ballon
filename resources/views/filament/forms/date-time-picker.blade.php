@@ -35,6 +35,7 @@
         :suffix-icon-color="$getSuffixIconColor()"
         :valid="! $errors->has($statePath)"
         :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
+        class="overflow-x-hidden overflow-y-hidden"
     >
         @if ($isNative())
             <x-filament::input
@@ -172,9 +173,11 @@
                         wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.display-text"
                         x-model="displayText"
                         @if ($id = $getId()) id="{{ $id }}" @endif
-                        @class([
-                            'w-full border-none bg-transparent px-3 py-1.5 text-base text-gray-950 outline-none transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] sm:text-sm sm:leading-6',
-                        ])
+                        {{
+                            $attributes
+                                ->merge($getExtraInputAttributes(), escape: false)
+                                ->class(['w-full border-none bg-transparent px-3 py-1.5 text-base text-gray-950 outline-none transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] sm:text-sm sm:leading-6'])
+                        }}
                     />
                 </button>
 
