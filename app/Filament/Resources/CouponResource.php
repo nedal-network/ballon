@@ -8,9 +8,10 @@ use App\Filament\Resources\CouponResource\Pages;
 use App\Models\Coupon;
 use Filament\Forms;
 use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Group as FormGroup;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -49,130 +50,144 @@ class CouponResource extends Resource
                 Grid::make(12)
                     ->hiddenOn('create')
                     ->schema([
-                        Section::make()
-                            ->schema([
-                                Grid::make(12)
-                                    ->schema([
+                        FormGroup::make([
+                            Section::make()->schema([
+                                Grid::make(12)->schema([
+                                    Fieldset::make('Kuponja adatai')->schema([
+                                        Placeholder::make('coupon_code')
+                                            ->hiddenLabel()
+                                            ->content(function ($record): HtmlString {
+                                                if (empty($record->auxiliary_coupon_code)) {
+                                                    return new HtmlString('
+                                            <div id="coupon_inline">
+                                                <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                                </svg>
+                                                </svg></div><div style="float:left; position:relative;">'.$record->coupon_code.'</div>
+                                            </div>
+                                            ');
+                                                } else {
+                                                    return new HtmlString('
+                                            <div id="coupon_inline">
+                                                <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                                </svg>
+                                                </svg></div><div style="float:left; position:relative;">'.$record->coupon_code.'</div>
+    
+                                                <br>
+    
+                                                <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
+                                                </svg>
+                                                </svg></div><div style="float:left; position:relative;">'.$record->auxiliary_coupon_code.'</div>
+    
+                                            </div>
+                                            ');
+                                                }
+                                            }),
+                                        Placeholder::make('source')
+                                            ->hiddenLabel()
+                                            ->content(function ($record) {
+                                                if (in_array($record->source, ['Ballonozz', 'Meglepkék'])) {
+                                                    return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="gray">
+                                            <path d="M4 9.5C4 14.0714 9.71429 17.5 9.71429 17.5H14.2857C14.2857 17.5 20 14.0714 20 9.5C20 4.92857 16.4183 1.5 12 1.5C7.58172 1.5 4 4.92857 4 9.5Z" stroke="currentColor" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8.99999 2C5.99996 8 10 17.5 10 17.5" stroke="currentColor" stroke-linejoin="round"/>
+                                            <path d="M14.8843 2C17.8843 8 13.8843 17.5 13.8843 17.5" stroke="currentColor" stroke-linejoin="round"/>
+                                            <path d="M13.4 23H10.6C10.2686 23 10 22.7314 10 22.4V20.6C10 20.2686 10.2686 20 10.6 20H13.4C13.7314 20 14 20.2686 14 20.6V22.4C14 22.7314 13.7314 23 13.4 23Z" stroke="currentColor" stroke-linecap="round"/>
+                                            </svg></div><div style="float:left; position:relative;">'.$record->source.'.hu</div>');
+                                                } else {
+                                                    return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 16v.01" />
+                                            <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                                            <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                                            <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                                            <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                                            <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                                            <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                                        </svg></div><div style="float:left; position:relative;">'.$record->source.'</div>');
+                                                }
 
-                                        Fieldset::make()
-                                            ->label('Kuponja adatai')
-                                            ->schema([
-                                                Placeholder::make('coupon_code')
-                                                    ->hiddenLabel()
-                                                    ->content(function ($record): HtmlString {
-                                                        if (empty($record->auxiliary_coupon_code)) {
-                                                            return new HtmlString('
-                                        <div id="coupon_inline">
-                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
-                                            </svg>
-                                            </svg></div><div style="float:left; position:relative;">'.$record->coupon_code.'</div>
-                                        </div>
-                                        ');
-                                                        } else {
-                                                            return new HtmlString('
-                                        <div id="coupon_inline">
-                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
-                                            </svg>
-                                            </svg></div><div style="float:left; position:relative;">'.$record->coupon_code.'</div>
+                                            }),
+                                        Placeholder::make('adult')
+                                            ->hiddenLabel()
+                                            ->content(function ($record): HtmlString {
+                                                $extra_adult = 0;
+                                                if ($record->childrenCoupons) {
+                                                    $extra_adult += $record->childrenCoupons->map(fn ($coupon) => $coupon->adult)->sum();
+                                                }
 
-                                            <br>
+                                                return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                        <path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" />
+                                        <path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                        <path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" />
+                                    </svg></div><div style="float:left; position:relative;">'.$record->adult.($extra_adult > 0 ? '+'.$extra_adult : '').' fő</div>');
+                                            }),
+                                        Placeholder::make('children')
+                                            ->hiddenLabel()
+                                            ->content(function ($record): HtmlString {
+                                                $extra_children = 0;
+                                                if ($record->childrenCoupons) {
+                                                    $extra_children += $record->childrenCoupons->map(fn ($coupon) => $coupon->children)->sum();
+                                                }
 
-                                            <div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" aria-hidden="true" data-slot="icon">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/>
-                                            </svg>
-                                            </svg></div><div style="float:left; position:relative;">'.$record->auxiliary_coupon_code.'</div>
-
-                                        </div>
-                                        ');
-                                                        }
-                                                    }),
-                                                Placeholder::make('source')
-                                                    ->hiddenLabel()
-                                                    ->content(function ($record) {
-                                                        if (in_array($record->source, ['Ballonozz', 'Meglepkék'])) {
-                                                            return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="gray">
-                                        <path d="M4 9.5C4 14.0714 9.71429 17.5 9.71429 17.5H14.2857C14.2857 17.5 20 14.0714 20 9.5C20 4.92857 16.4183 1.5 12 1.5C7.58172 1.5 4 4.92857 4 9.5Z" stroke="currentColor" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M8.99999 2C5.99996 8 10 17.5 10 17.5" stroke="currentColor" stroke-linejoin="round"/>
-                                        <path d="M14.8843 2C17.8843 8 13.8843 17.5 13.8843 17.5" stroke="currentColor" stroke-linejoin="round"/>
-                                        <path d="M13.4 23H10.6C10.2686 23 10 22.7314 10 22.4V20.6C10 20.2686 10.2686 20 10.6 20H13.4C13.7314 20 14 20.2686 14 20.6V22.4C14 22.7314 13.7314 23 13.4 23Z" stroke="currentColor" stroke-linecap="round"/>
-                                        </svg></div><div style="float:left; position:relative;">'.$record->source.'.hu</div>');
-                                                        } else {
-                                                            return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 16v.01" />
-                                        <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
-                                        <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
-                                        <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
-                                        <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
-                                        <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
-                                        <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
-                                    </svg></div><div style="float:left; position:relative;">'.$record->source.'</div>');
-                                                        }
-
-                                                    }),
-                                                Placeholder::make('adult')
-                                                    ->hiddenLabel()
-                                                    ->content(function ($record): HtmlString {
-                                                        $extra_adult = 0;
-                                                        if ($record->childrenCoupons) {
-                                                            $extra_adult += $record->childrenCoupons->map(fn ($coupon) => $coupon->adult)->sum();
-                                                        }
-
-                                                        return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                    <path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" />
-                                    <path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                    <path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" />
-                                </svg></div><div style="float:left; position:relative;">'.$record->adult.($extra_adult > 0 ? '+'.$extra_adult : '').' fő</div>');
-                                                    }),
-                                                Placeholder::make('children')
-                                                    ->hiddenLabel()
-                                                    ->content(function ($record): HtmlString {
-                                                        $extra_children = 0;
-                                                        if ($record->childrenCoupons) {
-                                                            $extra_children += $record->childrenCoupons->map(fn ($coupon) => $coupon->children)->sum();
-                                                        }
-
-                                                        return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3.5 17.5c5.667 4.667 11.333 4.667 17 0" />
-                                    <path d="M19 18.5l-2 -8.5l1 -2l2 1l1.5 -1.5l-2.5 -4.5c-5.052 .218 -5.99 3.133 -7 6h-6a3 3 0 0 0 -3 3" />
-                                    <path d="M5 18.5l2 -9.5" />
-                                    <path d="M8 20l2 -5h4l2 5" />
-                                </svg></div><div style="float:left; position:relative;">'.$record->children.($extra_children > 0 ? '+'.$extra_children : '').' fő</div>');
-                                                    }),
-                                                Placeholder::make('expiration_at')
-                                                    ->hiddenLabel()
-                                                    ->content(function ($record): HtmlString {
-                                                        return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
-                                    <path d="M16 3v4" />
-                                    <path d="M8 3v4" />
-                                    <path d="M4 11h16" />
-                                    <path d="M11 15h1" />
-                                    <path d="M12 15v3" />
-                                    </svg></div><div style="float:left; position:relative;">'.Carbon::parse($record->expiration_at)->translatedFormat('Y.m.d.').'</div>');
-                                                    }),
-                                            ])
-                                            ->columns([
-                                                'sm' => 5,
-                                                'md' => 5,
-                                                'lg' => 5,
-                                                'xl' => 5,
-                                                '2xl' => 5,
-                                            ]),
-
+                                                return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3.5 17.5c5.667 4.667 11.333 4.667 17 0" />
+                                        <path d="M19 18.5l-2 -8.5l1 -2l2 1l1.5 -1.5l-2.5 -4.5c-5.052 .218 -5.99 3.133 -7 6h-6a3 3 0 0 0 -3 3" />
+                                        <path d="M5 18.5l2 -9.5" />
+                                        <path d="M8 20l2 -5h4l2 5" />
+                                    </svg></div><div style="float:left; position:relative;">'.$record->children.($extra_children > 0 ? '+'.$extra_children : '').' fő</div>');
+                                            }),
+                                        Placeholder::make('expiration_at')
+                                            ->hiddenLabel()
+                                            ->content(function ($record): HtmlString {
+                                                return new HtmlString('<div style="float:left; position:relative; margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="gray" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                                        <path d="M16 3v4" />
+                                        <path d="M8 3v4" />
+                                        <path d="M4 11h16" />
+                                        <path d="M11 15h1" />
+                                        <path d="M12 15v3" />
+                                        </svg></div><div style="float:left; position:relative;">'.Carbon::parse($record->expiration_at)->translatedFormat('Y.m.d.').'</div>');
+                                            }),
+                                    ])->columns([
+                                        'sm' => 5,
+                                        'md' => 5,
+                                        'lg' => 5,
+                                        'xl' => 5,
+                                        '2xl' => 5,
                                     ]),
-                            ])
-                            ->columnSpan([
-                                'sm' => 12,
-                                'md' => 12,
-                                'lg' => 12,
-                                'xl' => 7,
-                                '2xl' => 7,
+                                ]),
                             ]),
-
+                            Grid::make(12)->schema([
+                                Grid::make(12)->columnSpan([
+                                    'sm' => 12,
+                                    'md' => 12,
+                                    'lg' => 12,
+                                    'xl' => 6,
+                                    '2xl' => 6,
+                                ]),
+                                Section::make()->schema([
+                                    Fieldset::make('Érdekelt régiók')->schema([
+                                        CheckboxList::make('liked_regions')->label('Válasszon a régiók közül')
+                                            ->options(fn ($record) => $record?->tickettype?->regions->pluck('name', 'id') ?? []),
+                                    ]),
+                                ])->columnSpan([
+                                    'sm' => 12,
+                                    'md' => 12,
+                                    'lg' => 12,
+                                    'xl' => 6,
+                                    '2xl' => 6,
+                                ]),
+                            ]),
+                        ])->columnSpan([
+                            'sm' => 12,
+                            'md' => 12,
+                            'lg' => 12,
+                            'xl' => 7,
+                            '2xl' => 7,
+                        ]),
                         Section::make()
                             ->schema([
                                 Grid::make(12)

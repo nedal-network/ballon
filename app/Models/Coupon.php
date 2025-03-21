@@ -79,6 +79,11 @@ class Coupon extends Model
         return $this->hasOne(Tickettype::class, 'id', 'tickettype_id');
     }
 
+    public function likedRegions()
+    {
+        return $this->belongsToMany(Region::class, 'liked_regions', 'coupon_id', 'region_id', 'id', 'id');
+    }
+
     private function validatePassengersData(self $coupon): void
     {
         foreach ($coupon->passengers as $p) {

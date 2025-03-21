@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Filament\Resources\CouponResource;
+use App\Filament\Resources\PendingcouponResource\Pages\ListPendingcoupons;
 use App\Http\Responses\LogoutResponse;
 use App\Models\Coupon;
 use Filament\Facades\Filament;
@@ -12,7 +13,7 @@ use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,6 +33,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //Model::unguard();
+
+        FilamentView::registerRenderHook(
+            name: PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE,
+            hook: fn (): View => view('filament.resources.pendingcoupon-resource.components.region-filter'),
+            scopes: [ListPendingcoupons::class]
+        );
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_START,

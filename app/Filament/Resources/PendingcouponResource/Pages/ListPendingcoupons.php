@@ -6,10 +6,18 @@ use App\Enums\CouponStatus;
 use App\Filament\Resources\PendingcouponResource;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Livewire\Attributes\On;
 
 class ListPendingcoupons extends ListRecords
 {
     protected static string $resource = PendingcouponResource::class;
+
+    #[On('regionFilterUpdated')]
+    public function applyRegionFilter(array $data = [])
+    {
+        unset($this->tableFilters['region_id']);
+        $this->tableFilters = array_merge_recursive($this->tableFilters, $data);
+    }
 
     public function getTabs(): array
     {
