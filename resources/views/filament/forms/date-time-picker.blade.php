@@ -134,30 +134,21 @@
                         x-data="{
                             init: function () {
                                 $watch('displayText', value => {
-                                    if (displayText?.length == 11) {
-                                        this.setCustomState(displayText)
+                                    if (displayText?.length === 11) {
+                                        this.setDateState(displayText)
                                     }
                                 })
 
-                                addEventListener('paste', (event) => {
-                                    if (event.srcElement?.id === @js($id)) {
-                                        return;
-                                    }
-    
-                                    event.preventDefault();
-    
-                                    let paste = (event.clipboardData || window.clipboardData).getData('text');
-
-                                    let date = paste
-
-                                    this.setCustomState(date)
+                                $el.addEventListener('paste', (event) => {
+                                    event.preventDefault()
+                                    let pastedContent = (event.clipboardData || window.clipboardData).getData('text')
+                                    this.setDateState(pastedContent)
                                 });
                             },
 
-                            setCustomState: function (date) {
+                            setDateState: function (string) {
                                 const timezone = dayjs.tz.guess()
-
-                                date = dayjs(date).tz(timezone)
+                                date = dayjs(string).tz(timezone)
 
                                 if (!date.isValid()) {
                                     return;
