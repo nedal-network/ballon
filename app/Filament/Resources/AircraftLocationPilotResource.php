@@ -258,183 +258,53 @@ class AircraftLocationPilotResource extends Resource
         return $table
             ->defaultGroup(
                 Group::make('date')
-                    //->date()
-                    ->getTitleFromRecordUsing(
-                        fn (AircraftLocationPilot $record): string => $record->date->format('Y.m.d.')
-                    )
-
-                    ->getTitleFromRecordUsing(function ($record) {
-                        $day_name = date('D', strtotime($record->date));
-                        if ($day_name == 'Mon') {
-                            $day_name = 'hétfő';
-                        }
-                        if ($day_name == 'Tue') {
-                            $day_name = 'kedd';
-                        }
-                        if ($day_name == 'Wed') {
-                            $day_name = 'szerda';
-                        }
-                        if ($day_name == 'Thu') {
-                            $day_name = 'csütörtök';
-                        }
-                        if ($day_name == 'Fri') {
-                            $day_name = 'péntek';
-                        }
-                        if ($day_name == 'Sat') {
-                            $day_name = 'szombat';
-                        }
-                        if ($day_name == 'Sun') {
-                            $day_name = 'vasárnap';
-                        }
-
-                        //return Carbon::parse($record->date)->translatedFormat('Y F d').'. '.$day_name;
-                        return Carbon::parse($record->date)->translatedFormat('Y.m.d.');
-                    })
-
-                    ->orderQueryUsing(
-                        fn (Builder $query, string $direction) => $query->orderBy('date', 'desc')
-                    )
+                    ->getTitleFromRecordUsing(fn ($record) => $record->date->format('Y.m.d.'))
+                    ->getTitleFromRecordUsing(fn ($record) => Carbon::parse($record->date)->translatedFormat('Y.m.d.'))
+                    ->orderQueryUsing(fn (Builder $query) => $query->orderBy('date', 'desc'))
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             )
             ->columns([
                 TextColumn::make('id')
-                    ->label('')
+                    ->label(false)
                     ->icon('tabler-number')
                     ->badge()
                     ->color('gray')
                     ->size('md')
                     ->visibleFrom('md'),
                 TextColumn::make('status')
-                    //->label('Státusz')
-                    ->label('')
+                    ->label(false)
                     ->badge()
                     ->size('md'),
 
-                TextColumn::make('date')
-                    //->icon('tabler-plane-departure')
-                    ->label('Időpont')
-                    ->formatStateUsing(function ($state, AircraftLocationPilot $fulldate) {
-                        /*
-                        $carbondate = Carbon::parse($state)->translatedFormat('Y F d');
-                        $datesource = strtotime($state);
-                        $day_name = date('D', $datesource);
-                        if ($day_name == 'Mon'){$day_name = 'hétfő';}
-                        if ($day_name == 'Tue'){$day_name = 'kedd';}
-                        if ($day_name == 'Wed'){$day_name = 'szerda';}
-                        if ($day_name == 'Thu'){$day_name = 'csütörtök';}
-                        if ($day_name == 'Fri'){$day_name = 'péntek';}
-                        if ($day_name == 'Sat'){$day_name = 'szombat';}
-                        if ($day_name == 'Sun'){$day_name = 'vasárnap';}
-                        */
-                        $timesource = strtotime($fulldate->time);
-                        $hour_source = date('G', $timesource);
-                        $minute_source = date('i', $timesource);
-
-                        //return $carbondate.'. '.$day_name;
-                        //return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$carbondate.'. '.$day_name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p><p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span> '.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>';
-                        //return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span> '.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>';
-                        return $hour_source.':'.$minute_source;
-                    })->html()
-                    ->searchable(),
-                /*
                 TextColumn::make('time')
                     ->label('Időpont')
-                    ->icon('tabler-clock-share')
-                    ->searchable()
-                    ->formatStateUsing(function ($state, AircraftLocationPilot $time) {
-                        $timesource = strtotime($state);
-                        $hour_source = date('G', $timesource);
-                        $minute_source = date('i', $timesource);
-                        return $hour_source.' óra '.$minute_source.' perc';
-                    }),
-                */
-                TextColumn::make('region_id')
-                    //->icon('iconoir-strategy')
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('H:i'))
+                    ->searchable(),
+                TextColumn::make('region.name')
                     ->label('Régió')
-                    ->formatStateUsing(function ($state, AircraftLocationPilot $fulldate) {
-                        /*
-                        $timesource = strtotime($fulldate->time);
-                        $hour_source = date('G', $timesource);
-                        $minute_source = date('i', $timesource);
-                        */
-                        $region_name = Region::find($state);
-                        $location_name = Location::find($fulldate->location_id);
-
-                        /*
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$hour_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> óra</span>'.$minute_source.' </span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> perc</span></p>
-                        <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$region_name->name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p>
-                        <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$location_name?->name.'</span></p>';
-                        */
-                        /*
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$region_name->name.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"></span></p>
-                        <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$location_name?->name.'</span></p>';
-                        */
-                        return $region_name->name;
-                    })->html()
-                    /*
-                    ->formatStateUsing(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
-                        //$location_id = Location::find($aircraft_localtion_pilot->location_id);
-                        //$region_id = $location_id->id;
-                        $region_name = Region::find($state);
-                        $location_name = Location::find($aircraft_localtion_pilot->location_id);
-                        //return $region_name->name. ' '.$location_name?->name;
-                        return $region_name->name;
-                    })
-                    ->description(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
-                        $location_name = Location::find($aircraft_localtion_pilot->location_id);
-                        return $location_name?->name;
-                    })
-                    */
                     ->searchable(),
-                TextColumn::make('location_id')
+                TextColumn::make('location.name')
                     ->label('Helyszín')
-                    ->formatStateUsing(function ($state) {
-                        $location_name = Location::find($state);
-
-                        return $location_name->name;
-                    }),
-                TextColumn::make('aircraft_id')
-                    //->icon('iconoir-airplane-rotation')
-                    ->label('Légijármű')
-                    ->searchable()
-                    ->formatStateUsing(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
-                        $aircraft = Aircraft::find($aircraft_localtion_pilot->aircraft_id);
-
-                        //$pilot = Pilot::find($aircraft_localtion_pilot->pilot_id);
-                        //return $aircraft->registration_number.' '.$aircraft->name.' '.$pilot->lastname.' '.$pilot->firstname;
-                        /*
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$aircraft->registration_number.' </span></p>
-                        <p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$aircraft->name.' </span></p>
-                        <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$pilot?->lastname.' '.$pilot?->firstname.'</span></p>';
-                        */
-                        /*
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$aircraft->registration_number.' </span></p>
-                        <p><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;">'.$aircraft->name.'</span></p>';
-                        */
-                        return '('.$aircraft->registration_number.') '.$aircraft->name;
-                    })->html()
-                    ->visibleFrom('md'),
-                /*
-                    ->description(function ($state, AircraftLocationPilot $aircraft_localtion_pilot) {
-                        $aircraft = Aircraft::find($aircraft_localtion_pilot->aircraft_id);
-                        return $aircraft->name;
-                    })
-                    */
-                TextColumn::make('pilot.fullname')
-                    //->icon('iconoir-user-square')
-                    ->label('Pilóta')
                     ->searchable(),
+                TextColumn::make('aircraft.name')
+                    ->label('Légijármű')
+                    ->searchable(['aircraft.registration_number', 'aircraft.name'])
+                    ->formatStateUsing(fn ($record) => "({$record->aircraft->registration_number}) {$record->aircraft->name}")
+                    ->visibleFrom('md'),
+                TextColumn::make('pilot.fullname')
+                    ->label('Pilóta')
+                    ->searchable(['pilots.lastname', 'pilots.firstname']),
 
             ])
             ->filters([
                 SelectFilter::make('aircraft_id')
                     ->label('Légijármű')
-                    ->options(Aircraft::all()->pluck('name', 'id'))
+                    ->relationship('aircraft', 'name')
                     ->native(false),
                 SelectFilter::make('region_id')
                     ->label('Régió')
-                    ->options(Region::all()->pluck('name', 'id'))
+                    ->relationship('region', 'name')
                     ->native(false),
             ])
             ->actions([
@@ -442,13 +312,7 @@ class AircraftLocationPilotResource extends Resource
                     ->label('')
                     ->icon('tabler-users-group')
                     ->tooltip(ListCheckins::getNavigationLabel())
-                    ->badge(function ($record) {
-                        if ($record->coupons->count()) {
-                            return $record->coupons->map(fn ($coupon) => $coupon->membersCount)->sum();
-                        }
-
-                        return null;
-                    })
+                    ->badge(fn ($record) => $record->coupons->sum('membersCount'))
                     ->hidden(fn ($record) => ! $record->coupons->count())
                     ->action(fn ($record) => redirect(route('filament.admin.resources.aircraft-location-pilots.checkins', $record->id))),
                 /*
