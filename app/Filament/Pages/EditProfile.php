@@ -64,7 +64,7 @@ class EditProfile extends Page implements HasForms
             ->schema([
                 Forms\Components\Section::make('Felhasználói profil')
                     ->description(
-                        fn ($record) => new HtmlString("Itt frissítheted felhasználóneved és a regisztrációhoz használt e-mail címed. <strong>Felhasználó azonosító: {$record->id}<strong>")
+                        fn ($record) => new HtmlString("Itt frissítheted felhasználóneved és a regisztrációhoz használt e-mail címed. <strong>Felhasználó azonosító: {$record->id}</strong>")
                     )
                     ->schema([
                         Forms\Components\TextInput::make('name')
