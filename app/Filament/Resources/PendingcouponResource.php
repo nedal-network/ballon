@@ -206,8 +206,11 @@ class PendingcouponResource extends Resource
                     ->label('Kapcsolattartó')
                     //->description(fn ($record): string => $record->user->email)
                     ->formatStateUsing(function ($record) {
-                        return $record->user->name.' ('.$record->user->email.')';
+                        $route = route(UserResource::getRouteBaseName().'.edit', ['record' => $record->user->id]);
+
+                        return "<a href='{$route}'>{$record->user->name} ({$record->user->email})</a>";
                     })
+                    ->html()
                     ->wrap()
                     ->color('Amber')
                     ->searchable(),
@@ -532,28 +535,28 @@ class PendingcouponResource extends Resource
                     ]),
                 //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
                 Tables\Actions\DeleteAction::make()
-                ->label(false)
-                ->tooltip('Törlés')
-                ->action(function($action) {
-                    try {
-                        $result = $action->process(static fn (Model $record) => $record->delete());
-                    } catch (\Throwable $th) {
-                        $result = false;
-                        if($th->errorInfo[0] == "23000" && $th->errorInfo[1] == 1451) { //idegene kulcs miatt nem törölhető
-                            $action->failureNotificationTitle('Aktív jelentkezéssel rendelkezik!<br>Nem törölhető!');
-                        } else {
-                            $action->failureNotificationTitle('Hiba történt!');
-                        }
-                    } finally {
-                        if (! $result) {
-                            $action->failure();
+                    ->label(false)
+                    ->tooltip('Törlés')
+                    ->action(function ($action) {
+                        try {
+                            $result = $action->process(static fn (Model $record) => $record->delete());
+                        } catch (\Throwable $th) {
+                            $result = false;
+                            if ($th->errorInfo[0] == '23000' && $th->errorInfo[1] == 1451) { //idegene kulcs miatt nem törölhető
+                                $action->failureNotificationTitle('Aktív jelentkezéssel rendelkezik!<br>Nem törölhető!');
+                            } else {
+                                $action->failureNotificationTitle('Hiba történt!');
+                            }
+                        } finally {
+                            if (! $result) {
+                                $action->failure();
 
-                            return;
-                        }
+                                return;
+                            }
 
-                        $action->success();
-                    }
-                }),
+                            $action->success();
+                        }
+                    }),
                 //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
 
             ])
