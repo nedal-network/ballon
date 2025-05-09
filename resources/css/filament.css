@@ -1,4 +1,4 @@
-.fi-ta-text, .fi-ta-cell > div {
+.fi-ta-text, .fi-ta-icon, .fi-ta-image, .fi-ta-cell > div {
     padding-top: 0.25rem !important;
     padding-bottom: 0.25rem !important;
 }
