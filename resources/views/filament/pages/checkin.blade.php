@@ -1,4 +1,9 @@
 <x-filament-panels::page>
+    <p class="text-gray-400">
+        <b>Repülésre MINDEN utasnak szükséges egy kitöltött nyilatkozat</b>, amit a helyszínen gyűjtünk össze tőletek.
+        <br>
+        Ennek hiányában a repülést megtagadjuk és a jegyed elveszik, ha éppen nálunk sem lesz pót példány, amit ki tudnál tölteni.
+    </p>
     <div class="flex gap-5 overflow-x-auto p-2">
         @forelse ($coupons as $coupon)
             <div class="clickable card @if ($coupon->id === $coupon_id) selected @endif grid min-w-max justify-between" wire:click="$set('coupon_id', {{ $coupon->id }})">

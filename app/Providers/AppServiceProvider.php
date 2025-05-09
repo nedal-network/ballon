@@ -11,6 +11,8 @@ use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContr
 use Filament\Navigation\NavigationItem;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
@@ -39,35 +41,41 @@ class AppServiceProvider extends ServiceProvider
             hook: fn (): View => view('filament.resources.pendingcoupon-resource.components.region-filter'),
             scopes: [ListPendingcoupons::class]
         );
+        FilamentView::registerRenderHook(
+            name: PanelsRenderHook::FOOTER,
+            hook: fn (): View => view('filament.footer'),
+        );
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_START,
             function () {
-                if (auth()->user() && ! auth()->user()->hasRole(['admin', 'super_admin'])) {
-                    $coupons_not_filled_with_passengers = 0;
-                    foreach (Coupon::all() as $coupon) {
-                        if ($coupon->missingData) {
-                            $coupons_not_filled_with_passengers++;
-                        }
+                if (! auth()->user() || auth()->user()->hasRole(['admin', 'super_admin'])) {
+                    return;
+                }
+
+                $coupons_not_filled_with_passengers = 0;
+                foreach (Coupon::whereNull('parent_id')->get() as $coupon) {
+                    if ($coupon->missingData) {
+                        $coupons_not_filled_with_passengers++;
                     }
-                    if ($coupons_not_filled_with_passengers > 0 && ! str_contains(CouponResource::getUrl(), $_SERVER['REQUEST_URI'])) {
-                        Notification::make()
-                            ->title('Hiányzó utasadatok!')
-                            ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
-                            ->iconColor('danger')
-                            ->color('danger')
-                            ->icon('tabler-alert-triangle')
-                            ->persistent()
-                            ->actions(function () {
-                                return [
-                                    Action::make('redirect')
-                                        ->button()
-                                        ->label('Ugrás a kitöltendő kuponokhoz')
-                                        ->url(CouponResource::getUrl()),
-                                ];
-                            })
-                            ->send();
-                    }
+                }
+                if ($coupons_not_filled_with_passengers > 0 && ! str_contains(CouponResource::getUrl(), $_SERVER['REQUEST_URI'])) {
+                    Notification::make()
+                        ->title('Hiányzó utasadatok!')
+                        ->body('Repülésre történő jelentkezéshez töltse fel elérhető kuponja utasainak adatait.')
+                        ->iconColor('danger')
+                        ->color('danger')
+                        ->icon('tabler-alert-triangle')
+                        ->persistent()
+                        ->actions(function () {
+                            return [
+                                Action::make('redirect')
+                                    ->button()
+                                    ->label('Ugrás a kitöltendő kuponokhoz')
+                                    ->url(CouponResource::getUrl()),
+                            ];
+                        })
+                        ->send();
                 }
             }
         );
@@ -76,6 +84,10 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::HEAD_START,
             fn (): string => Blade::render('@vite([\'resources/css/checking.css\', \'resources/css/list-checkins.css\'])'),
         );
+
+        FilamentAsset::register([
+            Css::make('custom-filament-stylesheet', __DIR__ . '/../../resources/css/filament.css'),
+        ]);
 
         Filament::serving(function () {
             Filament::registerNavigationItems([

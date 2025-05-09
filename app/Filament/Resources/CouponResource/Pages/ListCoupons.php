@@ -12,13 +12,15 @@ class ListCoupons extends ListRecords
 {
     protected static string $resource = CouponResource::class;
 
+    protected static string $createActionLabel = 'Új kupon megadása';
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\Action::make('redirect-to-chekin')->label('Repülés időpontok')
                 ->color('info')
                 ->url(Checkin::getUrl()),
-            Actions\CreateAction::make()->label('Új kupon megadása'),
+            Actions\CreateAction::make()->label(static::getCreateActionLabel()),
             /*Actions\Action::make('edit')->url(route('posts.edit', ['post' => $this->post])),*/
         ];
     }
@@ -36,5 +38,10 @@ class ListCoupons extends ListRecords
             'Felhasznált' => Tab::make()->query(fn ($query) => $query->where('status', '3'))->icon('tabler-circle-x')->badgeColor('danger'),
             */
         ];
+    }
+
+    public static function getCreateActionLabel(): string
+    {
+        return static::$createActionLabel;
     }
 }
