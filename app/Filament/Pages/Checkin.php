@@ -44,6 +44,9 @@ class Checkin extends Page
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('redirect-to-responsibility-statement')->label('Felelősségvállalási nyilatkozat')
+                ->color('success')
+                ->url('https://ballonozz.hu/felelossegvallalasi-nyilatkozat/', true),
             Action::make('redirect-to-coupon')->label('Kuponjaim')
                 ->color('info')
                 ->url(CouponResource::getUrl()),

@@ -11,7 +11,7 @@ class Dashboard extends BaseDashboard
 
     protected static string $view = 'filament.pages.dashboard';
 
-    protected static ?string $title = 'Üdvözlünk oldalunkon!';
+    protected static ?string $title = 'Üdvözlöl a fedélzeten a Ballonozz.hu csapata!';
 
     protected static ?string $navigationIcon = 'tabler-home-heart';
 }
