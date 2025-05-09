@@ -1,16 +1,21 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-Josk5sKs.css",
+    "file": "assets/app-DChq4-lE.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/checking.css": {
-    "file": "assets/checking-t0aeNQV-.css",
+    "file": "assets/checking-BqE6dF1t.css",
     "src": "resources/css/checking.css",
     "isEntry": true
   },
+  "resources/css/filament.css": {
+    "file": "assets/filament-DPeARMf5.css",
+    "src": "resources/css/filament.css",
+    "isEntry": true
+  },
   "resources/css/list-checkins.css": {
-    "file": "assets/list-checkins-RilnygEn.css",
+    "file": "assets/list-checkins-t6ZxW-In.css",
     "src": "resources/css/list-checkins.css",
     "isEntry": true
   },

@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 
 #[ScopedBy([ClientScope::class])]
-
 class Coupon extends Model
 {
     protected $table = 'coupons';

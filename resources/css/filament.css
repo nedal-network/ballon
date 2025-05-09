@@ -1,0 +1,4 @@
+.fi-ta-text, .fi-ta-cell > div {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}

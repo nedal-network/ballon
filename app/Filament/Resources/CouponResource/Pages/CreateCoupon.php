@@ -26,6 +26,7 @@ class CreateCoupon extends CreateRecord
     {
         $data['user_id'] = Auth::id();
         $checking_the_existence_of_a_coupon = Coupon::query()
+            ->withoutGlobalScopes()
             ->where('coupon_code', $data['coupon_code'])
             ->where('auxiliary_coupon_code', $data['auxiliary_coupon_code'])
             ->where('source', $data['source'])
