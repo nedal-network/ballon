@@ -40,6 +40,7 @@ class ListCheckins extends Page
                         ->options($this->record->region->locations->pluck('name', 'id'))
                         ->required(),
                 ])
+                ->disabled($this->record->status === AircraftLocationPilotStatus::Deleted)
                 ->action(function (array $data): void {
 
                     $unselectedCoupons = $this->record->coupons()->wherePivotNotIn('coupon_id', $this->selectedCoupons)->pluck('coupon_id')->toArray();
@@ -97,10 +98,16 @@ class ListCheckins extends Page
         $this->record->coupons->where('pivot.status', 1)
             ->map(fn ($coupon) => $this->selectedCoupons[] = $coupon->id);
 
-        $this->alreadyCheckedCoupons = array_filter(Coupon::with('aircraftLocationPilots')->where('status', CouponStatus::Applicant)->get()->map(function ($coupon) {
-            if (count($coupon->aircraftLocationPilots->where('pivot.aircraft_location_pilot_id', '!=', $this->record->id)->where('pivot.status', 1))) {
-                return $coupon->id;
-            }
-        })->toArray());
+        $coupons = Coupon::with('aircraftLocationPilots')->where('status', CouponStatus::Applicant)->get();
+
+        $this->alreadyCheckedCoupons = $coupons
+            ->filter(function ($coupon) {
+                return $coupon->aircraftLocationPilots
+                    ->where('status', '!=', AircraftLocationPilotStatus::Deleted)
+                    ->where('pivot.aircraft_location_pilot_id', '!=', $this->record->id)
+                    ->where('pivot.status', 1)->count();
+            })
+            ->pluck('id')
+            ->toArray();
     }
 }
