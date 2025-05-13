@@ -1,6 +1,7 @@
 <x-filament-panels::page>
     <p class="text-gray-400">
-        <b>Repülésre MINDEN utasnak szükséges egy kitöltött nyilatkozat</b>, amit a helyszínen gyűjtünk össze tőletek.
+        <b>Repülésre MINDEN utasnak szükséges egy kitöltött felelősség vállalási nyilatkozat</b>, aminek a linkjét 
+        a jobb oldali zöld „Felelősségvállalási nyilatkozat” gombra kattintva éred el. Ezt a helyszínen gyűjtünk össze tőletek.
         <br>
         Ennek hiányában a repülést megtagadjuk és a jegyed elveszik, ha éppen nálunk sem lesz pót példány, amit ki tudnál tölteni.
     </p>
