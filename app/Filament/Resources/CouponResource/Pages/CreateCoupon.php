@@ -25,6 +25,10 @@ class CreateCoupon extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = Auth::id();
+        $data['adult'] = 0;
+        $data['children'] = 0;
+        $data['status'] = CouponStatus::CanBeUsed;
+
         $checking_the_existence_of_a_coupon = Coupon::query()
             ->withoutGlobalScopes()
             ->where('coupon_code', $data['coupon_code'])
@@ -76,9 +80,8 @@ class CreateCoupon extends CreateRecord
                                             continue;
                                         }
                                         $data['tickettype_id'] = ($product_attributes['attributes'][0]['options'][0]) * 1;
-                                        $data['adult'] = ($product_attributes['attributes'][1]['options'][0]) * $response_item_nums;
-                                        $data['children'] = ($product_attributes['attributes'][2]['options'][0]) * $response_item_nums;
-                                        $data['status'] = CouponStatus::CanBeUsed;
+                                        $data['adult'] += ($product_attributes['attributes'][1]['options'][0]) * $response_item_nums;
+                                        $data['children'] += ($product_attributes['attributes'][2]['options'][0]) * $response_item_nums;
                                         $data['expiration_at'] = $coupon_expiration_date;
                                         $data['total_price'] = $payment_total_price;
                                     } else {
@@ -154,7 +157,6 @@ class CreateCoupon extends CreateRecord
                             $data['tickettype_id'] = 2; //Normál repülés
                             $data['adult'] = $members[0];
                             $data['children'] = $members[1] ?? 0;
-                            $data['status'] = CouponStatus::CanBeUsed;
                             $data['expiration_at'] = $coupon_expiration_date;
                             $data['total_price'] = $payment_total_price;
                         } else {
