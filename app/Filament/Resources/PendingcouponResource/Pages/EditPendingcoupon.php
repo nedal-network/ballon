@@ -44,7 +44,7 @@ class EditPendingcoupon extends EditRecord
         return [
             $this->getSaveFormAction(),
             Action::make('Kiegészítő jegy')
-                ->form([PendingcouponResource::getVirtualCouponFieldset()])
+                ->form(PendingcouponResource::getVirtualCouponSchema())
                 ->action(function (array $data, Coupon $record): void {
                     $virtual_coupon = new Coupon();
                     $virtual_coupon->parent_id = $record->id;
