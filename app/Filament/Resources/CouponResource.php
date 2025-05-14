@@ -607,6 +607,7 @@ class CouponResource extends Resource
             })
             ->columns([
                 IconColumn::make('missing_data')
+                    ->sortable(false)
                     ->label('')
                     ->width(0)
                     ->boolean()
@@ -616,6 +617,7 @@ class CouponResource extends Resource
                     ->falseIcon('')
                     ->tooltip(fn ($state) => $state ? 'Hiányzó utasadatok!' : ''),
                 IconColumn::make('childrenCoupons')
+                    ->sortable(false)
                     ->label('')
                     ->width(0)
                     ->boolean()
