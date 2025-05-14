@@ -5,13 +5,16 @@ namespace App\Filament\Resources;
 use App\Enums\CouponStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\PendingcouponResource\Pages;
+use App\Models\Coupon;
 use App\Models\Pendingcoupon;
 use App\Models\Tickettype;
 use App\Models\User;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group as ComponentsGroup;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -45,86 +48,70 @@ class PendingcouponResource extends Resource
             ->schema([
                 Grid::make(12)
                     ->schema([
-                        Section::make()
-                            ->schema([
-                                TextInput::make('coupon_code')
-                                    ->label('Kupon azonosító 1')
-                                    ->prefixIcon('iconoir-password-cursor')
-                                    ->placeholder('ABC-'.random_int(100000, 999999))
-                                    ->required()
-                                    ->minLength(3)
-                                    ->maxLength(255)
-                                    ->disabledOn('edit'),
-                                TextInput::make('auxiliary_coupon_code')
-                                    ->label('Kupon azonosító 2')
-                                    ->prefixIcon('iconoir-password-cursor')
-                                    ->minLength(3)
-                                    ->maxLength(255)
-                                    ->disabledOn('edit'),
-                                TextInput::make('source')
-                                    ->label('Forrás')
-                                    ->required()
-                                    ->minLength(3)
-                                    ->maxLength(255)
-                                    ->disabledOn('edit'),
+                        ComponentsGroup::make([
 
-                            ])
+                            Section::make()
+                                ->schema([
+                                    TextInput::make('coupon_code')
+                                        ->label('Kupon azonosító 1')
+                                        ->prefixIcon('iconoir-password-cursor')
+                                        ->placeholder('ABC-'.random_int(100000, 999999))
+                                        ->required()
+                                        ->minLength(3)
+                                        ->maxLength(255)
+                                        ->disabledOn('edit'),
+                                    TextInput::make('auxiliary_coupon_code')
+                                        ->label('Kupon azonosító 2')
+                                        ->prefixIcon('iconoir-password-cursor')
+                                        ->minLength(3)
+                                        ->maxLength(255)
+                                        ->disabledOn('edit'),
+                                    TextInput::make('source')
+                                        ->label('Forrás')
+                                        ->required()
+                                        ->minLength(3)
+                                        ->maxLength(255)
+                                        ->disabledOn('edit'),
+
+                                ])->columns(3),
+                            Section::make()
+                                ->schema(function (Coupon $record) {
+                                    return $record?->isVirtual()
+                                            ? [static::getVirtualCouponFieldset()]
+                                            : [static::getPassangersFieldset()];
+                                }),
+                        ])->columns(2)
                             ->columnSpan([
                                 'sm' => 12,
-                                'md' => 12,
-                                'lg' => 4,
-                                'xl' => 4,
-                                '2xl' => 2,
-                            ]),
-
-                        Section::make()
-                            ->schema([
-                                Fieldset::make('Utasok száma')
-                                    ->schema([
-                                        TextInput::make('adult')
-                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
-                                            ->label('Felnőtt')
-                                            ->prefixIcon('tabler-friends')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        TextInput::make('children')
-                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
-                                            ->label('Gyermek')
-                                            ->prefixIcon('tabler-horse-toy')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                    ])->columns(2),
-                            ])
-                            ->columnSpan([
-                                'sm' => 12,
-                                'md' => 12,
-                                'lg' => 8,
-                                'xl' => 8,
-                                '2xl' => 4,
+                                '2xl' => 6,
                             ]),
 
                         Section::make()
                             ->schema([
                                 Fieldset::make('Jóváhagyás')
                                     ->schema([
-                                        Select::make('tickettype_id')
-                                            ->helperText('Válaszd ki a kívánt jegytípust.')
-                                            ->label('Jegytípus')
-                                            ->prefixIcon('heroicon-o-ticket')
-                                            ->required()
-                                            ->native(false)
-                                            ->relationship(
-                                                name: 'tickettype',
-                                                modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
-                                            )
-                                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
-
+                                        ComponentsGroup::make([
+                                            Select::make('tickettype_id')
+                                                ->helperText('Válaszd ki a kívánt jegytípust.')
+                                                ->label('Jegytípus')
+                                                ->prefixIcon('heroicon-o-ticket')
+                                                ->required()
+                                                ->native(false)
+                                                ->relationship(
+                                                    name: 'tickettype',
+                                                    modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
+                                                )
+                                                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
+                                            CustomDatePicker::make('expiration_at')
+                                                ->label('Felhasználható')
+                                                ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
+                                                ->prefixIcon('tabler-calendar')
+                                                ->weekStartsOnMonday()
+                                                ->format('Y-m-d')
+                                                ->displayFormat('Y.m.d.')
+                                                ->live()
+                                                ->default(now()),
+                                        ])->columns(1),
                                         ToggleButtons::make('status')
                                             ->helperText('Hagyd jóvá vagy utasítsd el ennek a kuponnak a felhasználást.')
                                             ->label('Válaszd ki kupon státuszát')
@@ -135,26 +122,13 @@ class PendingcouponResource extends Resource
                                             ->live()
                                             ->options(CouponStatus::class),
 
-                                    ])->columns(2),
-
-                                Fieldset::make('Érvényesség hosszabbítás')
-                                    ->schema([
-                                        CustomDatePicker::make('expiration_at')
-                                            ->label('Felhasználható')
-                                            ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
-                                            ->prefixIcon('tabler-calendar')
-                                            ->weekStartsOnMonday()
-                                            ->format('Y-m-d')
-                                            ->displayFormat('Y.m.d.')
-                                            ->live()
-                                            ->default(now()),
-                                    ])->columns(2),
+                                    ])
+                                    ->columns(2),
+                                static::getDescriptionTextArea(),
                             ])
+                            ->columns(2)
                             ->columnSpan([
                                 'sm' => 12,
-                                'md' => 12,
-                                'lg' => 12,
-                                'xl' => 12,
                                 '2xl' => 6,
                             ]),
                     ]),
@@ -325,6 +299,70 @@ class PendingcouponResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getAdultsAndChildrenFields(): array
+    {
+        return [
+            TextInput::make('adult')
+                ->label('Felnőtt')
+                ->prefixIcon('tabler-friends')
+                ->numeric()
+                ->default(0)
+                ->minLength(1)
+                ->maxLength(10)
+                ->suffix(' fő'),
+            TextInput::make('children')
+                ->label('Gyermek')
+                ->prefixIcon('tabler-horse-toy')
+                ->numeric()
+                ->default(0)
+                ->minLength(1)
+                ->maxLength(10)
+                ->suffix(' fő'),
+        ];
+    }
+
+    public static function getDescriptionTextArea(): Textarea
+    {
+        return Textarea::make('description')
+            ->label('Megjegyzés')
+            ->rows(3)
+            ->cols(20)
+            ->columnSpanFull();
+    }
+
+    public static function getVirtualCouponFieldset(): Fieldset
+    {
+        return Fieldset::make('Kiegészítő jegy részletei')
+            ->schema([
+                ...static::getAdultsAndChildrenFields(),
+                TextInput::make('total_price')
+                    ->label('Helyszínen fizetendő')
+                    ->prefixIcon('iconoir-hand-cash')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->minLength(1)
+                    ->maxLength(10)
+                    ->suffix(' Ft.'),
+            ])
+            ->columns(3);
+    }
+
+    public static function getVirtualCouponSchema(): array
+    {
+        return [
+            static::getVirtualCouponFieldset(),
+            static::getDescriptionTextArea(),
+        ];
+    }
+
+    public static function getPassangersFieldset(): Fieldset
+    {
+        return Fieldset::make('Utasok száma')
+            ->schema(static::getAdultsAndChildrenFields())
+            ->columns(2);
     }
 
     public static function getRelations(): array
