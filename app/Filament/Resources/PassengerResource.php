@@ -32,6 +32,7 @@ class PassengerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('lastname')
                     ->label('Utas')

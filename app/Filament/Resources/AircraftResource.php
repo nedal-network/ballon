@@ -219,6 +219,7 @@ class AircraftResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
 
                 TextColumn::make('registration_number')
@@ -292,10 +293,10 @@ class AircraftResource extends Resource
             ])
             ->actions([
                 //Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('Megtekintés')->link(),
-                //Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 /*
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\DeleteAction::make()->label(false)->tooltip('Törlés'),
                 Tables\Actions\ForceDeleteAction::make()->label(false)->tooltip('Végleges törlés'),
                 Tables\Actions\RestoreAction::make()->label(false)->tooltip('Helyreállítás'),

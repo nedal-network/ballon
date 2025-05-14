@@ -256,6 +256,7 @@ class AircraftLocationPilotResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->defaultGroup(
                 Group::make('date')
                     ->getTitleFromRecordUsing(fn ($record) => $record->date->format('Y.m.d.'))
@@ -317,10 +318,10 @@ class AircraftLocationPilotResource extends Resource
                     ->action(fn ($record) => redirect(route('filament.admin.resources.aircraft-location-pilots.checkins', $record->id))),
                 /*
                 ViewAction::make()->hiddenLabel()->tooltip('Megtekintés')->link(),
-                EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
-                DeleteAction::make()
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
+                Tables\Actions\DeleteAction::make()
                     ->hidden(fn ($record) => (bool) $record->coupons->count())
                     ->label(false)
                     ->tooltip('Törlés'),

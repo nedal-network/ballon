@@ -214,6 +214,7 @@ class LocationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('region.name')
                     ->label('Régió'),
@@ -264,7 +265,6 @@ class LocationResource extends Resource
             ->actions([
                 /*
                 Tables\Actions\ViewAction::make()->hiddenLabel()->tooltip('Megtekintés')->link(),
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
                 Action::make('coordinates')
@@ -281,6 +281,7 @@ class LocationResource extends Resource
                             return true;
                         }
                     }),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\DeleteAction::make()->label(false)->tooltip('Törlés'),
                 Tables\Actions\ForceDeleteAction::make()->label(false)->tooltip('Végleges törlés'),
                 Tables\Actions\RestoreAction::make()->label(false)->tooltip('Helyreállítás'),

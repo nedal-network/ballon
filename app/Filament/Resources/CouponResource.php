@@ -671,23 +671,13 @@ class CouponResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\EditAction::make()->label(false)->tooltip('Szerkesztés')
+                    ->hidden(fn ($record) => ($record->status == CouponStatus::Used || $record->status == CouponStatus::Expired || $record->status == CouponStatus::Applicant || $record->parent_id != null)),
                 Tables\Actions\DeleteAction::make()->label(false)->tooltip('Törlés')
                     ->hidden(fn ($record) => ($record->status == CouponStatus::Used || $record->status == CouponStatus::Expired || $record->status == CouponStatus::Applicant || $record->parent_id != null)),
             ])
             ->headerActions([
             ])
-            ->recordUrl(
-                /* így is lehet
-                fn (Coupon $record): string => ($record->status==CouponStatus::Used) ?false: route('filament.admin.resources.coupons.edit', ['record' => $record]),
-                vagy úgy ahogy ez alatt van */
-                function ($record) {
-                    if ($record->status == CouponStatus::Used || $record->status == CouponStatus::Expired || $record->status == CouponStatus::Applicant || $record->parent_id != null) {
-                        return false;
-                    } else {
-                        return route('filament.admin.resources.coupons.edit', ['record' => $record]);
-                    }
-                },
-            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()->label('Mind törlése'),
