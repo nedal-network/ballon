@@ -14,6 +14,8 @@ use Filament\Notifications\Notification;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
+use Filament\Tables\Columns\Column;
+use Filament\Tables\Table;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
@@ -35,7 +37,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //Model::unguard();
-
+        Column::configureUsing(function (Column $column) {
+            $column->sortable();
+        });
         FilamentView::registerRenderHook(
             name: PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE,
             hook: fn (): View => view('filament.resources.pendingcoupon-resource.components.region-filter'),
