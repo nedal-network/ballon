@@ -267,14 +267,14 @@ class AircraftLocationPilotResource extends Resource
             )
             ->columns([
                 TextColumn::make('id')
-                    ->label(false)
+                    ->label('ID')
                     ->icon('tabler-number')
                     ->badge()
                     ->color('gray')
                     ->size('md')
                     ->visibleFrom('md'),
                 TextColumn::make('status')
-                    ->label(false)
+                    ->label('Státusz')
                     ->badge()
                     ->size('md'),
 
@@ -294,6 +294,7 @@ class AircraftLocationPilotResource extends Resource
                     ->formatStateUsing(fn ($record) => "({$record->aircraft->registration_number}) {$record->aircraft->name}")
                     ->visibleFrom('md'),
                 TextColumn::make('pilot.fullname')
+                    ->sortable(['pilots.lastname', 'pilots.firstname'])
                     ->label('Pilóta')
                     ->searchable(['pilots.lastname', 'pilots.firstname']),
 
