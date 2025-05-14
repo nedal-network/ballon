@@ -123,6 +123,7 @@ class EventResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 IconColumn::make('status')
                     ->label('Státusz')

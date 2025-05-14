@@ -12,15 +12,12 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
-use Filament\Tables\Actions\Action as TableAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -46,7 +43,6 @@ class PendingcouponResource extends Resource
     {
         return $form
             ->schema([
-
                 Grid::make(12)
                     ->schema([
                         Section::make()
@@ -62,7 +58,6 @@ class PendingcouponResource extends Resource
                                 TextInput::make('auxiliary_coupon_code')
                                     ->label('Kupon azonosító 2')
                                     ->prefixIcon('iconoir-password-cursor')
-                                //->placeholder('ABC-'. random_int(100000, 999999))
                                     ->minLength(3)
                                     ->maxLength(255)
                                     ->disabledOn('edit'),
@@ -74,8 +69,6 @@ class PendingcouponResource extends Resource
                                     ->disabledOn('edit'),
 
                             ])
-
-                                //->columnSpan(2),
                             ->columnSpan([
                                 'sm' => 12,
                                 'md' => 12,
@@ -92,11 +85,8 @@ class PendingcouponResource extends Resource
                                             ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                                             ->label('Felnőtt')
                                             ->prefixIcon('tabler-friends')
-                                            //->required()
-                                            //->disabledOn('edit')
                                             ->numeric()
                                             ->default(0)
-                                            //->minValue(1)
                                             ->minLength(1)
                                             ->maxLength(10)
                                             ->suffix(' fő'),
@@ -104,8 +94,6 @@ class PendingcouponResource extends Resource
                                             ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                                             ->label('Gyermek')
                                             ->prefixIcon('tabler-horse-toy')
-                                            //->required()
-                                            //->disabledOn('edit')
                                             ->numeric()
                                             ->default(0)
                                             ->minLength(1)
@@ -113,7 +101,6 @@ class PendingcouponResource extends Resource
                                             ->suffix(' fő'),
                                     ])->columns(2),
                             ])
-                                //->columnSpan(4),
                             ->columnSpan([
                                 'sm' => 12,
                                 'md' => 12,
@@ -162,7 +149,7 @@ class PendingcouponResource extends Resource
                                             ->live()
                                             ->default(now()),
                                     ])->columns(2),
-                            ])//->columnSpan(6),
+                            ])
                             ->columnSpan([
                                 'sm' => 12,
                                 'md' => 12,
@@ -179,6 +166,7 @@ class PendingcouponResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->defaultSort('source', 'asc')
             ->defaultGroup(
                 Group::make('source')
@@ -198,13 +186,11 @@ class PendingcouponResource extends Resource
             ->columns([
                 TextColumn::make('coupon_code')
                     ->label('Kuponkód')
-                    //->description(fn (Pendingcoupon $record): string => $record->source)
                     ->wrap()
                     ->color('Amber')
                     ->searchable(['coupon_code', 'source']),
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
-                    //->description(fn ($record): string => $record->user->email)
                     ->formatStateUsing(function ($record) {
                         return $record->user->name.' ('.$record->user->email.')';
                     })
@@ -214,9 +200,6 @@ class PendingcouponResource extends Resource
                 TextColumn::make('adult')
                     ->label('Utasok')
                     ->formatStateUsing(function ($state, Pendingcoupon $payload) {
-                        /*
-                    return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span></p><p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span></p>';
-                    */
                         if (! empty($payload?->adult) && ! empty($payload?->children)) {
                             $passenger_nums = '<p>'.$payload?->adult.'+'.$payload?->children.'</p>';
                         }
@@ -252,12 +235,6 @@ class PendingcouponResource extends Resource
                 TextColumn::make('expiration_at')
                     ->label('Lejárat')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.'))
-
-                    /*->description(function($state)
-                {
-                    $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
-                    return abs($diff_day_nums).($diff_day_nums < 0 ? ' nap múlva lejár' : ' napja lejárt');
-                })*/
                     ->color(function ($state) {
                         $diff_day_nums = Carbon::parse($state)->diffInDays('now', false);
                         if ($diff_day_nums > 0 && $diff_day_nums < 31) {
@@ -273,7 +250,6 @@ class PendingcouponResource extends Resource
                 TextColumn::make('tickettype_id')
                     ->label('Jegytípus')
                     ->badge()
-                    //->color('gray')
                     ->color(fn ($record) => \Filament\Support\Colors\Color::Hex($record->tickettype->color))
                     ->formatStateUsing(function ($state, Pendingcoupon $tickettype) {
                         $tickettype_name = Tickettype::find($tickettype->tickettype_id);
@@ -282,36 +258,6 @@ class PendingcouponResource extends Resource
                     })
                     ->visibleFrom('md'),
             ])
-            /*
-            ->columns([
-                TextColumn::make('coupon_code')
-                    ->label('Kuponkód')
-                    ->description(fn (Pendingcoupon $record): string => $record->source)
-                    ->wrap()
-                    ->color('Amber')
-                    ->searchable(),
-                TextColumn::make('adult')
-                    ->label('Utasok')
-                    ->formatStateUsing(function ($state, Pendingcoupon $payload) {
-                        return'<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->adult.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> felnőtt</span></p><p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$payload->children.'</span><span class="text-gray-500 dark:text-gray-400" style="font-size:9pt;"> gyerek</span></p>';
-                    })->html()
-                    ->searchable()
-                    ->visibleFrom('md'),
-                TextColumn::make('status')
-                    ->label('Státusz')
-                    ->badge()
-                    ->size('md'),
-                TextColumn::make('tickettype_id')
-                    ->label('Jegytípus')
-                    ->badge()
-                    //->color('gray')
-                    ->color(fn ($record) => \Filament\Support\Colors\Color::Hex ($record->tickettype->color))
-                    ->formatStateUsing(function ($state, Pendingcoupon $tickettype) {
-                        $tickettype_name = Tickettype::find($tickettype->tickettype_id);
-                        return $tickettype_name->name;
-                    })
-                    ->visibleFrom('md'),
-            ])*/
             ->filters([
                 SelectFilter::make('user_id')
                     ->label('Kapcsolattartó')
@@ -347,217 +293,33 @@ class PendingcouponResource extends Resource
                         'Egyéb' => 'Egyéb',
                     ])
                     ->native(false),
-                /*
-                Filter::make('expiration_at')
-                    ->form([
-                        CustomDatePicker::make('expiration_from')->label('Lejárati dátumtól')->native(false)->format('Y-m-d')->displayFormat('Y-m-d'),
-                        CustomDatePicker::make('expiration_until')->label('Lejárati dátumig')->native(false)->format('Y-m-d')->displayFormat('Y-m-d')->default(now()),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['expiration_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('expiration_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['expiration_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('expiration_at', '<=', $date),
-                            );
-                    })*/
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link()->modalWidth(MaxWidth::ScreenExtraLarge)
-                    ->mutateFormDataUsing(function (array $data, $record): array {
-                        if (Carbon::parse($data['expiration_at']) < today() && $record->status != CouponStatus::Applicant) {
-                            $data['status'] = CouponStatus::Expired;
-                        }
-
-                        return $data;
-                    })
-                    ->extraModalFooterActions([
-                        TableAction::make('Kiegészítő jegy')
-                            ->form([
-                                Fieldset::make('Kiegészítő jegy részletei')
-                                    ->schema([
-                                        TextInput::make('adult')
-                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
-                                            ->label('Felnőtt')
-                                            ->prefixIcon('tabler-friends')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        TextInput::make('children')
-                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
-                                            ->label('Gyermek')
-                                            ->prefixIcon('tabler-horse-toy')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        TextInput::make('total_price')
-                                            ->helperText('Add meg a kiegészítő jegy árát.')
-                                            ->label('Helyszínen fizetendő')
-                                            ->prefixIcon('iconoir-hand-cash')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' Ft.'),
-                                        Textarea::make('description')
-                                            ->label('Megjegyzés')
-                                            ->rows(3)
-                                            ->cols(20)
-                                            ->columnSpanFull(),
-                                    ])->columns(3),
-
-                            ])
-                            ->action(function (array $data, Pendingcoupon $record): void {
-                                /*
-                        DB::table('coupons')->insert([
-                            'parent_id' => $record->id,
-                            'user_id' => $record->user_id,
-                            'coupon_code' => 'virtual'.random_int(10000, 99999),
-                            'source' => 'Kiegészítő',
-                            'adult' => $data['adult'],
-                            'children' => $data['children'],
-                            'tickettype_id' => $record->tickettype_id,
-                            'status' => CouponStatus::CanBeUsed,
-                            'expiration_at' => $data['expiration_at'],
-                            'created_at' => Carbon::now()->toDateTimeString(),
-                        ]);
-                        */
-                                $virtual_coupon = new Pendingcoupon();
-                                $virtual_coupon->parent_id = $record->id;
-                                $virtual_coupon->user_id = $record->user_id;
-                                $virtual_coupon->coupon_code = 'virtual'.random_int(10000, 99999);
-                                $virtual_coupon->source = 'Kiegészítő';
-                                $virtual_coupon->adult = $data['adult'];
-                                $virtual_coupon->children = $data['children'];
-                                $virtual_coupon->tickettype_id = $record->tickettype_id;
-                                $virtual_coupon->status = CouponStatus::CanBeUsed;
-                                $virtual_coupon->expiration_at = $record->expiration_at;
-                                $virtual_coupon->total_price = $data['total_price'];
-                                $virtual_coupon->description = $data['description'];
-                                $virtual_coupon->created_at = Carbon::now()->toDateTimeString();
-                                $virtual_coupon->save();
-                            }),
-
-                        TableAction::make('Ajándék jegy')
-                            ->form([
-                                Fieldset::make('Ajándék jegy részletei')
-                                    ->schema([
-                                        TextInput::make('adult')
-                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
-                                            ->label('Felnőtt')
-                                            ->prefixIcon('tabler-friends')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minValue(1)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        TextInput::make('children')
-                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
-                                            ->label('Gyermek')
-                                            ->prefixIcon('tabler-horse-toy')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        Select::make('tickettype_id')
-                                            ->helperText('Válaszd ki a kívánt jegytípust.')
-                                            ->label('Jegytípus')
-                                            ->prefixIcon('heroicon-o-ticket')
-                                            ->required()
-                                        //->disabledOn('edit')
-                                        //->options(Tickettype::all()->pluck('name', 'id'))
-                                            ->native(false)
-                                        //->relationship('tickettype')
-                                            ->relationship(
-                                                name: 'tickettype',
-                                                modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
-                                            )
-                                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
-                                        CustomDatePicker::make('expiration_at')
-                                            ->label('Felhasználható')
-                                            ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
-                                            ->prefixIcon('tabler-calendar')
-                                            ->weekStartsOnMonday()
-                                            ->format('Y-m-d')
-                                            ->displayFormat('Y.m.d.')
-                                            ->default(now()),
-                                    ])->columns(2),
-
-                            ])
-                            ->action(function (array $data, Pendingcoupon $record): void {
-                                /*
-                        DB::table('coupons')->insert([
-                            'user_id' => $record->user_id,
-                            'coupon_code' => 'gift'.random_int(10000, 99999),
-                            'source' => 'Ajándék',
-                            'adult' => $data['adult'],
-                            'children' => $data['children'],
-                            'tickettype_id' => $data['tickettype_id'],
-                            'status' => CouponStatus::CanBeUsed,
-                            'expiration_at' => $data['expiration_at'],
-                            'created_at' => Carbon::now()->toDateTimeString(),
-                        ]);
-                        */
-                                $virtual_coupon = new Pendingcoupon();
-                                $virtual_coupon->user_id = $record->user_id;
-                                $virtual_coupon->coupon_code = 'gift'.random_int(10000, 99999);
-                                $virtual_coupon->source = 'Ajándék';
-                                $virtual_coupon->adult = $data['adult'];
-                                $virtual_coupon->children = $data['children'];
-                                $virtual_coupon->tickettype_id = $data['tickettype_id'];
-                                $virtual_coupon->status = CouponStatus::CanBeUsed;
-                                $virtual_coupon->expiration_at = $data['expiration_at'];
-                                $virtual_coupon->created_at = Carbon::now()->toDateTimeString();
-                                $virtual_coupon->save();
-                            }),
-                    ]),
-                //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\DeleteAction::make()
-                ->label(false)
-                ->tooltip('Törlés')
-                ->action(function($action) {
-                    try {
-                        $result = $action->process(static fn (Model $record) => $record->delete());
-                    } catch (\Throwable $th) {
-                        $result = false;
-                        if($th->errorInfo[0] == "23000" && $th->errorInfo[1] == 1451) { //idegene kulcs miatt nem törölhető
-                            $action->failureNotificationTitle('Aktív jelentkezéssel rendelkezik!<br>Nem törölhető!');
-                        } else {
-                            $action->failureNotificationTitle('Hiba történt!');
+                    ->label(false)
+                    ->tooltip('Törlés')
+                    ->action(function ($action) {
+                        try {
+                            $result = $action->process(static fn (Model $record) => $record->delete());
+                        } catch (\Throwable $th) {
+                            $result = false;
+                            if ($th->errorInfo[0] == 23000 && $th->errorInfo[1] == 1451) { //idegene kulcs miatt nem törölhető
+                                $action->failureNotificationTitle('Aktív jelentkezéssel rendelkezik!<br>Nem törölhető!');
+                            } else {
+                                $action->failureNotificationTitle('Hiba történt!');
+                            }
+                        } finally {
+                            if (! $result) {
+                                $action->failure();
+
+                                return;
+                            }
+
+                            $action->success();
                         }
-                    } finally {
-                        if (! $result) {
-                            $action->failure();
-
-                            return;
-                        }
-
-                        $action->success();
-                    }
-                }),
-                //->hidden(fn ($record) => ($record->status==CouponStatus::Used)),
-
+                    }),
             ])
-
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -572,20 +334,12 @@ class PendingcouponResource extends Resource
         ];
     }
 
-    /*
-    //ez a scope ami a model-ben deklarálva lett
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->underProcess();
-    }
-    */
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPendingcoupons::route('/'),
             'create' => Pages\CreatePendingcoupon::route('/create'),
-            //'edit' => Pages\EditPendingcoupon::route('/{record}/edit'),
+            'edit' => Pages\EditPendingcoupon::route('/{record}/edit'),
         ];
     }
 }
