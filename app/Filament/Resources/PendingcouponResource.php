@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\CouponStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\PendingcouponResource\Pages;
+use App\Models\Coupon;
 use App\Models\Pendingcoupon;
 use App\Models\Tickettype;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -78,29 +80,13 @@ class PendingcouponResource extends Resource
                             ]),
 
                         Section::make()
-                            ->schema([
-                                Fieldset::make('Utasok száma')
-                                    ->schema([
-                                        TextInput::make('adult')
-                                            ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
-                                            ->label('Felnőtt')
-                                            ->prefixIcon('tabler-friends')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                        TextInput::make('children')
-                                            ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
-                                            ->label('Gyermek')
-                                            ->prefixIcon('tabler-horse-toy')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->minLength(1)
-                                            ->maxLength(10)
-                                            ->suffix(' fő'),
-                                    ])->columns(2),
-                            ])
+                            ->schema(function (Coupon $record) {
+                                return [
+                                    $record?->isVirtual()
+                                        ? static::getVirtualCouponFieldset()
+                                        : static::getPassangersFieldset(),
+                                ];
+                            })
                             ->columnSpan([
                                 'sm' => 12,
                                 'md' => 12,
@@ -325,6 +311,58 @@ class PendingcouponResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getVirtualCouponFieldset(): Fieldset
+    {
+        return Fieldset::make('Kiegészítő jegy részletei')
+            ->schema([
+                ...static::getAdultsAndChildrenFields(),
+                TextInput::make('total_price')
+                    ->label('Helyszínen fizetendő')
+                    ->prefixIcon('iconoir-hand-cash')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->minLength(1)
+                    ->maxLength(10)
+                    ->suffix(' Ft.'),
+                Textarea::make('description')
+                    ->label('Megjegyzés')
+                    ->rows(3)
+                    ->cols(20)
+                    ->columnSpanFull(),
+            ])
+            ->columns(3);
+    }
+
+    public static function getAdultsAndChildrenFields(): array
+    {
+        return [
+            TextInput::make('adult')
+                ->label('Felnőtt')
+                ->prefixIcon('tabler-friends')
+                ->numeric()
+                ->default(0)
+                ->minLength(1)
+                ->maxLength(10)
+                ->suffix(' fő'),
+            TextInput::make('children')
+                ->label('Gyermek')
+                ->prefixIcon('tabler-horse-toy')
+                ->numeric()
+                ->default(0)
+                ->minLength(1)
+                ->maxLength(10)
+                ->suffix(' fő'),
+        ];
+    }
+
+    public static function getPassangersFieldset(): Fieldset
+    {
+        return Fieldset::make('Utasok száma')
+            ->schema(static::getAdultsAndChildrenFields())
+            ->columns(2);
     }
 
     public static function getRelations(): array

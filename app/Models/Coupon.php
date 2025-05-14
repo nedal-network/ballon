@@ -116,6 +116,11 @@ class Coupon extends Model
         );
     }
 
+    public function isVirtual(): bool
+    {
+        return $this->source === 'Kiegészítő';
+    }
+
     protected function isValid(): Attribute
     {
         return Attribute::make(
