@@ -86,25 +86,35 @@
                     } else {
                         $textColor = 'white';
                     }
+
+                    $actives = $coupon->aircraftLocationPilots->filter(
+                        fn ($event) => $event->pivot->status == 0 && $event->date >= now()
+                    );
+
+                    $inactives = $coupon->aircraftLocationPilots->filter(
+                        fn ($event) => ($event->pivot->status == 0 && $event->date < now()) || $event->status === \App\Enums\AircraftLocationPilotStatus::Deleted
+                    );
+
+                    $disabled = $isCheckedAlready || $coupon->missingData || $record->status === \App\Enums\AircraftLocationPilotStatus::Deleted;
                 @endphp
-                <label wire:loading.class="cursor-wait" id="checkbox" class="tbody @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
-                    <input wire:loading.class="cursor-wait" wire:loading.attr="disabled" id="coupon-{{ $coupon->id }}" class="checkbox ms-2" type="checkbox" @disabled($isCheckedAlready || $coupon->missingData) wire:model.live="selectedCoupons" value="{{ $coupon->id }}">
+                <label wire:loading.class="cursor-wait" id="checkbox" class="tbody @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
+                    <input wire:loading.class="cursor-wait" wire:loading.attr="disabled" id="coupon-{{ $coupon->id }}" class="checkbox ms-2" type="checkbox" @disabled($disabled) wire:model.live="selectedCoupons" value="{{ $coupon->id }}">
                 </label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->coupon_code }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->name }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->email }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->phone }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->pivot->created_at)->translatedFormat('Y.m.d., H:i') }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->expiration_at)->translatedFormat('Y.m.d.') }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->tickettype->name }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '>=', now())->count() }}/{{ $coupon->aircraftLocationPilots->where('pivot.status', 0)->where('date', '<', now())->count() }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->membersCount }}</span></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->membersBodyWeight }} kg</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->coupon_code }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->name }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->email }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->user->phone }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->pivot->created_at)->translatedFormat('Y.m.d., H:i') }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ Carbon\Carbon::parse($coupon->expiration_at)->translatedFormat('Y.m.d.') }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->tickettype->name }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $actives->count() }}/{{ $inactives->count() }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->membersCount }}</span></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="tbody min-w-min text-sm @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif><span style="opacity: 1">{{ $coupon->membersBodyWeight }} kg</span></label>
                 @php
                     $summ_price = 0;
                 @endphp
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs min-w-min @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif></label>
-                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" style='{{ $style }} padding-bottom: 0px !important;' @else " style="{{ $style }} background: {{ $backgroundColor }}; color: {{ $textColor }}; padding-bottom: 0px !important;" @endif>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs min-w-min @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif></label>
+                <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" style='{{ $style }} padding-bottom: 0px !important;' @else " style="{{ $style }} background: {{ $backgroundColor }}; color: {{ $textColor }}; padding-bottom: 0px !important;" @endif>
                     <div> 
                         @foreach ($coupon->childrenCoupons->where('source', 'Kiegészítő') as $item) 
                             @php
@@ -122,8 +132,8 @@
                     </div>
                 </label> 
                 @if ($summ_price) 
-                    <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="w-full text-xs min-w-min pb-2 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif></label>
-                    <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs pb-2 @if ($isCheckedAlready || $coupon->missingData) bg-zinc-100 text-zinc-400 dark:bg-white/10" style='{{ $style }}' @else " style="{{ $style }} background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
+                    <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="w-full text-xs min-w-min pb-2 @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif></label>
+                    <label wire:loading.class="cursor-wait" for="coupon-{{ $coupon->id }}" class="text-xs pb-2 @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" style='{{ $style }}' @else " style="{{ $style }} background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
                         <span class="w-full font-bold">Helyszínen fizetendő: {{ number_format($summ_price, 0, '', ' ') }} Ft</span>
                     </label>
                 @endif
