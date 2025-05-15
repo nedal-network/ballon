@@ -667,6 +667,7 @@ class CouponResource extends Resource
                     ->searchable(),
                 TextColumn::make('status')
                     ->label('Státusz')
+                    ->sortable(false)
                     ->badge()
                     ->size('md'),
             ])
