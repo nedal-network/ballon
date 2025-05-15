@@ -167,11 +167,9 @@ class PendingcouponResource extends Resource
                     ->searchable(['coupon_code', 'source']),
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
-                    ->formatStateUsing(function ($record) {
-                        return $record->user->name.' ('.$record->user->email.')';
-                    })
+                    ->url(fn (Coupon $record): string => route(UserResource::getRouteBaseName().'.edit', ['record' => $record->user->id]))
+                    ->formatStateUsing(fn (Coupon $record): string => "{$record->user->name} ({$record->user->email})")
                     ->wrap()
-                    ->color('Amber')
                     ->searchable(),
                 TextColumn::make('adult')
                     ->label('Utasok')
