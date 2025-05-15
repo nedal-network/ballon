@@ -6,13 +6,11 @@ use App\Enums\CouponStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\PendingcouponResource;
 use App\Models\Coupon;
-use App\Models\Pendingcoupon;
 use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
 
@@ -43,51 +41,10 @@ class EditPendingcoupon extends EditRecord
 
     protected function getFormActions(): array
     {
-        $defaultActions = collect(parent::getFormActions());
         return [
-            $defaultActions->first(),
+            $this->getSaveFormAction(),
             Action::make('Kiegészítő jegy')
-                ->form([
-                    Fieldset::make('Kiegészítő jegy részletei')
-                        ->schema([
-                            TextInput::make('adult')
-                                ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
-                                ->label('Felnőtt')
-                                ->prefixIcon('tabler-friends')
-                                ->required()
-                                ->numeric()
-                                ->default(0)
-                                ->minLength(1)
-                                ->maxLength(10)
-                                ->suffix(' fő'),
-                            TextInput::make('children')
-                                ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
-                                ->label('Gyermek')
-                                ->prefixIcon('tabler-horse-toy')
-                                ->required()
-                                ->numeric()
-                                ->default(0)
-                                ->minLength(1)
-                                ->maxLength(10)
-                                ->suffix(' fő'),
-                            TextInput::make('total_price')
-                                ->helperText('Add meg a kiegészítő jegy árát.')
-                                ->label('Helyszínen fizetendő')
-                                ->prefixIcon('iconoir-hand-cash')
-                                ->required()
-                                ->numeric()
-                                ->default(0)
-                                ->minLength(1)
-                                ->maxLength(10)
-                                ->suffix(' Ft.'),
-                            Textarea::make('description')
-                                ->label('Megjegyzés')
-                                ->rows(3)
-                                ->cols(20)
-                                ->columnSpanFull(),
-                        ])->columns(3),
-
-                ])
+                ->form(PendingcouponResource::getVirtualCouponSchema())
                 ->action(function (array $data, Coupon $record): void {
                     $virtual_coupon = new Coupon();
                     $virtual_coupon->parent_id = $record->id;
@@ -110,7 +67,6 @@ class EditPendingcoupon extends EditRecord
                     Fieldset::make('Ajándék jegy részletei')
                         ->schema([
                             TextInput::make('adult')
-                                ->helperText('Add meg a kuponhoz tartozó felnőtt utasok számát.')
                                 ->label('Felnőtt')
                                 ->prefixIcon('tabler-friends')
                                 ->required()
@@ -121,7 +77,6 @@ class EditPendingcoupon extends EditRecord
                                 ->maxLength(10)
                                 ->suffix(' fő'),
                             TextInput::make('children')
-                                ->helperText('Add meg a kuponhoz tartozó gyermek utasok számát.')
                                 ->label('Gyermek')
                                 ->prefixIcon('tabler-horse-toy')
                                 ->required()
@@ -131,7 +86,6 @@ class EditPendingcoupon extends EditRecord
                                 ->maxLength(10)
                                 ->suffix(' fő'),
                             Select::make('tickettype_id')
-                                ->helperText('Válaszd ki a kívánt jegytípust.')
                                 ->label('Jegytípus')
                                 ->prefixIcon('heroicon-o-ticket')
                                 ->required()
@@ -143,7 +97,6 @@ class EditPendingcoupon extends EditRecord
                                 ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
                             CustomDatePicker::make('expiration_at')
                                 ->label('Felhasználható')
-                                ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
                                 ->prefixIcon('tabler-calendar')
                                 ->weekStartsOnMonday()
                                 ->format('Y-m-d')
@@ -165,7 +118,7 @@ class EditPendingcoupon extends EditRecord
                     $virtual_coupon->created_at = Carbon::now()->toDateTimeString();
                     $virtual_coupon->save();
                 }),
-            $defaultActions->last(),
+            $this->getCancelFormAction(),
         ];
     }
 
