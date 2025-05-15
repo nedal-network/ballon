@@ -20,6 +20,7 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -29,6 +30,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\HtmlString;
 
 class PendingcouponResource extends Resource
 {
@@ -173,30 +175,13 @@ class PendingcouponResource extends Resource
                     ->searchable(),
                 TextColumn::make('adult')
                     ->label('Utasok')
-                    ->formatStateUsing(function ($state, Pendingcoupon $payload) {
-                        if (! empty($payload?->adult) && ! empty($payload?->children)) {
-                            $passenger_nums = '<p>'.$payload?->adult.'+'.$payload?->children.'</p>';
-                        }
-                        if (empty($payload?->adult) && ! empty($payload?->children)) {
-                            $passenger_nums = '<p>0+'.$payload?->children.'</p>';
-                        }
-                        if (! empty($payload?->adult) && empty($payload?->children)) {
-                            $passenger_nums = '<p>'.$payload?->adult.'+0</p>';
-                        }
-                        if (empty($payload?->adult) && empty($payload?->children)) {
-                            $passenger_nums = '<p>0+0</p>';
-                        }
-
-                        if (! empty($payload->description)) {
-                            $description = '<p style="font-size:9pt; color:gray;"><b>Megjegyzés: </b>'.$payload->description.'</p>';
-                        }
-                        if (empty($payload->description)) {
-                            $description = '';
-                        }
-                        $totalpassengermessage = $passenger_nums.$description;
-
-                        return $totalpassengermessage;
-                    })->html()
+                    ->formatStateUsing(fn (Coupon $record) => "{$record->adult}+{$record->children}")
+                    ->html()
+                    ->icon(fn ($record) => filled($record->description) ? 'tabler-message-2' : null)
+                    ->iconPosition(IconPosition::After)
+                    ->iconColor('info')
+                    ->tooltip(fn (Coupon $record) => filled($record->description) ? "Megjegyzés: {$record->description}" : null)
+                    ->width(1)
                     ->visibleFrom('md'),
                 TextColumn::make('total_price')
                     ->label('Ár')
