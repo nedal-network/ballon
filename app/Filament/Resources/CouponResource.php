@@ -644,6 +644,7 @@ class CouponResource extends Resource
                     ->searchable(),
                 TextColumn::make('adult')
                     ->label('Utasok')
+                    ->sortable(false)
                     ->formatStateUsing(function ($state, Coupon $payload) {
                         $extra_adult = 0;
                         $extra_children = 0;

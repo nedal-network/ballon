@@ -173,6 +173,7 @@ class PendingcouponResource extends Resource
                     ->searchable(),
                 TextColumn::make('adult')
                     ->label('Utasok')
+                    ->sortable(false)
                     ->formatStateUsing(fn (Coupon $record) => "{$record->adult}+{$record->children}")
                     ->html()
                     ->icon(fn ($record) => filled($record->description) ? 'tabler-message-2' : null)
