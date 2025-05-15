@@ -9,6 +9,7 @@ use App\Models\Region;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
@@ -39,6 +40,7 @@ class FlightlocationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             //->heading('Várható repülési helyszínek')
             ->description('Itt folyamatosan nyomon követheted a már kiírt, valamint a jövöben kiírásra kerülő repüléseink helyszíneit.')
             ->emptyStateHeading('Nincs megjeleníthető helyszín.')

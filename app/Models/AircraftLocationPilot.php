@@ -67,9 +67,6 @@ class AircraftLocationPilot extends Model
                         break;
 
                     case AircraftLocationPilotStatus::Deleted:
-
-                        Checkin::where('aircraft_location_pilot_id', $event->id)->whereIn('coupon_id', $checkedCoupons)->update(['status' => 0]);
-
                         if (! in_array($event->getOriginal('status'), [AircraftLocationPilotStatus::Executed, AircraftLocationPilotStatus::Feedback])) {
                             foreach ($event->coupons as $coupon) {
                                 Mail::to($coupon->user)->queue(new EventDeleted(

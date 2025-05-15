@@ -256,6 +256,7 @@ class AircraftLocationPilotResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->defaultGroup(
                 Group::make('date')
                     ->getTitleFromRecordUsing(fn ($record) => $record->date->format('Y.m.d.'))
@@ -266,14 +267,14 @@ class AircraftLocationPilotResource extends Resource
             )
             ->columns([
                 TextColumn::make('id')
-                    ->label(false)
+                    ->label('ID')
                     ->icon('tabler-number')
                     ->badge()
                     ->color('gray')
                     ->size('md')
                     ->visibleFrom('md'),
                 TextColumn::make('status')
-                    ->label(false)
+                    ->label('Státusz')
                     ->badge()
                     ->size('md'),
 
@@ -293,6 +294,7 @@ class AircraftLocationPilotResource extends Resource
                     ->formatStateUsing(fn ($record) => "({$record->aircraft->registration_number}) {$record->aircraft->name}")
                     ->visibleFrom('md'),
                 TextColumn::make('pilot.fullname')
+                    ->sortable(['pilots.lastname', 'pilots.firstname'])
                     ->label('Pilóta')
                     ->searchable(['pilots.lastname', 'pilots.firstname']),
 
@@ -317,10 +319,10 @@ class AircraftLocationPilotResource extends Resource
                     ->action(fn ($record) => redirect(route('filament.admin.resources.aircraft-location-pilots.checkins', $record->id))),
                 /*
                 ViewAction::make()->hiddenLabel()->tooltip('Megtekintés')->link(),
-                EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Tables\Actions\Action::make('delete')->icon('heroicon-m-trash')->color('danger')->hiddenLabel()->tooltip('Törlés')->link()->requiresConfirmation()->action(fn ($record) => $record->delete()),
                 */
-                DeleteAction::make()
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
+                Tables\Actions\DeleteAction::make()
                     ->hidden(fn ($record) => (bool) $record->coupons->count())
                     ->label(false)
                     ->tooltip('Törlés'),

@@ -95,6 +95,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->headerActions([
                 ExportAction::make()
                     ->label('Felhasználók exportálása')
@@ -123,6 +124,7 @@ class UserResource extends Resource
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('Y.m.d.')),
 
                 TextColumn::make('coupons')->label('Kuponok')
+                    ->sortable(false)
                     ->formatStateUsing(fn ($record) => collect(CouponStatus::cases())
                         ->filter(fn ($status) => $status !== CouponStatus::Applicant)
                         ->map(fn ($status) => $record->coupons->where('status', $status)->count())

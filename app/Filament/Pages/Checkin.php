@@ -59,15 +59,7 @@ class Checkin extends Page
             ->orderBy('source')
             ->orderBy('coupon_code')
             ->get()
-            ->map(function ($coupon) {
-
-                if ($coupon->isActive) {
-                    return $coupon;
-                }
-
-                return null;
-
-            })->whereNotNull();
+            ->filter(fn ($coupon) => $coupon->isActive);
 
         if ($this->coupons->count()) {
             $this->coupon_id = $this->coupons->first()->id;
