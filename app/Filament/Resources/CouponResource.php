@@ -6,6 +6,7 @@ use App\Enums\CouponStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\CouponResource\Pages;
 use App\Models\Coupon;
+use App\Models\Pendingcoupon;
 use Filament\Forms;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\CheckboxList;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\View;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -29,6 +31,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
+use Spatie\Activitylog\Models\Activity;
 
 class CouponResource extends Resource
 {
@@ -46,7 +49,6 @@ class CouponResource extends Resource
     {
         return $form
             ->schema([
-
                 Grid::make(12)
                     ->hiddenOn('create')
                     ->schema([
@@ -160,27 +162,19 @@ class CouponResource extends Resource
                                     ]),
                                 ]),
                             ]),
-                            Grid::make(12)->schema([
-                                Grid::make(12)->columnSpan([
-                                    'sm' => 12,
-                                    'md' => 12,
-                                    'lg' => 12,
-                                    'xl' => 6,
-                                    '2xl' => 6,
-                                ]),
-                                Section::make()->schema([
-                                    Fieldset::make('Érdekelt régiók')->schema([
-                                        CheckboxList::make('liked_regions')->label('Válasszon a régiók közül')
-                                            ->options(fn ($record) => $record?->tickettype?->regions->pluck('name', 'id') ?? []),
+                            Grid::make(2)->schema([
+                                FormGroup::make([
+                                    Section::make()->schema(static::getActivityLogSchema()),
+                                ])->columnSpan(2),
+                                FormGroup::make([
+                                    Section::make()->schema([
+                                        Fieldset::make('Érdekelt régiók')->schema([
+                                            CheckboxList::make('liked_regions')->label(false)
+                                                ->options(fn ($record) => $record?->tickettype?->regions->pluck('name', 'id') ?? []),
+                                        ]),
                                     ]),
-                                ])->columnSpan([
-                                    'sm' => 12,
-                                    'md' => 12,
-                                    'lg' => 12,
-                                    'xl' => 6,
-                                    '2xl' => 6,
-                                ]),
-                            ]),
+                                ])->columns(1),
+                            ])->columns(3),
                         ])->columnSpan([
                             'sm' => 12,
                             'md' => 12,
@@ -696,6 +690,23 @@ class CouponResource extends Resource
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             );
+    }
+
+    public static function getActivityLogSchema(): array
+    {
+        $activities = Activity::query()
+            ->whereIn('subject_type', [Pendingcoupon::class, Coupon::class])
+            ->where('subject_id', request()->segment(3))
+            ->latest()
+            ->get();
+
+        return [
+            Fieldset::make('Napló')->schema([
+                View::make('activity-log')
+                    ->label('Életút')
+                    ->view('filament.components.activity-log', compact('activities')),
+            ])->columns(1),
+        ];
     }
 
     public static function getRelations(): array

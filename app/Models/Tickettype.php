@@ -38,5 +38,10 @@ class Tickettype extends Model
         return $this->belongsToMany(Region::class, 'tickettype_region');
     }
 
+    public function fullname()
+    {
+        return $this->aircrafttype->getLabel() . ' - ' . $this->name;
+    }
+
     use SoftDeletes;
 }

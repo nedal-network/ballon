@@ -13,10 +13,14 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 #[ScopedBy([ClientScope::class])]
 class Coupon extends Model
 {
+    use LogsActivity;
+
     protected $table = 'coupons';
 
     protected $guarded = ['custom_children_ids'];
@@ -28,8 +32,25 @@ class Coupon extends Model
         'aircraft_type' => AircraftType::class,
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['*'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
     protected static function booted(): void
     {
+        static::deleting(function (self $coupon) {
+            $coupon->activities()->delete();
+            $coupon->aircraftLocationPilots()->sync([]);
+        });
+        static::updating(function (self $coupon) {
+            if ($coupon->expiration_at < today()) {
+                $coupon->status = CouponStatus::Expired;
+            }
+        });
         static::updated(function (self $coupon) {
 
             switch ($coupon->status) {
@@ -99,9 +120,7 @@ class Coupon extends Model
         return Attribute::make(
             get: function (): bool {
                 return $this->aircraftLocationPilots
-                    ->whereIn('status', [
-                        AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized
-                    ])
+                    ->whereIn('status', [AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized])
                     ->count();
             }
         );
