@@ -26,7 +26,7 @@ class CreateCoupon extends CreateRecord
     {
         $data['user_id'] = Auth::id();
         ! isset($data['adult']) && $data['adult'] = 0;
-        ! isset($data['adult']) && $data['children'] = 0;
+        ! isset($data['children']) && $data['children'] = 0;
 
         $checking_the_existence_of_a_coupon = Coupon::query()
             ->withoutGlobalScopes()
