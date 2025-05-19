@@ -12,6 +12,7 @@ use App\Models\User;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group as ComponentsGroup;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -19,6 +20,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
@@ -30,7 +32,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\HtmlString;
 
 class PendingcouponResource extends Resource
 {
@@ -82,6 +83,8 @@ class PendingcouponResource extends Resource
                                             ? [static::getVirtualCouponFieldset()]
                                             : [static::getPassangersFieldset()];
                                 }),
+                            Section::make()
+                                ->schema(CouponResource::getActivityLogSchema()),
                         ])->columns(2)
                             ->columnSpan([
                                 'sm' => 12,
@@ -103,7 +106,7 @@ class PendingcouponResource extends Resource
                                                     name: 'tickettype',
                                                     modifyQueryUsing: fn (Builder $query) => $query->orderBy('aircrafttype')->orderBy('default', 'desc')->orderBy('name'),
                                                 )
-                                                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->aircrafttype->getLabel()} - {$record->name}"),
+                                                ->getOptionLabelFromRecordUsing(fn ($record) => $record->fullname()),
                                             CustomDatePicker::make('expiration_at')
                                                 ->label('Felhasználható')
                                                 ->helperText('Itt módosíthatod az adott kupon érvényességi idejét.')
@@ -111,9 +114,17 @@ class PendingcouponResource extends Resource
                                                 ->weekStartsOnMonday()
                                                 ->format('Y-m-d')
                                                 ->displayFormat('Y.m.d.')
+                                                ->afterStateUpdated(function ($state, $record, Get $get, Set $set) {
+                                                    if (Carbon::parse($state) < today()) {
+                                                        $set('status', CouponStatus::Expired);
+                                                    } else {
+                                                        $set('status', $get('latest_status') ?? $record->status);
+                                                    }
+                                                })
                                                 ->live()
                                                 ->default(now()),
                                         ])->columns(1),
+                                        Hidden::make('latest_status')->live()->dehydrated(),
                                         ToggleButtons::make('status')
                                             ->helperText('Hagyd jóvá vagy utasítsd el ennek a kuponnak a felhasználást.')
                                             ->label('Válaszd ki kupon státuszát')
@@ -121,6 +132,11 @@ class PendingcouponResource extends Resource
                                             ->required()
                                             ->default('0')
                                             ->disabled(fn (Get $get) => Carbon::parse($get('expiration_at')) < today())
+                                            ->afterStateUpdated(function ($state, Set $set) {
+                                                if ($state != CouponStatus::Expired) {
+                                                    $set('latest_status', $state);
+                                                }
+                                            })
                                             ->live()
                                             ->options(CouponStatus::class),
 
