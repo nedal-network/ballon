@@ -19,6 +19,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
@@ -105,20 +106,28 @@ class AircraftLocationPilotResource extends Resource
                                         Select::make('aircraft_id')
                                             /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
                                             ->label('Légijármű')
+                                            ->live()
                                             ->prefixIcon('tabler-ufo')
                                             ->relationship('aircraft', 'name')
                                             ->getOptionLabelFromRecordUsing(fn ($record) => "({$record->registration_number}) {$record->name}")
                                             ->preload()
+                                            ->afterStateUpdated(fn ($set) => $set('region_id', null))
                                             ->native(false)
                                             ->required()
                                             ->searchable(),
 
                                         Select::make('region_id')
                                             ->label('Régió')
+                                            ->live()
                                             ->prefixIcon('tabler-map-route')
-                                            ->options(Region::all()->pluck('name', 'id'))
+                                            ->options(function (Get $get) {
+                                                return Region::whereHas('tickettypes', function (Builder $query) use ($get) {
+                                                    $query->whereRelation('aircrafts', 'id', $get('aircraft_id'));
+                                                })->pluck('name', 'id');
+                                            })
                                             ->native(false)
                                             ->required()
+                                            ->preload()
                                             ->searchable(),
                                         /*
                                 Select::make('location_id')
