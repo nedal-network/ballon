@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.8",
         "psr/simple-cache": "^3.0",
         "ryangjchandler/blade-tabler-icons": "^2.2",
+        "spatie/laravel-activitylog": "^4.10",
         "stechstudio/filament-impersonate": "^3.7"
     },
     "require-dev": {
