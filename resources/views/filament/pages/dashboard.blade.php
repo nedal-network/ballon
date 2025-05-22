@@ -37,7 +37,7 @@
     </style>
     <p>
         <b>
-            Ezen a fülön található információk igen fontosak és mindenképpen olvasd el, ugyanis sokat segít a jövőbeli kellemetlen meglepeték elkerülésében, ha tudod, pontosan mit várhatsz az utas foglaló rendszertől, illetve mire kell figyelned a jelentkezéskor.
+            Ezen a fülön található információk igen fontosak és mindenképpen olvasd el, ugyanis sokat segít a jövőbeli kellemetlen meglepetések elkerülésében, ha tudod, pontosan mit várhatsz az utas foglaló rendszertől, illetve mire kell figyelned a jelentkezéskor.
         </b>
     </p>
     <p>
@@ -114,7 +114,7 @@
         </li>
         <li>Ha felvitted az adatokat akkor kattints az <i>Ellenőrzés</i> gombra és eljutsz a „Kupon adatok megadása” részhez. Amennyiben jobb felső sarokban hibaüzenetet kapsz, akkor lehet, hogy éppen a weboldal, ahonnét az adatokat lekéri a rendszer nem válaszol, de a sokkal valószínűbb eset, hogy az azonosítód hibás 🙂 Ezt mindenképpen ellenőrizd le. Tipikus hiba a „#„ kettős kereszt feltüntetése a 4 jegyű Ballonozz.hu rendelési azonosítónál.</li>
         <li>
-            <span style="color: rgb(4, 164, 60)">A táblázatban zölddel jelölt kibocsátók sorainak esetében a jegyed ellenőrzése automatikusan történik</span><span>, azaz ha helyesen csináltad az azonosítód bevitelét, akkor a rendszer a kupon adatokat beemeli és felhasználható sátuszba kerül. Az után azonnal tudod folytatni a kitöltést. </span>
+            <span style="color: rgb(4, 164, 60)">A táblázatban zölddel jelölt kibocsátók sorainak esetében a jegyed ellenőrzése automatikusan történik</span><span>, azaz ha helyesen csináltad az azonosítód bevitelét, akkor a rendszer a kupon adatokat beemeli és felhasználható státuszba kerül. Ez után azonnal tudod folytatni a kitöltést. </span>
             <br>
             <span style="color: rgb(126, 177, 255)">A táblázatban halvány kékkel jelölt soroknál ezen a ponton a jegyed még feldolgozás alatt lesz</span><span>, mi fogjuk ellenőrizni, hogy helyes-e kupon, illetve felvinni a szükséges alapadatokat. Ezt tipikusan néhány nap alatt (repülési szezonon kívül 1 hét) megtesszük és átállítjuk a jegyedet felhasználható státuszra. Erről fogsz kapni e-mailt. Ekkor tudod folytatni kupon adatok megadását.</span>
         </li>
@@ -154,7 +154,7 @@
             <img src="{{ asset('images/resztveszek.png') }}" alt="">
             Ha a repülés véglegesített és nem szerepelsz annak utaslistáján, akkor szürkével jelenik meg az időpont: 
             <img src="{{ asset('images/lezarva.png') }}" alt="">
-            Javasoljuk, hogy MINDEN lehetséges időpontot jelölj be, ami jó lehet számodra, mert ha 1 alkalmat jelölsz meg és ezen a repülésen van 20 jelentkező, a másikra senki, akkor a jelentkezők felének nem tudunk beosztást adni. A rendszer 5-10 aktív időpontra történő jelentkezést minimum megenged. Érdemes kihasználni.
+            Javasoljuk, hogy MINDEN lehetséges időpontot jelölj be, ami jó lehet számodra, mert ha 1 alkalmat jelölsz meg és ezen a repülésen van 20 jelentkező, a másikra senki, akkor a jelentkezők felének nem tudunk beosztást adni. A rendszer 5-10 aktív időpontra történő jelentkezést enged egy időben. Érdemes kihasználni.
         </li>
         <li>
             <b>FONTOS: A repüléskre történő jelölésed és annak törlése szabadon megtehető a repülés előtt 7 napig.</b> Így amég rendszer ezt engedi, ez semmilyen következménnyel nem jár számodra. Egy már véglegesített / lezárt repülést is bejelölhetsz, ezzel nincs semmi gond, mivel ha felszabadul hely, akkor az aktuális jelentkezők kapnak beosztást erre a helyre. <b>Ellenben a véglegesített repülés esetében 7 nappal a repülés időpontja előtt a beosztásod véglegesé válik.</b> Ez után a repülésen részt kell venned. Lemondani igen indokolt esetben teheted meg anélkül, hogy a kuponod ne veszne el. Ezt a változtatást már csak mi tudjuk már elvégezni, a megkeresésed után. Azaz arra figyelj, hogy ha egy időpont nem jó, akkor arról az időpontot megelőző 7 napig jelentkezz le, hogy ne kapj végleges beosztást. Egyetlen kivétel a repülésen való részvételi közelezettség alól ebben az időszakban, ha a beosztásodat a hátralevő 7 napban kapod, mert valaki helyett osztottunk be, vagy akkor véglegesítettük az időpontot. Ekkor a tájékoztató e-mail beérkezte után 24 óráig van lehetőséged jelezni, hogy a beosztás már nem alkalmas, utána a repülésen részt kell venned. Ilyenkor általában az idő rövidsége miat telefonon is egyeztetünk veled beosztás előtt.
@@ -177,7 +177,7 @@
             <b>Ha a repülés sikeres</b>, akkor a jegyed felhasználásra kerül, így a jövőben már nem fogod látni a repüléseket (mivel nincs érvényes jegyed). Újabb repülés esetében örülünk, ha visszatérőként fogadhatunk ezen a remek programon. Másik, új kupont bármikor fel tudsz vinni a fiókodba a jövőben ennek a leírásnak megfelelően.
         </li>
         <p>
-            Amennyiben kérdésed van, vagy ebben a leírásban nem találod a megoldást számodra, akkor keress minket az elérhetőségeinken. Nem sürgős esetben, kérjünk, e-mailen. Telefonon kereszül általában a konkrét technikai jellegű kérdésben nem tudunk segíteni, mert nem vagyunk számítógép előtt és az lesz a kérésünk, hogy írd le üzenetben, amint megnézünk, amint tudunk: <a href="mailto:info@ballonozz.hu">info@ballonozz.hu</a>, +36207779081 (Balázs - kapcsolattartó)
+            Amennyiben kérdésed van, vagy ebben a leírásban nem találod a megoldást számodra, akkor keress minket az elérhetőségeinken. Nem sürgős esetben kérjük, írj e-mailt a hívás helyett. Telefonon kereszül általában a konkrét technikai jellegű kérdésben nem tudunk segíteni, mert nem vagyunk számítógép előtt és az lesz a kérésünk, hogy írd le üzenetben, amint megnézünk, amint tudunk: <a href="mailto:info@ballonozz.hu">info@ballonozz.hu</a>, +36207779081 (Balázs - kapcsolattartó)
         </p>
 
 
@@ -239,11 +239,11 @@
                     </tr>
                 </tbody>
             </table>
-            Ballonos privát jellegű repüléseknél havi szinten vannak, viszont szinte csak Siófok, Velencei-tó és Eger-Mickolc térségében.
-            Kisrepülőgép esetében a létszám csak 1 fő így, itt nagyobb a rugalmasság.
+            Ballonos privát jellegű repüléseknél havi szinten írunk ki időpontokat, viszont szinte csak Siófok, Velencei-tó és Eger-Mickolc térségében.
+            Kisrepülőgép esetében a létszám csak 1 fő, így itt nagyobb a rugalmasság, viszont egymás után több személlyel tervezzük egymás után a repülést.
         </li>
         <li>
-            <b>Ruházat, egyéb kellékek repüléshez:</b> Ballonozáshoz fontos, hogy legyen kinyomtatott, kitöltött felelősség vállalási nyilatkozat, amit itt is leírunk újra. Érdemes nálad lennie némi apró nasinak, illetve folyadéknak, mert 35-40 fok is tud lenni a felszálló területen, ahol várnod kell. Ez főleg a nyári délutáni repülések esetében fontos, ahol minimum 1liter/fővel érdemes készülni. A repülés előtt koplalj egész nap, mert ha a program végére elég éhes leszel, vagy elszédülsz az alacsony cukor szint miatt, akkor kevésbé lesz élvezhető a program. Fényképezőt, telefont és hasonlókat tudsz magaddal hozni, illetve maximum egy kisebb táskát is, ha szükséges.
+            <b>Ruházat, egyéb kellékek repüléshez:</b> Ballonozáshoz fontos, hogy legyen kinyomtatott, kitöltött felelősség vállalási nyilatkozat, amit itt is leírunk újra. Érdemes nálad lennie némi apró nasinak, illetve folyadéknak, mert 35-40 fok is tud lenni a felszálló területen, ahol várnod kell. Ez főleg a nyári délutáni repülések esetében fontos, ahol minimum 1liter/fővel érdemes készülni. A repülés előtt ne koplalj egész nap, mert ha a program végére elég éhes leszel, vagy elszédülsz az alacsony cukor szint miatt, akkor kevésbé lesz élvezhető a program. Fényképezőt, telefont és hasonlókat tudsz magaddal hozni, illetve maximum egy kisebb táskát is, ha szükséges.
             <br>
             Ballonos program esetében a ruházat a szezonnak megfelelő sportosabb ruházat a jó, ami esetében nem jelent gondot, ha esetleg poros lesz. Érdemes rétegesen öltözködni, mivel napfelkeltekor van a leghidegebb, ami augusztusban is 15 fok tud lenni, de leszálláskor már 30 fok lesz. A nadrágnak érdemes hosszú szárúnak lennie. Cipő esetében mindenképpen zárt legyen. A szandállal nekünk nincs bajuk, viszont neked lesz, ha a leszálló területen a térdig érő gazból rövidgatyában és szandálban kell kisétálnod. 🙂
             Kisrepülőgép esetében érdemes rétegesen öltözködni és a helyszínen eldöntjük, mit hagyunk meg, mivel gépe válogatja, melyik milyen fűtéssel, szellőztetéssel és napellenzővel rendelkezik.
