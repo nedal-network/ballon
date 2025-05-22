@@ -126,13 +126,9 @@ class Coupon extends Model
         );
     }
 
-    protected function isExpired(): Attribute
+    public function isExpired(): bool
     {
-        return Attribute::make(
-            get: function () {
-                return Carbon::parse($this->expiration_at) < today();
-            }
-        );
+        return Carbon::parse($this->expiration_at) < today() || $this->status == CouponStatus::Expired;
     }
 
     public function isVirtual(): bool
@@ -167,7 +163,7 @@ class Coupon extends Model
                     return true;
                 }
 
-                if (! $this->isExpired && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
+                if (! $this->isExpired() && in_array($this->status, [CouponStatus::CanBeUsed, CouponStatus::Applicant]) && $isParent && $this->isValid) {
                     return true;
                 }
 

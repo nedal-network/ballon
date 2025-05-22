@@ -13,6 +13,7 @@ use App\Models\Coupon;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Computed;
@@ -56,10 +57,11 @@ class Checkin extends Page
     public function mount()
     {
         $this->coupons = Coupon::query()
+            ->with('aircraftLocationPilots')
             ->orderBy('source')
             ->orderBy('coupon_code')
             ->get()
-            ->filter(fn ($coupon) => $coupon->isActive);
+            ->filter(fn ($coupon) => $coupon->isActive || $coupon->aircraftLocationPilots->count());
 
         if ($this->coupons->count()) {
             $this->coupon_id = $this->coupons->first()->id;
@@ -83,14 +85,13 @@ class Checkin extends Page
             return false;
         }
 
-        $events = AircraftLocationPilot::query()
-
-            // TODO Jelenleg csak a mainapra szűrünk,
-            // azaz tudunk jelentkezni olyan eseményre ami ma van, de már pl. 1 órája végét ért.
-            // azaz tudunk jelentkezni olyan eseményre ami ma van, de már pl. 1 órája végét ért. --- nem lényeges maradhat
-            // jelenítsük meg vissza menőleg 2 hónapra a teljesített repüléseket.
+        if ($this->coupon->isExpired()) {
+            $query = (new EloquentCollection($this->coupon->aircraftLocationPilots))->toQuery();
+        } else {
+            $query = AircraftLocationPilot::query();
+        }
+        $events = $query
             ->where('date', '>=', now()->format('Y-m-d'))
-
             ->whereIn('status', [AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized])
             ->withWhereHas('aircraft', function ($query) {
                 $query->where('number_of_person', '>=', $this->coupon->membersCount);
@@ -135,11 +136,11 @@ class Checkin extends Page
             ->delete();
 
         
-        if ($this->coupon->status == CouponStatus::Applicant && !$this->coupon->isExpired) {
+        if ($this->coupon->status == CouponStatus::Applicant && !$this->coupon->isExpired()) {
             $this->coupon->update(['status' => CouponStatus::CanBeUsed]);
         }
         
-        if ($this->coupon->isExpired) {
+        if ($this->coupon->isExpired()) {
             $this->coupon->update(['status' => CouponStatus::Expired]);
         }
 
