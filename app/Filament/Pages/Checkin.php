@@ -61,7 +61,7 @@ class Checkin extends Page
             ->orderBy('source')
             ->orderBy('coupon_code')
             ->get()
-            ->filter(fn ($coupon) => $coupon->isActive || $coupon->aircraftLocationPilots->count());
+            ->filter(fn ($coupon) => $coupon->isActive || $coupon->aircraftLocationPilots->whereNotIn('status', [AircraftLocationPilotStatus::Deleted])->count());
 
         if ($this->coupons->count()) {
             $this->coupon_id = $this->coupons->first()->id;
@@ -85,11 +85,16 @@ class Checkin extends Page
             return false;
         }
 
-        if ($this->coupon->isExpired()) {
-            $query = (new EloquentCollection($this->coupon->aircraftLocationPilots))->toQuery();
+        $couponEvents = $this->coupon->aircraftLocationPilots->whereNotIn('status', [AircraftLocationPilotStatus::Deleted]);
+
+        if ($this->coupon->isExpired() && ! $couponEvents->count()) {
+            return new EloquentCollection();
+        } elseif ($this->coupon->isExpired()) {
+            $query = (new EloquentCollection($couponEvents))->toQuery();
         } else {
             $query = AircraftLocationPilot::query();
         }
+
         $events = $query
             ->where('date', '>=', now()->format('Y-m-d'))
             ->whereIn('status', [AircraftLocationPilotStatus::Published, AircraftLocationPilotStatus::Finalized])
