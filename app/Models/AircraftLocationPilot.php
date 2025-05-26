@@ -80,6 +80,12 @@ class AircraftLocationPilot extends Model
                 }
             }
         });
+
+        static::deleting(function (self $event) {
+            $selectedCoupons =  $event->coupons->where('pivot.status', 1)->where('status', CouponStatus::Applicant);
+            $selectedCoupons->each(fn (Coupon $coupon) => $coupon->update(['status' => CouponStatus::CanBeUsed]));
+            $event->coupons()->detach();
+        });
     }
 
     public function aircraft()
