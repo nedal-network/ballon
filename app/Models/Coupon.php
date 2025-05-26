@@ -47,7 +47,7 @@ class Coupon extends Model
             $coupon->aircraftLocationPilots()->sync([]);
         });
         static::updating(function (self $coupon) {
-            if ($coupon->expiration_at < today()) {
+            if ($coupon->isExpired()) {
                 $coupon->status = CouponStatus::Expired;
             }
         });
