@@ -112,6 +112,10 @@ class FlightlocationResource extends Resource
                 ->collapsible()
                 ->visible(fn ($record) => filled($record->description) || filled($record->coordinates)),
             ])
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
+            ])
             ->filters([
                 //
             ])
