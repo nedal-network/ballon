@@ -8,7 +8,9 @@ use App\Models\Region;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -56,23 +58,25 @@ class FlightlocationResource extends Resource
             )
             ->columns([
                 Split::make([
-                    Stack::make([
-                        ImageColumn::make('image_path')
+                    ImageColumn::make('image_path')
                             ->sortable(false)
                             ->label('Kép')
                             ->square()
                             ->width(75)
                             ->height(75)
-                            ->tooltip('Ide kattintva megtekintheted egy új ablakban a helyszínt a térképen.')
-                            ->url(fn ($record) => $record->online_map_link, true),
-                    ])->extraAttributes(['class' => 'flex w-min'], true),
-
+                            ->url(fn ($record) => $record->online_map_link, true)
+                            ->extraAttributes(['style' => 'min-width: 75px;'], true)
+                            ->extraImgAttributes(['class' => 'rounded-md'])
+                            ->grow(false),
                     Stack::make([
                         TextColumn::make('name')
                             ->label('Elnevezés')
                             ->sortable(false)
                             ->weight(FontWeight::SemiBold)
                             ->searchable()
+                            ->icon(fn ($record) => filled($record->online_map_link) ? 'heroicon-s-map-pin' : false)
+                            ->iconPosition(IconPosition::After)
+                            ->iconColor('danger')
                             ->url(fn ($record) => $record->online_map_link, true),
 
                         TextColumn::make('zip_code')
@@ -87,22 +91,26 @@ class FlightlocationResource extends Resource
                             })
                             ->searchable(['zip_code', 'settlement']),
                     ]),
-
-                    Stack::make([
-                        TextColumn::make('coordinates')
-                            ->label('Navigáció')
-                            ->sortable(false)
-                            ->formatStateUsing(function ($state) {
-                                $coordinates = explode(',', $state);
-
-                                return implode(', ', $coordinates);
-                            })
-                            ->width(1)
-                            ->url(fn ($record) => $record->online_map_link, true)
-                            ->icon('tabler-compass')
-                            ->visibleFrom('md'),
-                    ]),
                 ]),
+                Panel::make([
+                    TextColumn::make('coordinates')
+                        ->label('Navigáció')
+                        ->sortable(false)
+                        ->formatStateUsing(function ($state) {
+                            $coordinates = explode(',', $state);
+
+                            return implode(', ', $coordinates);
+                        })
+                        ->width(1)
+                        ->url(fn ($record) => $record->online_map_link, true)
+                        ->icon('tabler-compass'),
+                    TextColumn::make('description')
+                        ->label('Megjegyzés')
+                        ->sortable(false)
+                        ->inline(),
+                ])
+                ->collapsible()
+                ->visible(fn ($record) => filled($record->description) || filled($record->coordinates)),
             ])
             ->filters([
                 //
