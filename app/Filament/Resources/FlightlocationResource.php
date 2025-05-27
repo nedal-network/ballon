@@ -3,14 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FlightlocationResource\Pages;
-use App\Models\AreaType;
 use App\Models\Flightlocation;
 use App\Models\Region;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\EditAction;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
@@ -41,97 +41,74 @@ class FlightlocationResource extends Resource
     {
         return $table
             ->recordUrl(null)
-            //->heading('Várható repülési helyszínek')
             ->description('Itt folyamatosan nyomon követheted a már kiírt, valamint a jövöben kiírásra kerülő repüléseink helyszíneit.')
             ->emptyStateHeading('Nincs megjeleníthető helyszín.')
             ->emptyStateDescription('Amint kiírásra kerülnek új lehetséges repülési helyszínek itt azonnal megtekintheted azokat, régiónkénti bontásban.')
             ->emptyStateIcon('iconoir-database-script')
-            //->defaultSort('region.name', 'asc')
+            ->groupingSettingsHidden()
             ->defaultGroup(
                 Group::make('region.name')
                     ->getTitleFromRecordUsing(function ($record) {
-                        return 'Régió: '.Region::find($record->region_id)->name;
+                        return Region::find($record->region_id)->name;
                     })
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             )
             ->columns([
-                TextColumn::make('name')
-                    ->label('Elnevezés')
-                    ->searchable(),
+                Split::make([
+                    Stack::make([
+                        ImageColumn::make('image_path')
+                            ->sortable(false)
+                            ->label('Kép')
+                            ->square()
+                            ->width(75)
+                            ->height(75)
+                            ->tooltip('Ide kattintva megtekintheted egy új ablakban a helyszínt a térképen.')
+                            ->url(fn ($record) => $record->online_map_link, true),
+                    ])->extraAttributes(['class' => 'flex w-min'], true),
 
-                TextColumn::make('zip_code')
-                    ->label('Cím')
-                    ->formatStateUsing(function (Flightlocation $location) {
-                        $areatype_name = AreaType::find($location->area_type_id);
+                    Stack::make([
+                        TextColumn::make('name')
+                            ->label('Elnevezés')
+                            ->sortable(false)
+                            ->weight(FontWeight::SemiBold)
+                            ->searchable()
+                            ->url(fn ($record) => $record->online_map_link, true),
 
-                        /*
-                    return ($location->zip_code ? $location->zip_code . ' ' : '') .
-                    ($location->settlement ? $location->settlement . ', ' : '') .
-                    ($location->address ? $location->address . ' ' : '') .
-                    ($areatype_name?->name ? $areatype_name?->name . ' ' : '') .
-                    ($location->address_number ? $location->address_number . '.' : '');
-                    */
-                        return ($location->zip_code ? $location->zip_code.' ' : '').
-                        ($location->settlement ? $location->settlement.', ' : '').
-                        ($location->address ? $location->address.' ' : '');
-                    })
-                    ->searchable(['zip_code', 'settlement']),
+                        TextColumn::make('zip_code')
+                            ->label('Cím')
+                            ->sortable(false)
+                            ->formatStateUsing(function (Flightlocation $location) {
+                                $data = [];
+                                $location->zip_code && $data[] = $location->zip_code.' '.$location->settlement;
+                                $location->address && $data[] = $location->address;
 
-                TextColumn::make('coordinates')
-                    ->label('Navigáció')
-                    ->formatStateUsing(function ($state) {
-                        [$latitude, $longitude] = explode(',', $state);
+                                return implode(', ', $data);
+                            })
+                            ->searchable(['zip_code', 'settlement']),
+                    ]),
 
-                        return '<p><span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$latitude.'</span>, <span class="text-custom-600 dark:text-custom-400" style="font-size:11pt;">'.$longitude.'</span></p>';
-                    })
-                    ->html()
-                    ->icon('tabler-compass'),
-                /*
-                TextColumn::make('online_map_link')
-                ->icon('tabler-map-route')
-                ->url(function ($record) {
-                    return 'http://maps.google.com/maps?q='.$record->coordinates;
-                })
-                ->openUrlInNewTab()
-                ->visibleFrom('md'),
-                */
-                TextColumn::make('online_map_link')
-                    ->icon('tabler-map-route')
-                    ->formatStateUsing(function ($state) {
-                        $wrapText = '...';
-                        $count = 40;
-                        if (strlen($state) > $count) {
-                            preg_match('/^.{0,'.$count.'}(?:.*?)\b/siu', $state, $matches);
-                            $text = $matches[0];
-                        } else {
-                            $wrapText = '';
-                        }
+                    Stack::make([
+                        TextColumn::make('coordinates')
+                            ->label('Navigáció')
+                            ->sortable(false)
+                            ->formatStateUsing(function ($state) {
+                                $coordinates = explode(',', $state);
 
-                        return $text.$wrapText;
-                    }),
-                ImageColumn::make('image_path')
-                    ->label('Kép')
-                    ->square()
-                    ->visibleFrom('md'),
+                                return implode(', ', $coordinates);
+                            })
+                            ->width(1)
+                            ->url(fn ($record) => $record->online_map_link, true)
+                            ->icon('tabler-compass')
+                            ->visibleFrom('md'),
+                    ]),
+                ]),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Action::make('redirect')
-                    ->icon('tabler-arrow-loop-right')
-                    ->hiddenLabel()
-                    ->tooltip('Ide kattintva megtekintheted egy új ablakban a helyszínt a térképen.')
-                    ->url(function ($record) {
-                        return $record->online_map_link;
-                    })
-                    ->openUrlInNewTab()
-                    ->visible(function ($record) {
-                        if (! empty($record->online_map_link)) {
-                            return true;
-                        }
-                    }),
+                //
             ])
             ->bulkActions([]);
     }
