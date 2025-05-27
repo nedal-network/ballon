@@ -41,6 +41,10 @@
                 ];
             @endphp
             <strong>Program várható időtartama: </strong>{{ $times[$event->period_of_time] }}
+            @if (filled($event->location->description))
+                <br>
+                <strong>Helyszínnel kapcsolatos megjegyzés: </strong>{{ $event->location->description }}
+            @endif
         </p>
         <p><strong>Fontos: </strong>Ha ez az időpont mégsem lesz jó számodra, akkor minél hamarabb jelentkezz le, mivel a lejelentkezési határidő letelte után ezt már nem tudod megtenni a kuponod elvesztése nélkül. Szolgáltatótól függően ez tipikusan 1-4 hét között változik. Kivételt csak alátámasztott egészségügyi, vagy egyéb igen indokolt eset képez.
         <p>Kérlek, vedd figyelembe, hogy az időponton +-30 percet és a helyszínen is változtatunk a repülés előtti napokban, ha ezt az időjárás előrejelzés alapján szükségesnek látjuk. Ha ezt megtesszük, arról e-mail, vagy sms értesítést fogsz kapni.
