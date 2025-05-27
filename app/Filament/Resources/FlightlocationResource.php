@@ -59,18 +59,19 @@ class FlightlocationResource extends Resource
             ->columns([
                 Split::make([
                     ImageColumn::make('image_path')
-                            ->sortable(false)
-                            ->label('Kép')
-                            ->square()
-                            ->width(75)
-                            ->height(75)
-                            ->url(fn ($record) => $record->online_map_link, true)
-                            ->extraAttributes(['style' => 'min-width: 75px;'], true)
-                            ->extraImgAttributes(['class' => 'rounded-md'])
-                            ->grow(false),
+                        ->sortable(false)
+                        ->label('Kép')
+                        ->square()
+                        ->width(75)
+                        ->height(75)
+                        ->url(fn ($record) => $record->online_map_link, true)
+                        ->extraAttributes(['style' => 'min-width: 75px;'], true)
+                        ->extraImgAttributes(['class' => 'rounded-md'])
+                        ->grow(false),
                     Stack::make([
                         TextColumn::make('name')
                             ->label('Elnevezés')
+                            ->grow(false)
                             ->sortable(false)
                             ->weight(FontWeight::SemiBold)
                             ->searchable()
@@ -93,24 +94,26 @@ class FlightlocationResource extends Resource
                     ]),
                 ]),
                 Panel::make([
-                    TextColumn::make('coordinates')
-                        ->label('Navigáció')
-                        ->sortable(false)
-                        ->formatStateUsing(function ($state) {
-                            $coordinates = explode(',', $state);
+                    Stack::make([
+                        TextColumn::make('coordinates')
+                            ->label('Navigáció')
+                            ->sortable(false)
+                            ->formatStateUsing(function ($state) {
+                                $coordinates = explode(',', $state);
 
-                            return implode(', ', $coordinates);
-                        })
-                        ->width(1)
-                        ->url(fn ($record) => $record->online_map_link, true)
-                        ->icon('tabler-compass'),
-                    TextColumn::make('description')
-                        ->label('Megjegyzés')
-                        ->sortable(false)
-                        ->inline(),
+                                return implode(', ', $coordinates);
+                            })
+                            ->grow(false)
+                            ->url(fn ($record) => $record->online_map_link, true)
+                            ->icon('tabler-compass'),
+                        TextColumn::make('description')
+                            ->label('Megjegyzés')
+                            ->sortable(false)
+                            ->inline(),
+                    ]),
                 ])
-                ->collapsible()
-                ->visible(fn ($record) => filled($record->description) || filled($record->coordinates)),
+                    ->collapsible()
+                    ->visible(fn ($record) => filled($record->description) || filled($record->coordinates)),
             ])
             ->contentGrid([
                 'md' => 2,
