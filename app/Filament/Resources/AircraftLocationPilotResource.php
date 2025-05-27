@@ -6,7 +6,6 @@ use App\Enums\AircraftLocationPilotStatus;
 use App\Filament\Forms\Components\CustomDatePicker;
 use App\Filament\Resources\AircraftLocationPilotResource\Pages;
 use App\Filament\Resources\AircraftLocationPilotResource\Pages\ListCheckins;
-use App\Models\Aircraft;
 use App\Models\AircraftLocationPilot;
 use App\Models\Location;
 use App\Models\Pilot;
@@ -17,15 +16,16 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
@@ -270,7 +270,7 @@ class AircraftLocationPilotResource extends Resource
                 Group::make('date')
                     ->getTitleFromRecordUsing(fn ($record) => $record->date->format('Y.m.d.'))
                     ->getTitleFromRecordUsing(fn ($record) => Carbon::parse($record->date)->translatedFormat('Y.m.d.'))
-                    ->orderQueryUsing(fn (Builder $query) => $query->orderBy('date', 'desc'))
+                    ->orderQueryUsing(fn (Builder $query) => $query->orderBy('date', 'asc'))
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             )
@@ -309,6 +309,19 @@ class AircraftLocationPilotResource extends Resource
 
             ])
             ->filters([
+                Filter::make('older-than-5-days')
+                    ->form([
+                        Toggle::make('hide')
+                            ->default(true)
+                            ->label('5 napnál korábbi időpontok elrejtése'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder => $query->when(
+                        $data['hide'],
+                        fn (Builder $query) => $query->whereDate('date', '>=', now()->subDays(5))
+                    ))
+                    ->indicateUsing(function (array $data): ?string {
+                        return $data['hide'] ? '5 napnál korábbi időpontok elrejtése' : null;
+                    }),
                 SelectFilter::make('aircraft_id')
                     ->label('Légijármű')
                     ->relationship('aircraft', 'name')
