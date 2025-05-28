@@ -52,7 +52,7 @@
     <h2 class="fi-header-heading text-xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-2xl">A repülésre jelentkezés folyamata a következő az oldalon:</h2>
     <ul class="flex flex-col gap-4 list-disc">
         <li>Ha esetleg nem rendelkezel még jeggyel, vagy kuponnal, akkor mindenképpen szükséged lesz egyre amit a ballonozz.hu oldalon is be tudsz szerezni. (Ez valószínúleg már megvan, ha itt vagy). Ha szeretnéd más konstrukcióra váltani a jegyedet, vagy hozzáadni utasokat, erre is van lehetőséged. Ez esetben keress minket.</li>
-        <li>Regisztálj az utasfoglaló oldalra. Ez a lépés is megvan, mivel itt vagy és az ismertetőnket olvasod éppen. 🙂</li>
+        <li>Regisztrálj az utasfoglaló oldalra. Ez a lépés is megvan, mivel itt vagy és az ismertetőnket olvasod éppen. 🙂 <b>Fontos:</b> Ha egy mód van rá @gmail.com címet használj és semmiképpen sem freemail-t, hotmail-t például, mert visszadobálják a leveleket és nem fogod megkapni az értesítéseket, amit küldünk.</li>
         <li>A jegyedet/kuponodat a <a class="text-primary-600 dark:text-primary-400 font-semibold" href="{{ route($couponResource::getRouteBaseName().'.index') }}">@svg($couponResource::getNavigationIcon(), ['class' => 'w-6 inline-block align-bottom']) {{ $couponResource::getNavigationLabel() }}</a> menüpontban tudod felvinni az <i>„{{ $listCoupons::getCreateActionLabel() }}”</i> gombbal a jobb felső sarokban.</li>
         <li>
             <span>A kupon azonosító 1-2, illetve kibocsátó esetében a következők szerint kell felvinned a jegyedet / kuponodat:</span>

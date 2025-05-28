@@ -5,13 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LocationResource\Pages;
 use App\Models\AreaType;
 use App\Models\Location;
-use App\Models\Region;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 /* saját use-ok */
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -48,7 +49,6 @@ class LocationResource extends Resource
                         Section::make()
                             ->schema([
                                 TextInput::make('name')
-                                    /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
                                     ->helperText('Adj egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')
                                     ->label('Elnevezés')
                                     ->prefixIcon('tabler-writing-sign')
@@ -71,7 +71,6 @@ class LocationResource extends Resource
                                     ->helperText('Válaszd ki vagy a "+" gombra kattintva, hozz létre egy új régiót, ahova tartozik az adott helyszín.')
                                     ->prefixIcon('iconoir-strategy')
                                     ->preload()
-                                    //->options(Region::all()->pluck('name', 'id'))
                                     ->relationship(name: 'region', titleAttribute: 'name')
                                     ->native(false)
                                     ->required()
@@ -90,67 +89,54 @@ class LocationResource extends Resource
 
                 Grid::make(12)
                     ->schema([
-                        Section::make()
-                            ->schema([
-                                Fieldset::make('Település')
-                                    ->schema([
-                                        TextInput::make('zip_code')
-                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Adjon egy fantázianevet a légijárműnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott légijármű.')*/
-                                            /*->helperText('Adj egy fantázianevet a helyszínnek. Érdemes olyan nevet választani, amivel könnyedén azonosítható lesz az adott helyszín.')*/
-                                            ->label('Irányítószám')
-                                            ->prefixIcon('tabler-mailbox')
-                                            ->placeholder('5600'),
-                                        TextInput::make('settlement')
-                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                            /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
-                                            ->label('Település')
-                                            ->prefixIcon('tabler-building-skyscraper')
-                                            ->placeholder('Békéscsaba'),
-                                    ])->columns([
-                                        'sm' => 1,
-                                        'md' => 2,
-                                        'lg' => 2,
-                                        'xl' => 3,
-                                        '2xl' => 3,
-                                    ]),
+                        Group::make([
+                            Section::make()
+                                ->schema([
+                                    Fieldset::make('Település')
+                                        ->schema([
+                                            TextInput::make('zip_code')
+                                                ->label('Irányítószám')
+                                                ->prefixIcon('tabler-mailbox')
+                                                ->placeholder('5600'),
+                                            TextInput::make('settlement')
+                                                ->label('Település')
+                                                ->prefixIcon('tabler-building-skyscraper')
+                                                ->placeholder('Békéscsaba'),
+                                        ])->columns([
+                                            'sm' => 1,
+                                            'md' => 2,
+                                            'lg' => 2,
+                                            'xl' => 3,
+                                            '2xl' => 3,
+                                        ]),
 
-                                Fieldset::make('Cím')
-                                    ->schema([
-                                        TextInput::make('address')
-                                            /*->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Ide a légijármű lajstromjelét adja meg.')*/
-                                            /*->helperText('Ide a légijármű lajstromjelét add meg.')*/
-                                            ->label('Cím')
-                                            ->prefixIcon('tabler-map-pin')
-                                            ->placeholder('Repülőtér'),
-                                        /*
-                            Select::make('area_type_id')
-                                ->label('Típus')
-                                ->prefixIcon('tabler-layout-list')
-                                ->options(AreaType::all()->pluck('name', 'id'))
-                                ->searchable()
-                                ->native(false),
-                            TextInput::make('address_number')
-                                ->label('Házszám')
-                                ->prefixIcon('tabler-number')
-                                ->numeric()
-                                ->placeholder('13'),
-                                */
-                                    ])->columns([
-                                        'sm' => 1,
-                                        'md' => 1,
-                                        'lg' => 1,
-                                        'xl' => 1,
-                                        '2xl' => 1,
-                                    ]),
+                                    Fieldset::make('Cím')
+                                        ->schema([
+                                            TextInput::make('address')
+                                                ->label('Cím')
+                                                ->prefixIcon('tabler-map-pin')
+                                                ->placeholder('Repülőtér'),
+                                        ])->columns([
+                                            'sm' => 1,
+                                            'md' => 1,
+                                            'lg' => 1,
+                                            'xl' => 1,
+                                            '2xl' => 1,
+                                        ]),
+                                ]),
 
-                            ])->columnSpan([
-                                'sm' => 6,
-                                'md' => 6,
-                                'lg' => 7,
-                                'xl' => 8,
-                                '2xl' => 7,
-                            ]),
-
+                            Section::make()
+                                ->schema([
+                                    Textarea::make('description')
+                                        ->label('Megjegyzés'),
+                                ]),
+                        ])->columnSpan([
+                            'sm' => 6,
+                            'md' => 6,
+                            'lg' => 7,
+                            'xl' => 8,
+                            '2xl' => 7,
+                        ]),
                         Section::make()
                             ->schema([
                                 Fieldset::make('Helyszín')
@@ -180,11 +166,6 @@ class LocationResource extends Resource
                                                     return 'http://maps.google.com/maps?q='.$record->coordinates;
                                                 })
                                                 ->openUrlInNewTab(),
-                                            /*
-                                ->hidden(fn (GET $get, $operation): bool => ($operation=='create'))
-                                    ->action(function (Forms\Get $get, Forms\Set $set) {
-                                        $set('excerpt', str($get('content'))->words(45, end: ''));
-                                    })*/
                                         ]),
 
                                         FileUpload::make('image_path')
@@ -226,9 +207,6 @@ class LocationResource extends Resource
                 TextColumn::make('address')
                     ->label('Cím')
                     ->formatStateUsing(function ($state, Location $location) {
-                        $areatype_name = AreaType::find($location->area_type_id);
-
-                        //return $location->zip_code . ' ' . $location->settlement . ', '. $location->address . ' ' . $areatype_name->name . ' ' . $location->address_number .'.';
                         return $location->zip_code.' '.$location->settlement.', '.$location->address.'.';
                     })->visibleFrom('md'),
 

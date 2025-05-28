@@ -110,6 +110,9 @@ class UserResource extends Resource
                 TextColumn::make('name')->label('Név')
                     ->searchable(),
                 TextColumn::make('email')
+                    ->icon('heroicon-m-envelope')
+                    ->iconColor('success')
+                    ->url(fn ($state) => filled($state) ? "mailto:$state" : null)
                     ->searchable(),
                 TextColumn::make('phone')
                     ->label('Telefonszám')
