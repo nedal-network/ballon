@@ -184,7 +184,15 @@ class PendingcouponResource extends Resource
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
                     ->url(fn (Coupon $record): string => route(UserResource::getRouteBaseName().'.edit', ['record' => $record->user->id]))
-                    ->formatStateUsing(fn (Coupon $record): string => "{$record->user->name} ({$record->user->email})")
+                    ->width(1)
+                    ->wrap()
+                    ->searchable(),
+                TextColumn::make('user.email')
+                    ->label('Email')
+                    ->icon('heroicon-m-envelope')
+                    ->iconColor('success')
+                    ->url(fn ($state) => filled($state) ? "mailto:$state" : null)
+                    ->width(1)
                     ->wrap()
                     ->searchable(),
                 TextColumn::make('adult')
