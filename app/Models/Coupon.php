@@ -6,6 +6,7 @@ use App\Enums\AircraftLocationPilotStatus;
 use App\Enums\AircraftType;
 use App\Enums\CouponStatus;
 use App\Mail\CouponApproved;
+use App\Mail\CouponUnderProcess;
 use App\Mail\CouponExpired;
 use App\Models\Scopes\ClientScope;
 use Carbon\Carbon;
@@ -42,6 +43,11 @@ class Coupon extends Model
 
     protected static function booted(): void
     {
+        static::created(function (self $coupon) {
+            if ($coupon->status === CouponStatus::UnderProcess) {
+                Mail::to(env('INFO_EMAIL', 'info@utasfoglalo.hu'))->queue(new CouponUnderProcess($coupon));
+            }
+        });
         static::deleting(function (self $coupon) {
             $coupon->activities()->delete();
             $coupon->aircraftLocationPilots()->sync([]);
