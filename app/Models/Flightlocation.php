@@ -2,19 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Flightlocation extends Model
+class Flightlocation extends Location
 {
-    use SoftDeletes;
-
-    protected $guarded = [];
-
-    protected $table = 'locations';
-
-    public function region()
-    {
-        return $this->belongsTo(Region::class);
-    }
 }
