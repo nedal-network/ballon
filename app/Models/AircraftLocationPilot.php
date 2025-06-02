@@ -69,6 +69,9 @@ class AircraftLocationPilot extends Model
                     case AircraftLocationPilotStatus::Deleted:
                         if (! in_array($event->getOriginal('status'), [AircraftLocationPilotStatus::Executed, AircraftLocationPilotStatus::Feedback])) {
                             foreach ($event->coupons as $coupon) {
+                                if ($coupon->status === CouponStatus::Applicant && $coupon->pivot->status == 1) {
+                                    $coupon->update(['status' => CouponStatus::CanBeUsed]);
+                                }
                                 Mail::to($coupon->user)->queue(new EventDeleted(
                                     user: $coupon->user,
                                     coupon: $coupon,
