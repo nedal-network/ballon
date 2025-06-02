@@ -60,8 +60,11 @@ class ListCheckins extends Page
                     $this->record->coupons()->updateExistingPivot($this->selectedCoupons, ['status' => 1]);
                     $this->record->coupons()->updateExistingPivot($unselectedCoupons, ['status' => 0]);
 
-                    Coupon::whereIn('id', $this->selectedCoupons)->update(['status' => CouponStatus::Applicant]);
-                    Coupon::whereIn('id', $unselectedCoupons)->update(['status' => CouponStatus::CanBeUsed]);
+                    Coupon::withoutGlobalScopes()->whereIn('id', $this->selectedCoupons)->get()
+                        ->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::Applicant]));
+
+                    Coupon::withoutGlobalScopes()->whereIn('id', $unselectedCoupons)->get()
+                        ->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::CanBeUsed]));
 
                     foreach ($informations as $info) {
                         Mail::to($info['user'])->queue(new EventFinalized(

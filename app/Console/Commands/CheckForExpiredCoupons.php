@@ -30,6 +30,7 @@ class CheckForExpiredCoupons extends Command
         Coupon::withoutGlobalScopes()
             ->where('expiration_at', '<', today())
             ->whereIn('status', [CouponStatus::CanBeUsed, CouponStatus::UnderProcess])
-            ->update(['status' => CouponStatus::Expired]);
+            ->get()
+            ->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::Expired]));
     }
 }

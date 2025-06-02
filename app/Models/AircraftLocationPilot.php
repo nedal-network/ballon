@@ -30,15 +30,7 @@ class AircraftLocationPilot extends Model
 
             if (in_array($event->status, [AircraftLocationPilotStatus::Executed, AircraftLocationPilotStatus::Deleted, AircraftLocationPilotStatus::Feedback])) {
 
-                $checkedCoupons = array_filter($event->coupons->map(function ($coupon) {
-
-                    if ($coupon->pivot->status == 1) {
-                        return $coupon->id;
-                    }
-
-                    return null;
-
-                })->toArray());
+                $checkedCoupons = $event->coupons->filter(fn ($coupon) => $coupon->pivot->status == 1);
 
                 switch ($event->status) {
 
@@ -61,9 +53,7 @@ class AircraftLocationPilot extends Model
                         break;
 
                     case AircraftLocationPilotStatus::Executed:
-
-                        Coupon::whereIn('id', $checkedCoupons)->whereNot('status', CouponStatus::Expired)->update(['status' => CouponStatus::Used]);
-
+                        $checkedCoupons->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::Used]));
                         break;
 
                     case AircraftLocationPilotStatus::Deleted:
@@ -85,8 +75,8 @@ class AircraftLocationPilot extends Model
         });
 
         static::deleting(function (self $event) {
-            $selectedCoupons =  $event->coupons->where('pivot.status', 1)->where('status', CouponStatus::Applicant);
-            $selectedCoupons->each(fn (Coupon $coupon) => $coupon->update(['status' => CouponStatus::CanBeUsed]));
+            $selectedCoupons = $event->coupons->where('pivot.status', 1)->where('status', CouponStatus::Applicant);
+            $selectedCoupons->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::CanBeUsed]));
             $event->coupons()->detach();
         });
     }

@@ -226,4 +226,19 @@ class Coupon extends Model
     {
         return $this->hasMany(self::class, 'parent_id', 'id');
     }
+
+    public function updateAsSystem(array $values): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null) {
+            return $this->update($values);
+        }
+
+        auth()->logout();
+        $isUpdated = $this->update($values);
+        auth()->login($user, ! empty($user->getRememberToken()));
+
+        return $isUpdated;
+    }
 }

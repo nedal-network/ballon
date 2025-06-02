@@ -140,11 +140,10 @@ class Checkin extends Page
             ->where('coupon_id', $this->coupon->id)
             ->delete();
 
-        
         if ($this->coupon->status == CouponStatus::Applicant && !$this->coupon->isExpired()) {
             $this->coupon->update(['status' => CouponStatus::CanBeUsed]);
         }
-        
+
         if ($this->coupon->isExpired()) {
             $this->coupon->update(['status' => CouponStatus::Expired]);
         }
