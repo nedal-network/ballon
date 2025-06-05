@@ -55,6 +55,7 @@
             <br>
             Kérünk, hogy ha szerinted aznap nem tűnik jónak az időjárás a programhoz, akkor a repülés esélyeivel kapcsolatban NE keresd a pilótát, mivel erről nem fog neked semmilyen információt adni. Egy repülés lemondáskor minden résztvevőnek egyszerre kerül kiküldésre a lemondásról szóló üzenet. Amég ez nem történik meg, addig a repülés végleges.
         </p>
-        <p>Kérjük, ne feledkezz el a személyenkénti kitöltött felelősség vállalási nyilatkozatról, továbbá tájékozódj a repülési feltételekről, ruházati követelményekről is, ha esetleg ezt az információt nem ismerted meg.
+        <p>Kérjük, ne feledkezz el a személyenkénti kitöltött felelősség vállalási nyilatkozatról, továbbá tájékozódj a repülési feltételekről, ruházati követelményekről is, ha esetleg ezt az információt nem ismerted meg.</p>
+        <p>Kérjük válasz üzenetben jelezz vissza nekünk az <a href="mailto:info@utasfoglalo.hu">info@utasfoglalo.hu</a> címre, ha megkaptad az üzenetet.</p>
     </div>
 </x-mail::message>
