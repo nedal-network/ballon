@@ -27,6 +27,8 @@ class ListCheckins extends Page
 
     public $selectedCoupons = [];
 
+    public $confirmedCoupons = [];
+
     public $alreadyCheckedCoupons;
 
     protected function getHeaderActions(): array
@@ -94,6 +96,17 @@ class ListCheckins extends Page
         ];
     }
 
+    public function toggleConfirmation(int $coupon_id)
+    {
+        if (in_array($coupon_id, $this->confirmedCoupons)) {
+            $this->confirmedCoupons = array_diff($this->confirmedCoupons, [$coupon_id]);
+            $this->record->coupons()->updateExistingPivot($coupon_id, ['confirmed_at' => null]);
+        } else {
+            $this->record->coupons()->updateExistingPivot($coupon_id, ['confirmed_at' => now()]);
+            $this->confirmedCoupons[] = $coupon_id;
+        }
+    }
+
     public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
@@ -111,6 +124,12 @@ class ListCheckins extends Page
                     ->where('pivot.status', 1)->count();
             })
             ->pluck('id')
+            ->toArray();
+
+        $this->confirmedCoupons = $this->record->coupons
+            ->where('pivot.confirmed_at', '!=', null)
+            ->pluck('id')
+            ->unique()
             ->toArray();
     }
 }
