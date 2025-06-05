@@ -60,7 +60,7 @@ class ListCheckins extends Page
                     })->filter();
 
                     $this->record->coupons()->updateExistingPivot($this->selectedCoupons, ['status' => 1]);
-                    $this->record->coupons()->updateExistingPivot($unselectedCoupons, ['status' => 0]);
+                    $this->record->coupons()->updateExistingPivot($unselectedCoupons, ['status' => 0, 'confirmed_at' => null]);
 
                     Coupon::withoutGlobalScopes()->whereIn('id', $this->selectedCoupons)->get()
                         ->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::Applicant]));
