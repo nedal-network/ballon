@@ -117,8 +117,9 @@ class ListCheckins extends Page
     {
         $this->record = $this->resolveRecord($record);
 
-        $this->record->coupons->where('pivot.status', 1)
-            ->map(fn ($coupon) => $this->selectedCoupons[] = $coupon->id);
+        foreach ($this->record->coupons->where('pivot.status', 1) as $coupon) {
+            $this->selectedCoupons[] = $coupon->id;
+        }
 
         $coupons = Coupon::with('aircraftLocationPilots')->where('status', CouponStatus::Applicant)->get();
 
