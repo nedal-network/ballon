@@ -242,12 +242,20 @@ class PendingcouponResource extends Resource
             ->filters([
                 SelectFilter::make('user_id')
                     ->label('Kapcsolattartó')
-                    ->relationship('user', 'name')
+                    ->options(User::withTrashed()->get()->mapWithKeys(function (User $user) {
+                        return [$user->id => $user->name.' ('.$user->email.')'];
+                    }))
                     ->searchable()
                     ->getSearchResultsUsing(function (string $search) {
-                        return User::where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%")->select('id', 'name', 'email')->limit(50)->get()->mapWithKeys(function (User $user, int $key) {
-                            return [$user->id => $user->name.' ('.$user->email.')'];
-                        });
+                        return User::withTrashed()
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->select('id', 'name', 'email')
+                            ->limit(50)
+                            ->get()
+                            ->mapWithKeys(function (User $user) {
+                                return [$user->id => $user->name.' ('.$user->email.')'];
+                            });
                     })
                     ->native(false),
                 Filter::make('created_at')

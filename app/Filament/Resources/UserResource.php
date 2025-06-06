@@ -152,6 +152,7 @@ class UserResource extends Resource
                     ->url(fn ($record): string => route('filament.admin.resources.pendingcoupons.index').'?tableFilters[user_id][value]='.$record->id),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Impersonate::make()
+                    ->visible(fn ($record) => ! $record->deleted_at)
                     ->tooltip('Átjelentkezés')
                     ->redirectTo(route('filament.admin.pages.dashboard'))
                     ->icon('tabler-ghost-2'),
@@ -183,9 +184,6 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return parent::getEloquentQuery()->withTrashed();
     }
 }
