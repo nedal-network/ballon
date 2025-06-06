@@ -120,7 +120,7 @@
                     <input wire:loading.class="cursor-wait" wire:loading.attr="disabled" id="coupon-{{ $coupon->id }}" class="checkbox ms-2" type="checkbox" @disabled($disabled) wire:model.live="selectedCoupons" value="{{ $coupon->id }}">
                 </label>
                 <x-list-checkins.column :$coupon :$disabled :$backgroundColor :$textColor>{{ $coupon->coupon_code }}</x-list-checkins.column>
-                <x-list-checkins.column :$coupon :$disabled :$backgroundColor :$textColor style="@if ($coupon->user->deleted_at) text-decoration: line-through; @endif">{{ $coupon->user->name }}</x-list-checkins.column>
+                <x-list-checkins.column :$coupon :$disabled :$backgroundColor :$textColor>{{ $coupon->user->name }} {{ $coupon->user->deleted_at ? '(törölve)' : '' }}</x-list-checkins.column>
                 <x-list-checkins.column :$coupon :$disabled :$backgroundColor :$textColor>
                     <span class="group/item">
                         <a class="flex gap-2 group-hover/item:underline group-focus-visible/item:underline" x-data @click.stop href="mailto:{{ $coupon->user->email }}">
