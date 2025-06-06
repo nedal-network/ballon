@@ -53,7 +53,7 @@ class Coupon extends Model
             $coupon->aircraftLocationPilots()->sync([]);
         });
         static::updating(function (self $coupon) {
-            if ($coupon->isExpired() && in_array($coupon->status, [CouponStatus::CanBeUsed, CouponStatus::UnderProcess])) {
+            if ($coupon->isExpired() && $coupon->status !== CouponStatus::Expired && in_array($coupon->getOriginal('status'), [CouponStatus::CanBeUsed, CouponStatus::UnderProcess])) {
                 $coupon->status = CouponStatus::Expired;
             }
         });
@@ -61,13 +61,11 @@ class Coupon extends Model
 
             switch ($coupon->status) {
                 case CouponStatus::CanBeUsed:
-                    switch ($coupon->getOriginal('status')) {
-                        case CouponStatus::UnderProcess:
-                            Mail::to($coupon->user)->queue(new CouponApproved(
-                                user: $coupon->user,
-                                coupon: $coupon
-                            ));
-                            break;
+                    if ($coupon->getOriginal('status') === CouponStatus::UnderProcess) {
+                        Mail::to($coupon->user)->queue(new CouponApproved(
+                            user: $coupon->user,
+                            coupon: $coupon
+                        ));
                     }
                     break;
 
@@ -76,6 +74,9 @@ class Coupon extends Model
                     // case CouponStatus::Used: --> mail: App\Models\AircraftLocationPilot.php
 
                 case CouponStatus::Expired:
+                    if ($coupon->user->deleted_at || $coupon->getOriginal('status') === CouponStatus::Expired) {
+                        break;
+                    }
                     Mail::to($coupon->user)->queue(new CouponExpired(
                         user: $coupon->user,
                         coupon: $coupon
@@ -92,7 +93,7 @@ class Coupon extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function aircraftLocationPilots()

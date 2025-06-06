@@ -47,17 +47,23 @@ class ListCheckins extends Page
 
                     $unselectedCoupons = $this->record->coupons()->wherePivotNotIn('coupon_id', $this->selectedCoupons)->pluck('coupon_id')->toArray();
 
-                    $informations = $this->record->coupons->map(function ($coupon) {
-                        if (in_array($coupon->id, $this->selectedCoupons) && $coupon->status != CouponStatus::Applicant) {
-                            return ['user' => $coupon->user, 'coupon' => $coupon];
-                        }
-                    })->filter();
+                    $informations = $this->record->coupons
+                        ->filter(function (Coupon $coupon) {
+                            if ($coupon->user->deleted_at) {
+                                return false;
+                            }
 
-                    $kickedInformations = $this->record->coupons->where('pivot.status', 1)->map(function ($coupon) use ($unselectedCoupons) {
-                        if (in_array($coupon->id, $unselectedCoupons) && $coupon->status === CouponStatus::Applicant) {
-                            return ['user' => $coupon->user, 'coupon' => $coupon];
-                        }
-                    })->filter();
+                            return $coupon->status !== CouponStatus::Applicant && in_array($coupon->id, $this->selectedCoupons);
+                        });
+
+                    $kickedInformations = $this->record->coupons->where('pivot.status', 1)
+                        ->filter(function (Coupon $coupon) use ($unselectedCoupons) {
+                            if ($coupon->user->deleted_at) {
+                                return false;
+                            }
+
+                            return $coupon->status === CouponStatus::Applicant && in_array($coupon->id, $unselectedCoupons);
+                        });
 
                     $this->record->coupons()->updateExistingPivot($this->selectedCoupons, ['status' => 1]);
                     $this->record->coupons()->updateExistingPivot($unselectedCoupons, ['status' => 0, 'confirmed_at' => null]);
@@ -68,18 +74,18 @@ class ListCheckins extends Page
                     Coupon::withoutGlobalScopes()->whereIn('id', $unselectedCoupons)->get()
                         ->each(fn (Coupon $coupon) => $coupon->updateAsSystem(['status' => CouponStatus::CanBeUsed]));
 
-                    foreach ($informations as $info) {
-                        Mail::to($info['user'])->queue(new EventFinalized(
-                            user: $info['user'],
-                            coupon: $info['coupon'],
+                    foreach ($informations as $coupon) {
+                        Mail::to($coupon->user)->queue(new EventFinalized(
+                            user: $coupon->user,
+                            coupon: $coupon,
                             event: $this->record
                         ));
                     }
 
-                    foreach ($kickedInformations as $info) {
-                        Mail::to($info['user'])->queue(new KickedFromEvent(
-                            user: $info['user'],
-                            coupon: $info['coupon'],
+                    foreach ($kickedInformations as $coupon) {
+                        Mail::to($coupon->user)->queue(new KickedFromEvent(
+                            user: $coupon->user,
+                            coupon: $coupon,
                             event: $this->record
                         ));
                     }

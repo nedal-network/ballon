@@ -183,6 +183,7 @@ class PendingcouponResource extends Resource
                     ->searchable(['coupon_code', 'source']),
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
+                    ->formatStateUsing(fn ($record) => $record->user->name . ($record->user->deleted_at ? ' (törölve)' : ''))
                     ->url(fn (Coupon $record): string => route(UserResource::getRouteBaseName().'.edit', ['record' => $record->user->id]))
                     ->width(1)
                     ->wrap()
