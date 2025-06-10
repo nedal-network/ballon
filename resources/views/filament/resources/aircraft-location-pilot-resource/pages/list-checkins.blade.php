@@ -62,7 +62,7 @@
         </div>
         <div x-data wire:loading.class="cursor-wait opacity-70" class="transition-all custom-table grid overflow-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10" style="grid-template-columns: {{ $grid_cols }};">
 
-            <div class="thead text-sm"></div>
+            <div class="thead text-sm" style="padding: 0 !important;"></div>
             <div class="thead text-sm"></div>
             <div class="thead text-sm">Kupon kód</div>
             <div class="thead text-sm">Kapcsolattartó</div>
@@ -106,16 +106,16 @@
 
                     $disabled = $isCheckedAlready || $coupon->missingData || $record->status === \App\Enums\AircraftLocationPilotStatus::Deleted;
                 @endphp
-                <button class="tbody w-5 h-full" 
+                <div class="tbody w-full h-full" 
                     title="{{ $confirmedMessage }}"
                     wire:click="toggleConfirmation({{ $coupon->id }})" 
                     @disabled($disabled || ! in_array($coupon->id, $this->selectedCoupons)) 
                     @style([
-                        'background-color: lightgray;',
+                        'background-color: lightgray; padding: 0 !important;',
                         'background-color: rgb(234 179 8);' => in_array($coupon->id, $this->selectedCoupons) && $coupon->status === \App\Enums\CouponStatus::Applicant,
                         'background-color: rgb(34 197 94);' => in_array($coupon->id, $this->selectedCoupons) && in_array($coupon->id, $this->confirmedCoupons),
                     ])
-                ></button>
+                ></div>
                 <label wire:loading.class="cursor-wait" id="checkbox" class="tbody @if ($disabled) bg-zinc-100 text-zinc-400 dark:bg-white/10" @else " style="background: {{ $backgroundColor }}; color: {{ $textColor }}" @endif>
                     <input wire:loading.class="cursor-wait" wire:loading.attr="disabled" id="coupon-{{ $coupon->id }}" class="checkbox ms-2" type="checkbox" @disabled($disabled) wire:model.live="selectedCoupons" value="{{ $coupon->id }}">
                 </label>
