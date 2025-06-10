@@ -6,6 +6,7 @@ use App\Enums\AircraftLocationPilotStatus;
 use App\Enums\AircraftType;
 use App\Enums\CouponStatus;
 use App\Mail\CouponApproved;
+use App\Mail\CouponUnderProcess;
 use App\Mail\CouponExpired;
 use App\Models\Scopes\ClientScope;
 use Carbon\Carbon;
@@ -42,12 +43,17 @@ class Coupon extends Model
 
     protected static function booted(): void
     {
+        static::created(function (self $coupon) {
+            if ($coupon->status === CouponStatus::UnderProcess) {
+                Mail::to(env('INFO_EMAIL', 'info@utasfoglalo.hu'))->queue(new CouponUnderProcess($coupon));
+            }
+        });
         static::deleting(function (self $coupon) {
             $coupon->activities()->delete();
             $coupon->aircraftLocationPilots()->sync([]);
         });
         static::updating(function (self $coupon) {
-            if ($coupon->isExpired()) {
+            if ($coupon->isExpired() && !in_array($coupon->status, [CouponStatus::Applicant, CouponStatus::Expired]) && in_array($coupon->getOriginal('status'), [CouponStatus::CanBeUsed, CouponStatus::UnderProcess])) {
                 $coupon->status = CouponStatus::Expired;
             }
         });
@@ -55,13 +61,11 @@ class Coupon extends Model
 
             switch ($coupon->status) {
                 case CouponStatus::CanBeUsed:
-                    switch ($coupon->getOriginal('status')) {
-                        case CouponStatus::UnderProcess:
-                            Mail::to($coupon->user)->queue(new CouponApproved(
-                                user: $coupon->user,
-                                coupon: $coupon
-                            ));
-                            break;
+                    if ($coupon->getOriginal('status') === CouponStatus::UnderProcess) {
+                        Mail::to($coupon->user)->queue(new CouponApproved(
+                            user: $coupon->user,
+                            coupon: $coupon
+                        ));
                     }
                     break;
 
@@ -70,6 +74,9 @@ class Coupon extends Model
                     // case CouponStatus::Used: --> mail: App\Models\AircraftLocationPilot.php
 
                 case CouponStatus::Expired:
+                    if ($coupon->user->deleted_at || $coupon->getOriginal('status') === CouponStatus::Expired) {
+                        break;
+                    }
                     Mail::to($coupon->user)->queue(new CouponExpired(
                         user: $coupon->user,
                         coupon: $coupon
@@ -86,7 +93,7 @@ class Coupon extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function aircraftLocationPilots()
@@ -219,5 +226,20 @@ class Coupon extends Model
     public function childrenCoupons()
     {
         return $this->hasMany(self::class, 'parent_id', 'id');
+    }
+
+    public function updateAsSystem(array $values): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null) {
+            return $this->update($values);
+        }
+
+        auth()->logout();
+        $isUpdated = $this->update($values);
+        auth()->login($user, ! empty($user->getRememberToken()));
+
+        return $isUpdated;
     }
 }

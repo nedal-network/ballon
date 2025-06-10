@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
+use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -32,10 +33,10 @@ enum AircraftLocationPilotStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Draft => 'warning',
             self::Published => 'success',
-            self::Finalized => 'success',
+            self::Finalized => 'info',
             self::Executed => 'info',
             self::Deleted => 'danger',
-            self::Feedback => 'info',
+            self::Feedback => Color::rgb('rgb(193,154,107)'), // brown
         };
     }
 

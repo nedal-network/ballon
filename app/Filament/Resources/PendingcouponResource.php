@@ -177,14 +177,30 @@ class PendingcouponResource extends Resource
             })
             ->columns([
                 TextColumn::make('coupon_code')
-                    ->label('Kuponkód')
+                    ->label('ID')
                     ->wrap()
+                    ->width(1)
                     ->color('Amber')
                     ->searchable(['coupon_code', 'source']),
+                TextColumn::make('auxiliary_coupon_code')
+                    ->label('ID 2')
+                    ->wrap()
+                    ->width(1)
+                    ->color('Amber')
+                    ->searchable(['auxiliary_coupon_code', 'source']),
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
+                    ->formatStateUsing(fn ($record) => $record->user->name . ($record->user->deleted_at ? ' (törölve)' : ''))
                     ->url(fn (Coupon $record): string => route(UserResource::getRouteBaseName().'.edit', ['record' => $record->user->id]))
-                    ->formatStateUsing(fn (Coupon $record): string => "{$record->user->name} ({$record->user->email})")
+                    ->width(1)
+                    ->wrap()
+                    ->searchable(),
+                TextColumn::make('user.email')
+                    ->label('Email')
+                    ->icon('heroicon-m-envelope')
+                    ->iconColor('success')
+                    ->url(fn ($state) => filled($state) ? "mailto:$state" : null)
+                    ->width(1)
                     ->wrap()
                     ->searchable(),
                 TextColumn::make('adult')
@@ -233,12 +249,20 @@ class PendingcouponResource extends Resource
             ->filters([
                 SelectFilter::make('user_id')
                     ->label('Kapcsolattartó')
-                    ->relationship('user', 'name')
+                    ->options(User::withTrashed()->get()->mapWithKeys(function (User $user) {
+                        return [$user->id => $user->name.' ('.$user->email.')'];
+                    }))
                     ->searchable()
                     ->getSearchResultsUsing(function (string $search) {
-                        return User::where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%")->select('id', 'name', 'email')->limit(50)->get()->mapWithKeys(function (User $user, int $key) {
-                            return [$user->id => $user->name.' ('.$user->email.')'];
-                        });
+                        return User::withTrashed()
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->select('id', 'name', 'email')
+                            ->limit(50)
+                            ->get()
+                            ->mapWithKeys(function (User $user) {
+                                return [$user->id => $user->name.' ('.$user->email.')'];
+                            });
                     })
                     ->native(false),
                 Filter::make('created_at')

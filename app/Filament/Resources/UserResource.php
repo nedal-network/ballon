@@ -58,7 +58,7 @@ class UserResource extends Resource
                     ->tel()
                     ->label('Telefonszám')
                     ->placeholder('+36_________')
-                    ->mask('+36999999999')
+                    ->mask('+9999999999999')
                     ->maxLength(30),
 
                 Group::make()->schema([
@@ -110,6 +110,9 @@ class UserResource extends Resource
                 TextColumn::make('name')->label('Név')
                     ->searchable(),
                 TextColumn::make('email')
+                    ->icon('heroicon-m-envelope')
+                    ->iconColor('success')
+                    ->url(fn ($state) => filled($state) ? "mailto:$state" : null)
                     ->searchable(),
                 TextColumn::make('phone')
                     ->label('Telefonszám')
@@ -149,6 +152,7 @@ class UserResource extends Resource
                     ->url(fn ($record): string => route('filament.admin.resources.pendingcoupons.index').'?tableFilters[user_id][value]='.$record->id),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Szerkesztés')->link(),
                 Impersonate::make()
+                    ->visible(fn ($record) => ! $record->deleted_at)
                     ->tooltip('Átjelentkezés')
                     ->redirectTo(route('filament.admin.pages.dashboard'))
                     ->icon('tabler-ghost-2'),
@@ -180,9 +184,6 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return parent::getEloquentQuery()->withTrashed();
     }
 }

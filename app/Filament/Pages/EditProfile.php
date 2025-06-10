@@ -82,7 +82,7 @@ class EditProfile extends Page implements HasForms
                             ->label('Telefonszám')
                             ->helperText('Add meg új telefonszámod arra az esetre, ha kapcsolatfelvétel tekintetében nem elegendő az e-mailben történő kapcsolatfelvétel')
                             ->placeholder('+36_________')
-                            ->mask('+36999999999')
+                            ->mask('+9999999999999')
                             ->maxLength(30),
                     ])->columns(3),
             ])

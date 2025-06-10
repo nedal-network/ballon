@@ -21,7 +21,6 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event): void
     {
-        //Log::info('siker'.Auth::id());
-        Auth::user()->update(['last_login_at' => now()]);
+        Auth::user()?->update(['last_login_at' => now()]);
     }
 }

@@ -40,7 +40,7 @@ class Register extends AuthRegister
                 ->label('Telefonszám')
                 ->tel()
                 ->placeholder('+36_________')
-                ->mask('+36999999999')
+                ->mask('+9999999999999')
                 ->maxLength(30),
         ])
             ->statePath('data');

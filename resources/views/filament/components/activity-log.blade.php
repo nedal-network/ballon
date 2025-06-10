@@ -28,7 +28,7 @@
                     <span class="text-primary-600 dark:text-primary-400 font-semibold">{{ $activity->event === 'created' ? __(ucfirst($activity->event)) : 'Módosítva' }}</span>
                     <span class="text-gray-400 dark:text-gray-500 text-xs w-full">{{ dateTime($activity->properties->first()['updated_at']) }}</span>
                     @if ($this instanceof App\Filament\Resources\PendingCouponResource\Pages\EditPendingCoupon)
-                        <span class="text-gray-400 dark:text-gray-500 text-end text-xs w-full">{{ $activity->causer_type::find($activity->causer_id)->name }}</span>
+                        <span class="text-gray-400 dark:text-gray-500 text-end text-xs w-full">{{ $activity->causer_type ? ($activity->causer_type::find($activity->causer_id)?->name ?? 'Rendszer') : 'Rendszer' }}</span>
                     @endif
                 </div>
             </div>
