@@ -177,8 +177,15 @@ class PendingcouponResource extends Resource
             })
             ->columns([
                 TextColumn::make('coupon_code')
-                    ->label('Kuponkód')
+                    ->label('ID')
                     ->wrap()
+                    ->width(1)
+                    ->color('Amber')
+                    ->searchable(['coupon_code', 'source']),
+                TextColumn::make('auxiliary_coupon_code')
+                    ->label('ID 2')
+                    ->wrap()
+                    ->width(1)
                     ->color('Amber')
                     ->searchable(['coupon_code', 'source']),
                 TextColumn::make('user.name')
