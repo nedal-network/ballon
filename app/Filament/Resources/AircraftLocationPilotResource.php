@@ -313,14 +313,14 @@ class AircraftLocationPilotResource extends Resource
                     ->form([
                         Toggle::make('hide')
                             ->default(true)
-                            ->label('5 napnál korábbi időpontok elrejtése'),
+                            ->label('5 napnál régebbi időpontok elrejtése'),
                     ])
                     ->query(fn (Builder $query, array $data): Builder => $query->when(
                         $data['hide'],
                         fn (Builder $query) => $query->whereDate('date', '>=', now()->subDays(5))
                     ))
                     ->indicateUsing(function (array $data): ?string {
-                        return $data['hide'] ? '5 napnál korábbi időpontok elrejtése' : null;
+                        return $data['hide'] ? '5 napnál régebbi időpontok elrejtése' : null;
                     }),
                 SelectFilter::make('aircraft_id')
                     ->label('Légijármű')
