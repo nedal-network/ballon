@@ -187,7 +187,7 @@ class PendingcouponResource extends Resource
                     ->wrap()
                     ->width(1)
                     ->color('Amber')
-                    ->searchable(['coupon_code', 'source']),
+                    ->searchable(['auxiliary_coupon_code', 'source']),
                 TextColumn::make('user.name')
                     ->label('Kapcsolattartó')
                     ->formatStateUsing(fn ($record) => $record->user->name . ($record->user->deleted_at ? ' (törölve)' : ''))
