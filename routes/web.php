@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\EventConfirmation;
 use App\Livewire\Home;
 use App\Models\Aircraft;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::domain('ballonozz.'.config('app.domain'))->group(function () {
     Route::get('/', Home::class)->name('ballonozz.home');
 });
-Route::view('/', 'welcome');
+
+Route::view('/', 'welcome')->name('welcome');
+
+Route::get('/event-confirmation', [EventConfirmation::class, 'index'])->name('event-confirmation');
 
 Route::get('/test', function () {
     //dump(env('AIRCRAFT_PASSENGER_LIMIT', 30));

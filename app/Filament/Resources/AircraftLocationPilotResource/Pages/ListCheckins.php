@@ -94,12 +94,25 @@ class ListCheckins extends Page
 
                     $this->record->update($data);
 
+                    $this->record->refresh();
+
+                    $this->confirmedCoupons = $this->getConfirmedCoupons();
+
                     Notification::make()
                         ->success()
                         ->title(__('filament-panels::resources/pages/edit-record.notifications.saved.title'))
                         ->send();
                 }),
         ];
+    }
+
+    public function getConfirmedCoupons(): array
+    {
+        return $this->record->coupons
+            ->where('pivot.confirmed_at', '!=', null)
+            ->pluck('id')
+            ->unique()
+            ->toArray();
     }
 
     public function toggleConfirmation(int $coupon_id)
@@ -133,10 +146,6 @@ class ListCheckins extends Page
             ->pluck('id')
             ->toArray();
 
-        $this->confirmedCoupons = $this->record->coupons
-            ->where('pivot.confirmed_at', '!=', null)
-            ->pluck('id')
-            ->unique()
-            ->toArray();
+        $this->confirmedCoupons = $this->getConfirmedCoupons();
     }
 }

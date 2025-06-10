@@ -10,11 +10,13 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class EventFinalized extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public string $confirmationLink;
     /**
      * Create a new message instance.
      */
@@ -22,7 +24,12 @@ class EventFinalized extends Mailable
         public User $user,
         public Coupon $coupon,
         public AircraftLocationPilot $event,
-    ) {
+    ) 
+    {
+        $this->confirmationLink = URL::signedRoute('event-confirmation', [
+            'coupon_id' => $this->coupon->id,
+            'event_id' => $this->event->id,
+        ]);
     }
 
     /**
@@ -40,7 +47,6 @@ class EventFinalized extends Mailable
      */
     public function content(): Content
     {
-        //dd($this->event);
         return new Content(
             markdown: 'mail.event-finalized',
         );
