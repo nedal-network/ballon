@@ -58,7 +58,7 @@ class UserResource extends Resource
                     ->tel()
                     ->label('Telefonszám')
                     ->placeholder('+36_________')
-                    ->mask('+36999999999')
+                    ->mask('+9999999999999')
                     ->maxLength(30),
 
                 Group::make()->schema([
