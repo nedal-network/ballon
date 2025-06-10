@@ -57,60 +57,62 @@
         <li>
             <span>A kupon azonosító 1-2, illetve kibocsátó esetében a következők szerint kell felvinned a jegyedet / kuponodat:</span>
             <br>
-            <table class="bg-zinc-100 dark:bg-white/5">
-                <thead>
-                    <tr class="font-semibold">
-                        <td class="border-2 p-1">Jegyed „forrása”, kiállítója</td>
-                        <td class="border-2 p-1">Azonosító 1 -></td>
-                        <td class="border-2 p-1">Azonosító 2</td>
-                        <td class="border-2 p-1">Kibocsátó</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="color: rgb(4, 164, 60)">
-                        <td class="border-2 p-1">Ballonozz.hu jegy #0123 formátumú rendelési azonosítóval</td>
-                        <td class="border-2 p-1">„0123” azonosító # szimbólum nélkül</td>
-                        <td class="border-2 p-1"><üres></td>
-                        <td class="border-2 p-1">ballonozz.hu</td>
-                    </tr>
-                    <tr style="color: rgb(126, 177, 255)">
-                        <td class="border-2 p-1">Ballonozz.hu kupon #kupon_00 formátumú rendelési azonosítóval</td>
-                        <td class="border-2 p-1">„#kupon_00” azonosító</td>
-                        <td class="border-2 p-1"><üres></td>
-                        <td class="border-2 p-1">Egyéb</td>
-                    </tr>
-                    <tr style="color: rgb(4, 164, 60)">
-                        <td class="border-2 p-1">Meglepkék kupon</td>
-                        <td class="border-2 p-1">„AB01234” 7 jegyű azonosító beírása</td>
-                        <td class="border-2 p-1"><üres></td>
-                        <td class="border-2 p-1">Meglepkék</td>
-                    </tr>
-                    <tr style="color: rgb(126, 177, 255)">
-                        <td class="border-2 p-1">Élménypláza voucher</td>
-                        <td class="border-2 p-1">„012345” 6 jegyű voucher kód</td>
-                        <td class="border-2 p-1">„987654” 6 jegyű voucher biztonsági kód</td>
-                        <td class="border-2 p-1">Élménypláza</td>
-                    </tr>
-                    <tr style="color: rgb(126, 177, 255)">
-                        <td class="border-2 p-1">Él A Mának voucher</td>
-                        <td class="border-2 p-1">„01234-01234-01234” voucher kód</td>
-                        <td class="border-2 p-1"><üres></td>
-                        <td class="border-2 p-1">ÉljAMának</td>
-                    </tr>
-                    <tr style="color: rgb(126, 177, 255)">
-                        <td class="border-2 p-1">Feldobox élménykártya</td>
-                        <td class="border-2 p-1">„0123456789” azonosító</td>
-                        <td class="border-2 p-1"><üres></td>
-                        <td class="border-2 p-1">Aji kártya</td>
-                    </tr>
-                    <tr style="color: rgb(126, 177, 255)">
-                        <td class="border-2 p-1">Aji VIP Kártya </td>
-                        <td class="border-2 p-1">„0123456789” azonosító</td>
-                        <td class="border-2 p-1">„0123” pinkód</td>
-                        <td class="border-2 p-1">Feldobox</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="bg-zinc-100 dark:bg-white/5">
+                    <thead>
+                        <tr class="font-semibold">
+                            <td class="border-2 p-1">Jegyed „forrása”, kiállítója</td>
+                            <td class="border-2 p-1">Azonosító 1 -></td>
+                            <td class="border-2 p-1">Azonosító 2</td>
+                            <td class="border-2 p-1">Kibocsátó</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="color: rgb(4, 164, 60)">
+                            <td class="border-2 p-1">Ballonozz.hu jegy #0123 formátumú rendelési azonosítóval</td>
+                            <td class="border-2 p-1">„0123” azonosító # szimbólum nélkül</td>
+                            <td class="border-2 p-1"><üres></td>
+                            <td class="border-2 p-1">ballonozz.hu</td>
+                        </tr>
+                        <tr style="color: rgb(126, 177, 255)">
+                            <td class="border-2 p-1">Ballonozz.hu kupon #kupon_00 formátumú rendelési azonosítóval</td>
+                            <td class="border-2 p-1">„#kupon_00” azonosító</td>
+                            <td class="border-2 p-1"><üres></td>
+                            <td class="border-2 p-1">Egyéb</td>
+                        </tr>
+                        <tr style="color: rgb(4, 164, 60)">
+                            <td class="border-2 p-1">Meglepkék kupon</td>
+                            <td class="border-2 p-1">„AB01234” 7 jegyű azonosító beírása</td>
+                            <td class="border-2 p-1"><üres></td>
+                            <td class="border-2 p-1">Meglepkék</td>
+                        </tr>
+                        <tr style="color: rgb(126, 177, 255)">
+                            <td class="border-2 p-1">Élménypláza voucher</td>
+                            <td class="border-2 p-1">„012345” 6 jegyű voucher kód</td>
+                            <td class="border-2 p-1">„987654” 6 jegyű voucher biztonsági kód</td>
+                            <td class="border-2 p-1">Élménypláza</td>
+                        </tr>
+                        <tr style="color: rgb(126, 177, 255)">
+                            <td class="border-2 p-1">Él A Mának voucher</td>
+                            <td class="border-2 p-1">„01234-01234-01234” voucher kód</td>
+                            <td class="border-2 p-1"><üres></td>
+                            <td class="border-2 p-1">ÉljAMának</td>
+                        </tr>
+                        <tr style="color: rgb(126, 177, 255)">
+                            <td class="border-2 p-1">Feldobox élménykártya</td>
+                            <td class="border-2 p-1">„0123456789” azonosító</td>
+                            <td class="border-2 p-1"><üres></td>
+                            <td class="border-2 p-1">Aji kártya</td>
+                        </tr>
+                        <tr style="color: rgb(126, 177, 255)">
+                            <td class="border-2 p-1">Aji VIP Kártya </td>
+                            <td class="border-2 p-1">„0123456789” azonosító</td>
+                            <td class="border-2 p-1">„0123” pinkód</td>
+                            <td class="border-2 p-1">Feldobox</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </li>
         <li>Ha felvitted az adatokat akkor kattints az <i>Ellenőrzés</i> gombra és eljutsz a „Kupon adatok megadása” részhez. Amennyiben jobb felső sarokban hibaüzenetet kapsz, akkor lehet, hogy éppen a weboldal, ahonnét az adatokat lekéri a rendszer nem válaszol, de a sokkal valószínűbb eset, hogy az azonosítód hibás 🙂 Ezt mindenképpen ellenőrizd le. Tipikus hiba a „#„ kettős kereszt feltüntetése a 4 jegyű Ballonozz.hu rendelési azonosítónál.</li>
         <li>
