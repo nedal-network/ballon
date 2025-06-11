@@ -45,7 +45,13 @@ class ListCheckins extends Page
                 ->disabled($this->record->status === AircraftLocationPilotStatus::Deleted)
                 ->action(function (array $data): void {
 
-                    $unselectedCoupons = $this->record->coupons()->wherePivotNotIn('coupon_id', $this->selectedCoupons)->pluck('coupon_id')->toArray();
+                    $unselectedCoupons = $this->record->coupons()
+                        ->wherePivotNotIn('coupon_id', [
+                            ...$this->selectedCoupons, 
+                            ...$this->alreadyCheckedCoupons,
+                        ])
+                        ->pluck('coupon_id')
+                        ->toArray();
 
                     $informations = $this->record->coupons
                         ->filter(function (Coupon $coupon) {
