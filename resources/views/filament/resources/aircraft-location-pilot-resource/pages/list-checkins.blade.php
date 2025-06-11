@@ -88,12 +88,14 @@
                         $textColor = 'white';
                     }
 
+                    // A kupon olyan eseményei, ami jövőbeli
                     $actives = $coupon->aircraftLocationPilots->filter(
-                        fn ($event) => $event->pivot->status == 0 && $event->date >= now()
+                        fn ($event) => Carbon\Carbon::parse($event->date) >= now()
                     );
 
+                    // A kupon olyan eseményei, amire nem lett beválogatva és az már lezajlott, vagy törölve lett
                     $inactives = $coupon->aircraftLocationPilots->filter(
-                        fn ($event) => ($event->pivot->status == 0 && $event->date < now()) || $event->status === \App\Enums\AircraftLocationPilotStatus::Deleted
+                        fn ($event) => $event->pivot->status == 0 && (Carbon\Carbon::parse($event->date) < now() || in_array($event->status, [\App\Enums\AircraftLocationPilotStatus::Deleted, \App\Enums\AircraftLocationPilotStatus::Feedback, \App\Enums\AircraftLocationPilotStatus::Executed]))
                     );
 
                     $isConfirmed = in_array($coupon->id, $this->selectedCoupons) && in_array($coupon->id, $this->confirmedCoupons);
