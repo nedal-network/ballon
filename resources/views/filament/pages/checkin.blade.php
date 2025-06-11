@@ -69,28 +69,32 @@
                             <div class="pb-2">{{ Carbon\Carbon::parse($date)->translatedFormat('Y.m.d.') }}</div>
                             @foreach ($events as $event)
                                 @php
-                                    $selected = $event->isChecked($this->coupon->id);
+                                    $signed = $event->isChecked($this->coupon->id);
                                     $finalized = $event->status == App\Enums\AircraftLocationPilotStatus::Finalized;
-                                    $checked = $event->coupons()->find($this->coupon)?->pivot->status == 1;
+                                    $selected = $event->coupons->firstWhere('id', $this->coupon->id)?->pivot->status == 1;
                                 @endphp
-                                <div class="card @if (($selected && !$finalized && !$this->coupon->is_used) || ($finalized && $selected && $checked)) border-green-500/80 @else dark:border-white/20 @endif @if ($selected && $finalized && $checked) bg-green-600/10 dark:bg-[#4ade80]/10 @elseif($finalized) bg-zinc-200/20 text-zinc-400 @endif mb-4 grid min-w-[220px] gap-2 border-2">
-                                    <div class="flex justify-between">
+                                <div class="card @if (($signed && !$finalized && !$this->coupon->is_used) || ($finalized && $signed && $selected)) border-green-500/80 @else dark:border-white/20 @endif @if ($signed && $finalized && $selected) bg-green-600/10 dark:bg-[#4ade80]/10 @elseif($finalized) bg-zinc-200/20 text-zinc-400 @endif mb-4 grid min-w-[220px] gap-2 border-2" wire:key="event-{{ $event->id }}">
+                                    <div class="flex justify-between items-center h-full">
                                         <div>{{ Carbon\Carbon::parse($event->time)->format('H:i') }}</div>
-                                        @if ($finalized)
-                                            <div class="@if ($selected && $finalized && $checked) text-green-600 @elseif($finalized) text-zinc-400 @endif">@svg('tabler-flag-check')</div>
-                                        @endif
+                                        <div class="flex justify-between items-center gap-2">
+                                            @if ($finalized)
+                                                <div class="@if ($signed && $finalized && $selected) text-green-600 @elseif($finalized) text-zinc-400 @endif">@svg('tabler-flag-check')</div>
+                                            @endif
                 
-                                        @if ($selected && $finalized && $checked)
-                                            <div class="p-1.5 font-semibold text-green-600 dark:text-green-400/80">Résztveszek</div>
-                                        @elseif($finalized)
-                                            <div class="p-1.5 font-semibold text-zinc-400">Lezárva</div>
-                                        @endif
+                                            @if ($signed && $finalized && $selected)
+                                                <div class="font-semibold text-green-600 dark:text-green-400/80">Résztveszek</div>
+                                            @elseif($finalized)
+                                                <div class="font-semibold text-zinc-400">Lezárva</div>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="flex justify-between" style="text-alaign: left;font-size:9pt;">
-                                        <b>Info: </b>{{ $event->public_description }}
+                                        @if (filled($event->public_description))
+                                            <b>Info: </b>{{ $event->public_description }}
+                                        @endif
                                     </div>
                                     <div class="flex gap-2">
-                                        <div class="@if (($selected && !$finalized) || ($finalized && $selected && $checked) || (!$selected && !$finalized)) text-red-500 @else text-red-500/50 @endif"">
+                                        <div class="@if (($signed && !$finalized) || ($finalized && $signed && $selected) || (!$signed && !$finalized)) text-red-500 @else text-red-500/50 @endif">
                                             <x-heroicon-c-map-pin class="w-6" />
                                         </div>
                                         <span>{{ $event->region->name }}</span>
@@ -99,28 +103,28 @@
                                     <div class="flex justify-between gap-2">
                                         <div class="flex items-center justify-self-center text-zinc-400">
                                             <x-iconoir-user class="w-5" />
-                                            <span class="py-2 ps-1 text-sm font-semibold">{{ $event->coupons->map(fn($coupon) => $coupon->membersCount)->sum() }}</span>
-                                        </div>
-                                        <br>
-                                        <div class="flex items-center justify-self-center text-zinc-400">
-                                            <x-iconoir-weight-alt class="w-5" />
-                                            <span class="py-2 ps-1 text-sm font-semibold">{{ $event->coupons->map(fn($coupon) => $coupon->membersBodyWeight)->sum() }}kg</span>
+                                            <span class="py-2 ps-1 text-sm font-semibold">{{ $event->coupons->sum('members_count') }}</span>
                                         </div>
                                         <div>
-                                            @if (!$selected && !$this->coupon->isExpired())
-                                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-blue-600 hover:!bg-blue-700">Jelölöm</x-filament::button>
-                                            @elseif(!$selected && $this->coupon->isExpired())
-                                                <x-filament::button wire:click="checkIn({{ $event->id }})" class="!bg-gray-600/50 hover:!bg-gray-700/50" disabled>Jelölöm</x-filament::button>
-                                            @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked && $finalized)
-                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Kiszállok</x-filament::button>
-                                            @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $checked)
-                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Törlés</x-filament::button>
-                                            @elseif($checked)
-                                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkOut({{ $event->id }})" disabled>Törlés</x-filament::button>
+                                            @if (!$signed && !$this->coupon->isExpired())
+                                                <x-filament::button class="!bg-blue-600 hover:!bg-blue-700" wire:click="checkIn({{ $event->id }})" wire:key="check-in-{{ $event->id }}">Jelölöm</x-filament::button>
+                                            @elseif(!$signed && $this->coupon->isExpired())
+                                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkIn({{ $event->id }})" wire:key="check-in-{{ $event->id }}" disabled>Jelölöm</x-filament::button>
+                                            @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $selected && $finalized)
+                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})" wire:key="check-out-{{ $event->id }}">Kiszállok</x-filament::button>
+                                            @elseif(now() < Carbon\Carbon::parse($event->date)->subWeek() && $selected)
+                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})" wire:key="check-out-{{ $event->id }}">Törlés</x-filament::button>
+                                            @elseif($selected)
+                                                <x-filament::button class="!bg-gray-600/50 hover:!bg-gray-700/50" wire:click="checkOut({{ $event->id }})" wire:key="check-out-{{ $event->id }}" disabled>Törlés</x-filament::button>
                                             @else
-                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})">Törlés</x-filament::button>
+                                                <x-filament::button class="!bg-red-600 hover:!bg-red-700" wire:click="checkOut({{ $event->id }})" wire:key="check-out-{{ $event->id }}">Törlés</x-filament::button>
                                             @endif
                                         </div>
+                                    </div>
+                                    <div>
+                                        <x-filament::badge :color="$event->status->getColor()" :icon="$event->status->getIcon()">
+                                            {{ $event->status->getLabel() }}
+                                        </x-filament::badge>
                                     </div>
                                 </div>
                             @endforeach
