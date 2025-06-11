@@ -129,12 +129,10 @@ class UserResource extends Resource
                 TextColumn::make('coupons')->label('Kuponok')
                     ->sortable(false)
                     ->formatStateUsing(fn ($record) => collect(CouponStatus::cases())
-                        ->filter(fn ($status) => $status !== CouponStatus::Applicant)
                         ->map(fn ($status) => $record->coupons->where('status', $status)->count())
                         ->implode(', ')
                     )
                     ->tooltip(collect(CouponStatus::cases())
-                        ->filter(fn ($status) => $status !== CouponStatus::Applicant)
                         ->map(fn ($status) => $status->getLabel())
                         ->implode(', ')
                     ),
