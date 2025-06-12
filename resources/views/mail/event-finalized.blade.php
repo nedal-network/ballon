@@ -9,7 +9,7 @@
         <p>Eljött a várva várt idő!🙂 Véglegesítettük az alábbi repülést, melyre beválogattunk a(z)</p>
         <p><strong>{{ $coupon->coupon_code }}</strong> kódú kuponoddal,</p>
         <p>{{ $coupon->adult + ($childrenCoupons?->sum('adult') ?? 0) }} felnőtt + {{ $coupon->children + ($childrenCoupons?->sum('children') ?? 0) }} gyerek, létszámmal,</p>
-        <p>{{ $event->coupons()->withoutGlobalScopes()->get()->map(fn ($c) => $c->membersBodyWeight)->sum() }} kg utas össztömeggel tervezve, melynél</p>
+        <p>{{ $coupon->membersBodyWeight }} kg utas össztömeggel tervezve, melynél</p>
         @php
             $virtualChildrenCoupons = $coupon->childrenCoupons()->withoutGlobalScopes()->where('source', 'Kiegészítő')->whereNotNull('total_price');
         @endphp
